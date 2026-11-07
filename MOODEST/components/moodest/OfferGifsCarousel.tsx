@@ -39,12 +39,12 @@ export default function OfferGifsCarousel() {
             <Link
               key={idx}
               href={banner.link}
-              className="flex-1 min-w-[220px] sm:min-w-[260px] rounded-[12px] overflow-hidden border border-mb-border shadow-card hover:shadow-dropdown transition-all hover:-translate-y-0.5 bg-mb-surface"
+              className="flex-1 min-w-[220px] sm:min-w-[260px] rounded-[4px] sm:rounded-[6px] overflow-hidden border border-mb-border shadow-card hover:shadow-dropdown transition-all hover:-translate-y-0.5 bg-mb-surface"
             >
               <img
                 src={banner.img}
                 alt={banner.title}
-                className="w-full h-auto object-cover rounded-[12px]"
+                className="w-full h-auto object-cover rounded-[4px] sm:rounded-[6px]"
               
                     onError={(e) => {
                       const target = e.currentTarget;

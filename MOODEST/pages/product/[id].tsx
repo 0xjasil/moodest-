@@ -134,7 +134,7 @@ export default function ProductDetail() {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-[460px_1fr]">
 
             {/* ── Image ───────────────────────────────────── */}
-            <div className="bg-mb-surface rounded-[14px] border border-mb-border shadow-card p-8 flex items-center justify-center aspect-square md:aspect-auto md:min-h-[440px]">
+            <div className="bg-mb-surface rounded-[6px] md:rounded-[8px] border border-mb-border shadow-card p-8 flex items-center justify-center aspect-square md:aspect-auto md:min-h-[440px]">
               <img
                 src={product.image}
                 alt={product.name}
@@ -153,7 +153,7 @@ export default function ProductDetail() {
             </div>
 
             {/* ── Details ─────────────────────────────────── */}
-            <div className="bg-mb-surface rounded-[14px] border border-mb-border shadow-card p-6 sm:p-8 flex flex-col justify-between">
+            <div className="bg-mb-surface rounded-[6px] md:rounded-[8px] border border-mb-border shadow-card p-6 sm:p-8 flex flex-col justify-between">
               <div>
                 {/* Brand + badge */}
                 <div className="flex items-center gap-3 mb-2">
@@ -321,7 +321,7 @@ export default function ProductDetail() {
           </div>
 
           {/* Customer Reviews Section */}
-          <div className="mt-12 bg-mb-surface rounded-[14px] border border-mb-border shadow-card p-6 sm:p-8">
+          <div className="mt-12 bg-mb-surface rounded-[6px] md:rounded-[8px] border border-mb-border shadow-card p-6 sm:p-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-mb-border-lite">
               <div>
                 <h2 className="font-serif text-xl sm:text-2xl font-semibold text-mb-text">

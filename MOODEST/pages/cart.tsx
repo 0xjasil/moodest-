@@ -45,7 +45,7 @@ export default function Cart() {
 
           {items.length === 0 ? (
             /* ── Empty state with Emblem Only ───────────────── */
-            <div className="bg-mb-surface rounded-[14px] border border-mb-border shadow-card p-12 text-center max-w-md mx-auto my-8">
+            <div className="bg-mb-surface rounded-[6px] md:rounded-[8px] border border-mb-border shadow-card p-12 text-center max-w-md mx-auto my-8">
               <div className="flex justify-center mb-4">
                 <BrandLogo variant="emblem" className="w-16 h-16 opacity-80" />
               </div>
@@ -68,7 +68,7 @@ export default function Cart() {
                 {items.map(({ product, qty }) => (
                   <article
                     key={product.id}
-                    className="bg-mb-surface rounded-[12px] border border-mb-border shadow-card p-4 sm:p-5 flex gap-4 sm:gap-5"
+                    className="bg-mb-surface rounded-[4px] sm:rounded-[6px] border border-mb-border shadow-card p-4 sm:p-5 flex gap-4 sm:gap-5"
                   >
                     <Link
                       href={`/product/${product.id}`}
@@ -160,7 +160,7 @@ export default function Cart() {
 
               {/* ── Order summary ────────────────────────────── */}
               <aside aria-label="Order summary">
-                <div className="bg-mb-surface rounded-[14px] border border-mb-border shadow-card p-6 sticky top-[130px]">
+                <div className="bg-mb-surface rounded-[6px] md:rounded-[8px] border border-mb-border shadow-card p-6 sticky top-[130px]">
                   <h2 className="font-serif text-lg font-semibold text-mb-text mb-4 pb-3 border-b border-mb-border-lite">
                     Order Summary
                   </h2>

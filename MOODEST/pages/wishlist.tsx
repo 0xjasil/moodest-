@@ -40,7 +40,7 @@ export default function Wishlist() {
 
           {products.length === 0 ? (
             /* ── Empty state with Emblem Only ───────────────── */
-            <div className="bg-mb-surface rounded-[14px] border border-mb-border shadow-card p-12 text-center max-w-md mx-auto my-8">
+            <div className="bg-mb-surface rounded-[6px] md:rounded-[8px] border border-mb-border shadow-card p-12 text-center max-w-md mx-auto my-8">
               <div className="flex justify-center mb-4">
                 <BrandLogo variant="emblem" className="w-16 h-16 opacity-80" />
               </div>

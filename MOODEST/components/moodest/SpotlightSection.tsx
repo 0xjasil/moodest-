@@ -32,7 +32,7 @@ export default function SpotlightSection() {
       </div>
 
       {/* Hero Banner with text — Responsive natural fit */}
-      <div className="relative overflow-hidden rounded-[14px] shadow-card mb-6 group border border-mb-border">
+      <div className="relative overflow-hidden rounded-[6px] md:rounded-[8px] shadow-card mb-6 group border border-mb-border">
         <Link href="/category/all" className="block">
           <img
             src="/banners/timeless-beauty-banner.jpg"
@@ -45,7 +45,7 @@ export default function SpotlightSection() {
               }
             }}
           />
-          <div className="absolute bottom-4 left-4 bg-mb-primary/95 text-mb-bg px-5 py-3 rounded-[10px] shadow-card border border-mb-primary-hover">
+          <div className="absolute bottom-4 left-4 bg-mb-primary/95 text-mb-bg px-5 py-3 rounded-[4px] md:rounded-[6px] shadow-card border border-mb-primary-hover">
             <p className="font-serif text-lg sm:text-xl font-bold leading-tight text-mb-bg">Up To 30% Off</p>
             <p className="text-xs text-mb-gold font-medium mt-0.5 uppercase tracking-wider">On Sanctuary Must-Haves</p>
           </div>
@@ -58,7 +58,7 @@ export default function SpotlightSection() {
           <Link
             key={idx}
             href={`/category/${item.slug}`}
-            className="group block overflow-hidden rounded-[10px] sm:rounded-[12px] bg-mb-surface border border-mb-border shadow-card hover:shadow-dropdown hover:-translate-y-1 transition-all duration-300"
+            className="group block overflow-hidden rounded-[4px] sm:rounded-[6px] bg-mb-surface border border-mb-border shadow-card hover:shadow-dropdown hover:-translate-y-1 transition-all duration-300"
           >
             <div className="relative aspect-[287/322] w-full overflow-hidden bg-[#EEE4D8]">
               <img

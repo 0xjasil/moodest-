@@ -29,9 +29,9 @@ export default function RadarSection() {
             <Link
               key={i}
               href={href}
-              className="group flex flex-col bg-mb-surface rounded-[12px] border border-mb-border shadow-card hover:shadow-dropdown transition-all p-3.5 text-center"
+              className="group flex flex-col bg-mb-surface rounded-[4px] sm:rounded-[6px] border border-mb-border shadow-card hover:shadow-dropdown transition-all p-3.5 text-center"
             >
-              <div className="relative aspect-square w-full overflow-hidden rounded-[8px] bg-mb-surface mb-2.5 flex items-center justify-center">
+              <div className="relative aspect-square w-full overflow-hidden rounded-[4px] bg-mb-surface mb-2.5 flex items-center justify-center">
                 <img
                   src={el.img}
                   alt={el.description}

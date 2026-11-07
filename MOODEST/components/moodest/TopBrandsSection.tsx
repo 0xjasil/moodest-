@@ -22,9 +22,9 @@ export default function TopBrandsSection() {
           <Link
             key={i}
             href={`/category/${brand.name.toLowerCase().replace(/\s+/g, "-")}`}
-            className="group flex flex-col bg-mb-surface rounded-[12px] border border-mb-border shadow-card hover:shadow-dropdown transition-all overflow-hidden p-3.5"
+            className="group flex flex-col bg-mb-surface rounded-[4px] sm:rounded-[6px] border border-mb-border shadow-card hover:shadow-dropdown transition-all overflow-hidden p-3.5"
           >
-            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[8px] bg-mb-surface mb-3">
+            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[4px] bg-mb-surface mb-3">
               <img
                 src={brand.img}
                 alt={brand.name}

@@ -163,7 +163,7 @@ export default function Category() {
             {/* Sidebar Filters */}
             <nav
               aria-label="Side navigation — filters"
-              className="hidden md:block flex-shrink-0 bg-mb-surface border border-mb-border rounded-[14px] shadow-card overflow-hidden"
+              className="hidden md:block flex-shrink-0 bg-mb-surface border border-mb-border rounded-[6px] md:rounded-[8px] shadow-card overflow-hidden"
               style={{ width: "230px", minWidth: "230px" }}>
 
               {/* Sort By selector */}
@@ -219,7 +219,7 @@ export default function Category() {
               </div>
 
               {sorted.length === 0 ? (
-                <div className="bg-mb-surface border border-mb-border rounded-[14px] shadow-card p-12 text-center">
+                <div className="bg-mb-surface border border-mb-border rounded-[6px] md:rounded-[8px] shadow-card p-12 text-center">
                   <p className="text-sm text-mb-body">No products found in &quot;{categoryDisplay}&quot;.</p>
                   <Link href="/" className="inline-block mt-4 text-xs font-semibold bg-mb-primary text-mb-bg px-6 py-2.5 rounded-[10px] shadow-sm">
                     Back to Home

@@ -44,12 +44,12 @@ export default function UnmissableOffers() {
               <Link
                 key={idx}
                 href={item.link}
-                className="flex-1 min-w-[260px] sm:min-w-[320px] rounded-[12px] overflow-hidden border border-mb-border shadow-card hover:shadow-dropdown transition-all bg-mb-surface"
+                className="flex-1 min-w-[260px] sm:min-w-[320px] rounded-[4px] sm:rounded-[6px] overflow-hidden border border-mb-border shadow-card hover:shadow-dropdown transition-all bg-mb-surface"
               >
                 <img
                   src={item.img}
                   alt={item.title}
-                  className="w-full h-auto object-cover rounded-[12px]"
+                  className="w-full h-auto object-cover rounded-[4px] sm:rounded-[6px]"
                 
                     onError={(e) => {
                       const target = e.currentTarget;
