@@ -51,15 +51,6 @@ export function AdminLoginForm({
     setIsExecuting(true);
     setErrorMessage(null);
 
-    // Dev bypass — skip real auth entirely
-    if (process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === "true") {
-      toast.success("Login successful (Dev Mode)");
-      router.replace("/dashboard");
-      router.refresh();
-      setIsExecuting(false);
-      return;
-    }
-
     try {
       // login() calls NestJS /auth/login then /users/me,
       // validates admin role, stores tokens + sets cookie

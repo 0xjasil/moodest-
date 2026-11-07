@@ -125,16 +125,10 @@ async function attemptTokenRefresh(refreshToken: string): Promise<string | null>
 /* ── Provider ─────────────────────────────────────────────────── */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, {
-    user: {
-      id: 1,
-      email: "admin@moreyella.com",
-      firstName: "Admin",
-      lastName: "User",
-      role: "ADMIN",
-    },
-    token: "mock-temp-admin-token",
-    refreshToken: "mock-temp-refresh-token",
-    isLoading: false,
+    user: null,
+    token: null,
+    refreshToken: null,
+    isLoading: true,
     error: null,
   });
 
@@ -186,13 +180,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         clearTokenCookie();
         dispatch({ type: "LOGOUT" });
       } catch {
-        // Network error — keep stored tokens, don't force logout
-        dispatch({
-          type: "LOGIN_SUCCESS",
-          user: { id: 0, email: "", role: "ADMIN" },
-          token: storedToken,
-          refreshToken: storedRefreshToken,
-        });
+        // Network error — clear session and force re-login
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(REFRESH_TOKEN_KEY);
+        clearTokenCookie();
+        dispatch({ type: "LOGOUT" });
       } finally {
         dispatch({ type: "SET_LOADING", isLoading: false });
       }

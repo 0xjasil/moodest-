@@ -123,9 +123,6 @@ async function parseAndValidateJwt(
 }
 
 export async function middleware(request: NextRequest) {
-  // TEMPORARY BYPASS: Allow full access to admin dashboard without login
-  return NextResponse.next();
-
   const { pathname } = request.nextUrl;
 
   // Allow public paths through without checking auth
