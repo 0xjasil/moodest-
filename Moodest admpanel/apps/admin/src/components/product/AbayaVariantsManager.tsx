@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import {
   Plus,
   Trash2,
@@ -10,6 +12,10 @@ import {
   Sparkles,
   Edit2,
   RefreshCw,
+  Package,
+  Eye,
+  ExternalLink,
+  Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,6 +52,7 @@ import { useConfigurableProduct } from "@/context/ConfigurableProductContext";
 import { useEditProduct } from "@/context/EcitProductContext";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { MOCK_ABAYA_PRODUCTS, type VariationProduct } from "@/components/variations/variations.mock";
 
 export const ABAYA_SIZES = ["50", "52", "54", "56", "58", "60", "62"] as const;
 export const FLEXIBLE_SIZES = ["Free Size", "Custom Size"] as const;
@@ -214,6 +221,24 @@ function AbayaVariantsManagerUI({
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertTargetVariant, setAlertTargetVariant] = useState<AbayaVariantItem | null>(null);
   const [alertAction, setAlertAction] = useState<"delete" | "deactivate">("delete");
+
+  // State for "Products Matching Variant" modal
+  const [variantProductsTarget, setVariantProductsTarget] = useState<AbayaVariantItem | null>(null);
+
+  // Filter catalog products matching the selected variant size/color
+  const matchingProducts = useMemo(() => {
+    if (!variantProductsTarget) return [];
+    const targetSize = (variantProductsTarget.size || "").toLowerCase().replace(/size\s*/i, "").trim();
+    const targetColor = (variantProductsTarget.color || "").toLowerCase().trim();
+
+    return Object.values(MOCK_ABAYA_PRODUCTS).filter((p) => {
+      const prodSize = (p.size || "").toLowerCase().replace(/size\s*/i, "").trim();
+      const prodColor = (p.color || "").toLowerCase().trim();
+      const sizeMatches = !targetSize || prodSize === targetSize || prodSize.includes(targetSize) || targetSize.includes(prodSize);
+      const colorMatches = !targetColor || targetColor === NO_COLOR_LABEL.toLowerCase() || prodColor.includes(targetColor) || targetColor.includes(prodColor);
+      return sizeMatches || colorMatches;
+    });
+  }, [variantProductsTarget]);
 
   // Detect duplicate SKUs in current form
   const duplicateSkus = useMemo(() => {
@@ -622,6 +647,20 @@ function AbayaVariantsManagerUI({
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Explore Products by Variant */}
+          <Link href="/variations" target="_blank" rel="noopener noreferrer">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-9 gap-1.5 rounded-lg border-gray-200 dark:border-white/10 text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5"
+              title="Explore all catalog products grouped by variant sizes and colors"
+            >
+              <Package className="size-3.5 text-indigo-600 dark:text-indigo-400" />
+              Products by Variant
+            </Button>
+          </Link>
+
           {/* Combinations Generator Button */}
           <Button
             type="button"
@@ -845,6 +884,18 @@ function AbayaVariantsManagerUI({
                       {/* Actions */}
                       <td className="py-3 px-3 align-middle text-right">
                         <div className="flex items-center justify-end gap-1">
+                          {/* View Matching Products */}
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setVariantProductsTarget(v)}
+                            className="size-7 p-0 rounded-lg text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40"
+                            title="Show catalog products with this variant"
+                          >
+                            <Package className="size-3.5" />
+                          </Button>
+
                           {/* Edit */}
                           <Button
                             type="button"
@@ -966,32 +1017,69 @@ function AbayaVariantsManagerUI({
               </div>
 
               {formSizeType === "preset" && (
-                <Select value={formSize} onValueChange={updateFormSize}>
+                <Select
+                  value={formSize}
+                  onValueChange={(val) => {
+                    if (val === "Free Size") {
+                      setFormSizeType("free");
+                      updateFormSize("Free Size");
+                    } else if (val === "custom_mode") {
+                      setFormSizeType("custom");
+                      const valCustom = formCustomSize.trim() || "55";
+                      setFormCustomSize(valCustom);
+                      updateFormSize(valCustom);
+                    } else {
+                      updateFormSize(val);
+                    }
+                  }}
+                >
                   <SelectTrigger id="variant-size" className="h-9 text-xs">
                     <SelectValue placeholder="Select abaya size" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="header-std" disabled className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Standard Abaya Lengths</SelectItem>
                     {ABAYA_SIZES.map((s) => (
                       <SelectItem key={s} value={s} className="text-xs">
                         Size {s} ({s}&quot; length)
                       </SelectItem>
                     ))}
+                    <SelectItem value="header-flex" disabled className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground pt-1 border-t">Flexible Sizing</SelectItem>
+                    <SelectItem value="Free Size" className="text-xs font-medium text-purple-600 dark:text-purple-400">
+                      ✦ Free Size (Universal Flowy Fit)
+                    </SelectItem>
+                    <SelectItem value="custom_mode" className="text-xs font-medium text-amber-600 dark:text-amber-400">
+                      ✎ Custom Size (Specify Custom Inches)...
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               )}
 
               {formSizeType === "custom" && (
                 <div className="space-y-2">
-                  <Input
-                    id="variant-custom-size"
-                    value={formCustomSize}
-                    onChange={(e) => {
-                      setFormCustomSize(e.target.value);
-                      updateFormSize(e.target.value);
-                    }}
-                    placeholder="e.g. 55 or Custom (Length 55, Bust 44)"
-                    className="h-9 text-xs"
-                  />
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="variant-custom-size"
+                      value={formCustomSize}
+                      onChange={(e) => {
+                        setFormCustomSize(e.target.value);
+                        updateFormSize(e.target.value);
+                      }}
+                      placeholder="e.g. 55 or Custom (Length 55, Bust 44)"
+                      className="h-9 text-xs"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setFormSizeType("preset");
+                        updateFormSize("54");
+                      }}
+                      className="h-9 text-xs shrink-0"
+                    >
+                      Preset Sizes
+                    </Button>
+                  </div>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="text-[11px] text-muted-foreground">Quick:</span>
                     {["53", "55", "57", "59", "Made to Measure", "Petite Cut", "Tall Cut"].map((sugg) => (
@@ -1625,6 +1713,104 @@ function AbayaVariantsManagerUI({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* ========================================================================= */}
+      {/* SHOW PRODUCTS MATCHING THIS VARIANT DIALOG                                 */}
+      {/* ========================================================================= */}
+      <Dialog
+        open={Boolean(variantProductsTarget)}
+        onOpenChange={(open) => {
+          if (!open) setVariantProductsTarget(null);
+        }}
+      >
+        <DialogContent className="sm:max-w-[560px]">
+          <DialogHeader>
+            <DialogTitle className="text-base font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+              <Package className="size-4 text-indigo-600" />
+              Products Matching Variant
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              Showing boutique catalog abayas configured with Size{" "}
+              <strong>{variantProductsTarget?.size}</strong>
+              {variantProductsTarget?.color ? ` and Color "${variantProductsTarget.color}"` : ""}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-3 py-2 max-h-[380px] overflow-y-auto">
+            {matchingProducts.length === 0 ? (
+              <div className="text-center py-8 text-xs text-muted-foreground border border-dashed rounded-xl">
+                <Package className="size-8 mx-auto mb-2 text-muted-foreground/50" />
+                No other catalog products currently assigned to this variant.
+              </div>
+            ) : (
+              matchingProducts.map((p) => (
+                <div
+                  key={p.id}
+                  className="flex items-center justify-between p-3 rounded-xl border border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/[0.02] hover:bg-gray-100/50 dark:hover:bg-white/[0.04] transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="relative size-12 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 dark:border-white/10 shrink-0">
+                      <Image
+                        src={p.image || "/images/products/1.webp"}
+                        alt={p.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-semibold text-gray-900 dark:text-white">
+                        {p.name}
+                      </h4>
+                      <p className="text-[11px] text-muted-foreground font-mono">
+                        {p.sku} • {p.category}
+                      </p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                          {formatMoney(p.price)}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground">
+                          Stock: {p.stock} pcs
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Link href={`/products`} target="_blank">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="size-8 p-0 text-gray-600 hover:text-indigo-600"
+                      title="View product in catalog"
+                    >
+                      <ExternalLink className="size-4" />
+                    </Button>
+                  </Link>
+                </div>
+              ))
+            )}
+          </div>
+
+          <DialogFooter className="flex items-center justify-between sm:justify-between pt-2">
+            <Link
+              href="/variations"
+              target="_blank"
+              className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1"
+            >
+              Open Variations Hub <ExternalLink className="size-3" />
+            </Link>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setVariantProductsTarget(null)}
+              className="text-xs"
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }
