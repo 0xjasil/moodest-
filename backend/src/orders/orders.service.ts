@@ -269,8 +269,16 @@ export class OrdersService {
   }
 
   async getOrderById(orderId: string, userId?: string, isAdmin: boolean = false) {
-    const order = await this.prisma.order.findUnique({
-      where: { id: orderId },
+    const cleanId = orderId.replace(/^#/, '').trim();
+    const order = await this.prisma.order.findFirst({
+      where: {
+        OR: [
+          { id: orderId },
+          { id: cleanId },
+          { orderNumber: orderId },
+          { orderNumber: cleanId },
+        ],
+      },
       include: {
         items: {
           include: { product: true, variant: true },
@@ -293,8 +301,16 @@ export class OrdersService {
   }
 
   async cancelOrder(orderId: string, userId?: string, isAdmin: boolean = false) {
-    const order = await this.prisma.order.findUnique({
-      where: { id: orderId },
+    const cleanId = orderId.replace(/^#/, '').trim();
+    const order = await this.prisma.order.findFirst({
+      where: {
+        OR: [
+          { id: orderId },
+          { id: cleanId },
+          { orderNumber: orderId },
+          { orderNumber: cleanId },
+        ],
+      },
       include: { reservations: true },
     });
 
@@ -311,22 +327,22 @@ export class OrdersService {
     }
 
     if (order.orderStatus === OrderStatus.CANCELLED) {
-      return this.getOrderById(orderId, userId, isAdmin);
+      return this.getOrderById(order.id, userId, isAdmin);
     }
 
     const hasCommitted = order.reservations.some((r) => r.status === ReservationStatus.COMMITTED);
     const hasReserved = order.reservations.some((r) => r.status === ReservationStatus.RESERVED);
 
     if (hasCommitted) {
-      await this.stockReservationService.restockCommitted(orderId);
+      await this.stockReservationService.restockCommitted(order.id);
     } else if (hasReserved) {
-      await this.stockReservationService.release(orderId);
+      await this.stockReservationService.release(order.id);
     }
 
     const cancelNote = isAdmin ? '[ADMIN_CANCELLED]' : '[MANUALLY_CANCELLED] by customer';
 
     await this.prisma.order.update({
-      where: { id: orderId },
+      where: { id: order.id },
       data: {
         orderStatus: OrderStatus.CANCELLED,
         reservationExpires: null,
@@ -334,11 +350,21 @@ export class OrdersService {
       },
     });
 
-    return this.getOrderById(orderId, userId, isAdmin);
+    return this.getOrderById(order.id, userId, isAdmin);
   }
 
   async requestReturn(orderId: string, userId: string) {
-    const order = await this.prisma.order.findUnique({ where: { id: orderId } });
+    const cleanId = orderId.replace(/^#/, '').trim();
+    const order = await this.prisma.order.findFirst({
+      where: {
+        OR: [
+          { id: orderId },
+          { id: cleanId },
+          { orderNumber: orderId },
+          { orderNumber: cleanId },
+        ],
+      },
+    });
     if (!order) {
       throw new NotFoundException(`Order not found: ${orderId}`);
     }
@@ -352,16 +378,16 @@ export class OrdersService {
     }
 
     await this.prisma.order.update({
-      where: { id: orderId },
+      where: { id: order.id },
       data: {
         orderStatus: OrderStatus.RETURNED,
         notes: order.notes ? `${order.notes}\n[RETURN_REQUESTED]` : '[RETURN_REQUESTED]',
       },
     });
 
-    await this.stockReservationService.restockCommitted(orderId);
+    await this.stockReservationService.restockCommitted(order.id);
 
-    return this.getOrderById(orderId, userId);
+    return this.getOrderById(order.id, userId);
   }
 
   // --- ADMIN OPERATIONS ---
@@ -408,8 +434,16 @@ export class OrdersService {
   }
 
   async updateOrderStatus(orderId: string, status: OrderStatus, trackingNumber?: string) {
-    const order = await this.prisma.order.findUnique({
-      where: { id: orderId },
+    const cleanId = orderId.replace(/^#/, '').trim();
+    const order = await this.prisma.order.findFirst({
+      where: {
+        OR: [
+          { id: orderId },
+          { id: cleanId },
+          { orderNumber: orderId },
+          { orderNumber: cleanId },
+        ],
+      },
       include: { reservations: true },
     });
 
@@ -424,14 +458,14 @@ export class OrdersService {
     ) {
       const hasCommitted = order.reservations.some((r) => r.status === ReservationStatus.COMMITTED);
       if (hasCommitted) {
-        await this.stockReservationService.restockCommitted(orderId);
+        await this.stockReservationService.restockCommitted(order.id);
       } else {
-        await this.stockReservationService.release(orderId);
+        await this.stockReservationService.release(order.id);
       }
     }
 
     await this.prisma.order.update({
-      where: { id: orderId },
+      where: { id: order.id },
       data: {
         orderStatus: status,
         trackingNumber: trackingNumber !== undefined ? trackingNumber : order.trackingNumber,
@@ -442,6 +476,6 @@ export class OrdersService {
       },
     });
 
-    return this.getOrderById(orderId, undefined, true);
+    return this.getOrderById(order.id, undefined, true);
   }
 }
