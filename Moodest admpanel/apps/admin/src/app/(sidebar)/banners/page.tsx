@@ -327,8 +327,19 @@ export default function AdminBannersPage() {
   const activeCount = banners.filter((b) => b.isActive).length;
 
   const fetchBanners = async () => {
-    setLoading(false);
-    setBanners([]);
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/banners?all=true`);
+      if (res.ok) {
+        const json = await res.json();
+        const data = Array.isArray(json) ? json : json.data || json.banners || [];
+        setBanners(data);
+      }
+    } catch (e) {
+      console.error("Failed to load CMS banners:", e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { fetchBanners(); }, []);
@@ -393,13 +404,6 @@ export default function AdminBannersPage() {
     <div className="flex flex-1 flex-col">
       <div className="container flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-900">
-            <p className="text-sm font-semibold">⚠️ Hero Banners Feature Notice</p>
-            <p className="text-xs text-amber-800 mt-1">
-              Dynamic banner upload is not supported by the current NestJS backend. Storefront carousel banners are statically maintained in the customer storefront application.
-            </p>
-          </div>
-
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>

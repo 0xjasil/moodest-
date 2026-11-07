@@ -2,13 +2,17 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
   Delete,
   Param,
   Body,
   Query,
   HttpCode,
   HttpStatus,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { StoreService } from './store.service';
 import { Public } from '../../common/decorators/public.decorator';
@@ -113,13 +117,48 @@ export class StoreController {
     return this.storeService.removeFromWishlist(user.id, productId);
   }
 
-  // --- BANNERS & FLASH SALES ---
+  // --- BANNERS & FLASH SALES (CMS) ---
 
   @Public()
   @Get('banners')
-  @ApiOperation({ summary: 'Get active storefront banners' })
-  async getBanners() {
-    return this.storeService.getBanners();
+  @ApiOperation({ summary: 'Get active storefront banners (or all banners for CMS)' })
+  async getBanners(@Query('all') all?: string) {
+    return this.storeService.getBanners(all === 'true');
+  }
+
+  @Public()
+  @Post('banners')
+  @UseInterceptors(FileInterceptor('image'))
+  @ApiOperation({ summary: 'Create a new banner (CMS)' })
+  async createBanner(@Body() body: any, @UploadedFile() file?: any) {
+    return this.storeService.createBanner(body, file);
+  }
+
+  @Public()
+  @Patch('banners/reorder')
+  @ApiOperation({ summary: 'Reorder banners (CMS)' })
+  async reorderBanners(@Body() body: { bannerIds: string[] }) {
+    return this.storeService.reorderBanners(body.bannerIds);
+  }
+
+  @Public()
+  @Patch('banners/:id')
+  @UseInterceptors(FileInterceptor('image'))
+  @ApiOperation({ summary: 'Update or toggle banner (CMS)' })
+  async updateBanner(
+    @Param('id') id: string,
+    @Body() body: any,
+    @UploadedFile() file?: any,
+  ) {
+    return this.storeService.updateBanner(id, body, file);
+  }
+
+  @Public()
+  @Delete('banners/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Delete banner (CMS)' })
+  async deleteBanner(@Param('id') id: string) {
+    return this.storeService.deleteBanner(id);
   }
 
   @Public()

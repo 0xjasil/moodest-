@@ -2,12 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import bannersData from "@/banners.json";
 
 /* ── Data ─────────────────────────────────────────────────────── */
-const heroBanners = (bannersData as any[])
+const defaultBanners = (bannersData as any[])
   .filter((b: any) => b.image)
   .slice(0, 6)
   .map((b: any) => ({
     image: b.image as string,
-    title: ((b.callout || b.alt || b.title || "") as string).split("|")[0].trim() || "Moryelle Beauté",
+    title: ((b.callout || b.alt || b.title || "") as string).split("|")[0].trim() || "Modest Studio",
     subtitle: (b.title || "") as string,
     link: (b.link || "#") as string,
   }));
@@ -28,9 +28,42 @@ const ChevronRight = () => (
 
 /* ── Component ────────────────────────────────────────────────── */
 export default function Hero() {
+  const [banners, setBanners] = useState(defaultBanners);
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-  const total = heroBanners.length;
+  const total = banners.length;
+
+  // Live CMS integration: fetch updated banners from backend API
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchCmsBanners() {
+      try {
+        const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000").replace(/\/$/, "");
+        const prefix = process.env.NEXT_PUBLIC_API_PREFIX || "/api";
+        const res = await fetch(`${apiUrl}${prefix}/banners`);
+        if (res.ok) {
+          const json = await res.json();
+          const list = Array.isArray(json) ? json : json.data || json.banners || [];
+          if (isMounted && Array.isArray(list) && list.length > 0) {
+            setBanners(
+              list.map((b: any) => ({
+                image: b.imageUrl || b.image,
+                title: b.title || "Modest Studio",
+                subtitle: b.subtitle || b.tag || b.description || "",
+                link: b.linkUrl || b.buttonLink || b.link || "#",
+              }))
+            );
+          }
+        }
+      } catch {
+        // Fallback to static default banners
+      }
+    }
+    fetchCmsBanners();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const next = useCallback(() => setActive(p => (p + 1) % total), [total]);
   const prev = useCallback(() => setActive(p => (p - 1 + total) % total), [total]);
@@ -52,7 +85,7 @@ export default function Hero() {
       onMouseLeave={() => setPaused(false)}
     >
       {/* Slides */}
-      {heroBanners.map((b, i) => (
+      {banners.map((b, i) => (
         <div
           key={i}
           aria-hidden={i !== active}
@@ -98,7 +131,7 @@ export default function Hero() {
       {/* Dots */}
       {total > 1 && (
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-1.5" role="tablist" aria-label="Slide indicators">
-          {heroBanners.map((_, i) => (
+          {banners.map((_, i) => (
             <button
               key={i}
               type="button"

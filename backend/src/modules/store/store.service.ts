@@ -272,11 +272,162 @@ export class StoreService {
 
   // --- BANNERS & FLASH SALES ---
 
-  async getBanners() {
-    return this.prisma.banner.findMany({
-      where: { isActive: true },
+  private formatBanner(b: any) {
+    return {
+      id: b.id,
+      title: b.title,
+      subtitle: b.subtitle || null,
+      tag: b.subtitle || null,
+      offerPrice: b.subtitle || null,
+      description: b.subtitle || null,
+      badge: b.section || 'HERO',
+      buttonText: 'Shop Collection',
+      buttonLink: b.linkUrl || '/category/all',
+      link: b.linkUrl || '/category/all',
+      linkUrl: b.linkUrl || '/category/all',
+      image: b.imageUrl,
+      imageUrl: b.imageUrl,
+      mobileImage: b.mobileImage || null,
+      order: b.sortOrder,
+      sortOrder: b.sortOrder,
+      isActive: b.isActive,
+      createdAt: b.createdAt,
+      updatedAt: b.updatedAt,
+    };
+  }
+
+  async getBanners(includeInactive: boolean = false) {
+    // If empty, auto-seed default luxury banners so CMS and storefront immediately work
+    const count = await this.prisma.banner.count();
+    if (count === 0) {
+      await this.prisma.banner.createMany({
+        data: [
+          {
+            title: 'New Arrivals Worth The Wait — Luxury Abayas',
+            subtitle: 'Atelier 2026 | All Sizes 50-62',
+            linkUrl: '/category/all',
+            imageUrl: '/banners/top-promo-banner.jpg',
+            section: 'HERO',
+            sortOrder: 1,
+            isActive: true,
+          },
+          {
+            title: 'Match The Mood — Handwork, Embroidery & Bridal Edits',
+            subtitle: 'Luxury Occasion | Crystals & Pearls',
+            linkUrl: '/category/bridal-wear',
+            imageUrl: '/banners/category-highlights-banner.jpg',
+            section: 'HERO',
+            sortOrder: 2,
+            isActive: true,
+          },
+          {
+            title: 'Beauty in Modesty — Timeless Elegance & Daily Comfort',
+            subtitle: 'Free Shipping on ₹1,999+',
+            linkUrl: '/category/all',
+            imageUrl: '/banners/timeless-beauty-banner.jpg',
+            section: 'HERO',
+            sortOrder: 3,
+            isActive: true,
+          },
+        ],
+      });
+    }
+
+    const where: Prisma.BannerWhereInput = includeInactive ? {} : { isActive: true };
+    const banners = await this.prisma.banner.findMany({
+      where,
       orderBy: { sortOrder: 'asc' },
     });
+
+    return banners.map((b) => this.formatBanner(b));
+  }
+
+  async createBanner(data: any, file?: any) {
+    const title = data.title ? String(data.title).trim() : 'Featured Collection';
+    const subtitle = data.tag || data.offerPrice || data.description || data.subtitle || '';
+    const linkUrl = data.buttonLink || data.linkUrl || data.link || '/category/all';
+    let imageUrl = data.image || data.imageUrl || '/banners/top-promo-banner.jpg';
+
+    if (file && file.originalname) {
+      imageUrl = `/banners/${file.originalname}`;
+    }
+
+    const sortOrder = Number(data.order ?? data.sortOrder) || 0;
+    const isActive = data.isActive !== undefined ? Boolean(data.isActive === 'true' || data.isActive === true) : true;
+
+    const banner = await this.prisma.banner.create({
+      data: {
+        title,
+        subtitle: subtitle || null,
+        linkUrl,
+        imageUrl,
+        section: 'HERO',
+        sortOrder,
+        isActive,
+      },
+    });
+
+    return this.formatBanner(banner);
+  }
+
+  async updateBanner(id: string, data: any, file?: any) {
+    const existing = await this.prisma.banner.findUnique({ where: { id } });
+    if (!existing) {
+      throw new NotFoundException(`Banner ${id} not found`);
+    }
+
+    const updateData: any = {};
+    if (data.title !== undefined) updateData.title = String(data.title).trim();
+    if (
+      data.tag !== undefined ||
+      data.description !== undefined ||
+      data.offerPrice !== undefined ||
+      data.subtitle !== undefined
+    ) {
+      updateData.subtitle = data.tag || data.description || data.offerPrice || data.subtitle || null;
+    }
+    if (data.buttonLink !== undefined || data.linkUrl !== undefined || data.link !== undefined) {
+      updateData.linkUrl = data.buttonLink || data.linkUrl || data.link;
+    }
+    if (file && file.originalname) {
+      updateData.imageUrl = `/banners/${file.originalname}`;
+    } else if (data.image !== undefined || data.imageUrl !== undefined) {
+      updateData.imageUrl = data.image || data.imageUrl;
+    }
+    if (data.order !== undefined || data.sortOrder !== undefined) {
+      updateData.sortOrder = Number(data.order ?? data.sortOrder);
+    }
+    if (data.isActive !== undefined) {
+      updateData.isActive = Boolean(data.isActive === 'true' || data.isActive === true);
+    }
+
+    const updated = await this.prisma.banner.update({
+      where: { id },
+      data: updateData,
+    });
+
+    return this.formatBanner(updated);
+  }
+
+  async deleteBanner(id: string) {
+    const existing = await this.prisma.banner.findUnique({ where: { id } });
+    if (!existing) {
+      throw new NotFoundException(`Banner ${id} not found`);
+    }
+    await this.prisma.banner.delete({ where: { id } });
+    return { success: true, message: 'Banner deleted successfully', id };
+  }
+
+  async reorderBanners(bannerIds: string[]) {
+    if (Array.isArray(bannerIds)) {
+      for (const [idx, id] of bannerIds.entries()) {
+        await this.prisma.banner.updateMany({
+          where: { id },
+          data: { sortOrder: idx + 1 },
+        });
+      }
+    }
+    return this.getBanners(true);
   }
 
   async getFlashSales() {
