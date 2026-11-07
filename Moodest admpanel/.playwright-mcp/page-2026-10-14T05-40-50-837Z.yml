@@ -1,0 +1,219 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - link "AP Admin Panel" [ref=e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e7]: AP
+            - generic [ref=e9]: Admin Panel
+          - button "Collapse sidebar (Ctrl+B)" [ref=e10]
+        - generic [ref=e11]:
+          - link "Home" [ref=e12] [cursor=pointer]:
+            - /url: /
+          - link "Orders 12" [ref=e18] [cursor=pointer]:
+            - /url: /orders
+            - generic [ref=e19]: Orders
+            - generic [ref=e25]: "12"
+          - button "Products" [ref=e27] [cursor=pointer]
+          - link "Customers" [ref=e36] [cursor=pointer]:
+            - /url: /customers
+          - button "Marketing" [ref=e45] [cursor=pointer]
+          - button "Analytics" [ref=e55] [cursor=pointer]
+          - button "Logs" [ref=e64] [cursor=pointer]
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - generic [ref=e76]: Pro Store
+              - generic [ref=e79]: v1.2 Live
+            - paragraph [ref=e80]: Multi-Channel Sync
+            - paragraph [ref=e83]:
+              - generic [ref=e84]: 8,400 / 10,000 SKUs
+              - generic [ref=e85]: 84%
+          - link "Settings" [ref=e87] [cursor=pointer]:
+            - /url: /settings
+          - generic [ref=e93]:
+            - generic [ref=e94]:
+              - generic [ref=e95]: A
+              - generic [ref=e96]:
+                - paragraph [ref=e97]: Admin
+                - paragraph
+            - button "Logout" [ref=e98]
+    - generic [ref=e99]:
+      - banner [ref=e100]:
+        - generic [ref=e101]:
+          - navigation [ref=e102]:
+            - generic [ref=e103]: Store
+            - generic [ref=e106]: Dashboard
+          - generic [ref=e107]:
+            - button "Toggle theme" [ref=e108]
+            - generic [ref=e117]:
+              - heading "Dashboard" [level=1] [ref=e118]
+              - paragraph [ref=e119]: Overview of your store
+      - main [ref=e120]:
+        - generic [ref=e121]:
+          - generic [ref=e122]:
+            - generic [ref=e123]:
+              - generic [ref=e124]:
+                - generic [ref=e125]: Live Storefront Connected
+                - generic [ref=e127]: •
+                - generic [ref=e128]: Updated just now
+              - heading "Performance Overview" [level=1] [ref=e129]
+              - paragraph [ref=e130]: Key commerce indicators, sales velocity, and catalog health.
+            - generic [ref=e131]:
+              - generic [ref=e132]:
+                - button "7D" [ref=e133]
+                - button "30D" [ref=e134]
+                - button "90D" [ref=e135]
+              - link "Add Product" [ref=e136] [cursor=pointer]:
+                - /url: /products/add-product
+          - generic [ref=e139]:
+            - generic [ref=e140]:
+              - generic [ref=e141]: Total Revenue
+              - generic [ref=e146]:
+                - generic [ref=e147]: ₹ 124,580
+                - generic [ref=e148]:
+                  - generic [ref=e149]: +0.0%
+                  - generic [ref=e153]: vs last month
+            - generic [ref=e154]:
+              - generic [ref=e155]: Total Orders
+              - generic [ref=e162]:
+                - generic [ref=e163]: "342"
+                - generic [ref=e164]:
+                  - generic [ref=e165]: +0.0%
+                  - generic [ref=e169]: vs last month
+            - generic [ref=e170]:
+              - generic [ref=e171]: Average Order
+              - generic [ref=e177]:
+                - generic [ref=e178]: ₹ 364.27
+                - generic [ref=e179]:
+                  - generic [ref=e180]: +0.0%
+                  - generic [ref=e184]: conversion 3.4%
+            - generic [ref=e185]:
+              - generic [ref=e186]: Inventory Health
+              - generic [ref=e193]:
+                - generic [ref=e194]: 8 SKUs
+                - generic [ref=e195]:
+                  - generic [ref=e196]: 1 Low Stock
+                  - generic [ref=e199]: 4 categories
+          - generic [ref=e200]:
+            - generic [ref=e201]:
+              - generic [ref=e202]:
+                - generic [ref=e203]:
+                  - heading "Sales Velocity & Trends" [level=2] [ref=e204]
+                  - paragraph [ref=e205]: Revenue and order momentum over the selected 30D period.
+                - generic [ref=e206]:
+                  - button "Revenue (₹)" [ref=e207]
+                  - button "Orders" [ref=e208]
+              - generic [ref=e209]:
+                - generic [ref=e210]:
+                  - generic: ₹ 84,000
+                  - generic [ref=e213]: W1
+                - generic [ref=e214]:
+                  - generic: ₹ 98,000
+                  - generic [ref=e217]: W2
+                - generic [ref=e218]:
+                  - generic: ₹ 112,000
+                  - generic [ref=e221]: W3
+                - generic [ref=e222]:
+                  - generic: ₹ 124,580
+                  - generic [ref=e225]: W4
+              - generic [ref=e226]:
+                - generic [ref=e227]: Gross Order Volume
+                - link "Detailed Analytics" [ref=e229] [cursor=pointer]:
+                  - /url: /analytics
+            - generic [ref=e232]:
+              - generic [ref=e233]:
+                - heading "Revenue by Category" [level=2] [ref=e234]
+                - paragraph [ref=e235]: Top performing product departments this month.
+                - generic [ref=e236]:
+                  - generic [ref=e238]:
+                    - generic [ref=e239]: Apparel & Outerwear
+                    - generic [ref=e240]:
+                      - text: ₹ 57,306
+                      - generic [ref=e241]: (46%)
+                  - generic [ref=e245]:
+                    - generic [ref=e246]: Footwear & Sneakers
+                    - generic [ref=e247]:
+                      - text: ₹ 34,882
+                      - generic [ref=e248]: (28%)
+                  - generic [ref=e252]:
+                    - generic [ref=e253]: Leather Accessories
+                    - generic [ref=e254]:
+                      - text: ₹ 22,424
+                      - generic [ref=e255]: (18%)
+                  - generic [ref=e259]:
+                    - generic [ref=e260]: Essentials & Other
+                    - generic [ref=e261]:
+                      - text: ₹ 9,966
+                      - generic [ref=e262]: (8%)
+              - generic [ref=e265]:
+                - generic [ref=e266]: 4 Product Categories
+                - link "Manage Catalog →" [ref=e267] [cursor=pointer]:
+                  - /url: /category
+          - generic [ref=e268]:
+            - generic [ref=e269]:
+              - generic [ref=e270]:
+                - generic [ref=e271]:
+                  - generic [ref=e272]:
+                    - heading "Recent Orders" [level=2] [ref=e273]
+                    - paragraph [ref=e274]: Real-time transaction stream from customer checkout.
+                  - link "All Orders" [ref=e275] [cursor=pointer]:
+                    - /url: /orders
+                - table [ref=e279]:
+                  - rowgroup [ref=e280]:
+                    - row [ref=e281]:
+                      - columnheader "Order ID" [ref=e282]
+                      - columnheader "Customer" [ref=e283]
+                      - columnheader "Amount" [ref=e284]
+                      - columnheader "Status" [ref=e285]
+                  - rowgroup [ref=e286]:
+                    - row [ref=e287]:
+                      - cell "#D-9421" [ref=e288]
+                      - cell [ref=e289]:
+                        - paragraph [ref=e290]: Customer
+                        - paragraph [ref=e291]: Customer
+                      - cell "₹ 438.00" [ref=e292]
+                      - cell "DELIVERED" [ref=e293]
+                    - row [ref=e295]:
+                      - cell "#D-9422" [ref=e296]
+                      - cell [ref=e297]:
+                        - paragraph [ref=e298]: Customer
+                        - paragraph [ref=e299]: Customer
+                      - cell "₹ 299.00" [ref=e300]
+                      - cell "SHIPPED" [ref=e301]
+                    - row [ref=e303]:
+                      - cell "#D-9423" [ref=e304]
+                      - cell [ref=e305]:
+                        - paragraph [ref=e306]: Customer
+                        - paragraph [ref=e307]: Customer
+                      - cell "₹ 119.00" [ref=e308]
+                      - cell "PENDING" [ref=e309]
+              - generic [ref=e311]:
+                - generic [ref=e312]: Showing latest 5 orders
+                - generic [ref=e313]: Total 342 processed
+            - generic [ref=e314]:
+              - generic [ref=e315]:
+                - generic [ref=e316]:
+                  - generic [ref=e321]:
+                    - heading "Stock Alerts" [level=3] [ref=e322]
+                    - paragraph [ref=e323]: Variants below safety reorder threshold
+                  - link "Inventory →" [ref=e324] [cursor=pointer]:
+                    - /url: /inventory
+                - generic [ref=e326]:
+                  - generic [ref=e327]:
+                    - paragraph [ref=e328]: Merino Wool Knit Overshirt
+                    - paragraph [ref=e329]: "Brand • SKU: N/A"
+                  - generic [ref=e330]: 4 left
+              - generic [ref=e331]:
+                - heading "Quick Administrative Tasks" [level=3] [ref=e332]
+                - generic [ref=e333]:
+                  - link "Add Product" [ref=e334] [cursor=pointer]:
+                    - /url: /products/add-product
+                  - link "Process Orders" [ref=e341] [cursor=pointer]:
+                    - /url: /orders
+                  - link "New Coupon" [ref=e348] [cursor=pointer]:
+                    - /url: /coupons
+                  - link "Hero Banners" [ref=e354] [cursor=pointer]:
+                    - /url: /banners
+  - region "Notifications alt+T"

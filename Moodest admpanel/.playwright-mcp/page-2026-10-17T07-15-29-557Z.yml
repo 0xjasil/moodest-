@@ -1,0 +1,347 @@
+- generic [ref=f2e1]:
+  - generic [aria-hidden] [ref=f2e2]:
+    - complementary [ref=f2e3]:
+      - generic [ref=f2e4]:
+        - generic [ref=f2e5]:
+          - link [ref=f2e504] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f2e7]: AP
+            - generic [ref=f2e9]: Admin Panel
+          - button [ref=f2e505]
+        - generic [ref=f2e11]:
+          - link [ref=f2e506] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f2e13]: Dashboard
+          - button [ref=f2e507] [cursor=pointer]:
+            - generic [ref=f2e20]: Products
+          - button [ref=f2e508] [cursor=pointer]:
+            - generic [ref=f2e30]: Orders
+            - generic [ref=f2e36]: "12"
+          - generic [ref=f2e40]:
+            - button [expanded] [ref=f2e509] [cursor=pointer]:
+              - generic [ref=f2e42]: Customers
+            - generic [ref=f2e510]:
+              - link [ref=f2e511] [cursor=pointer]:
+                - /url: /customers
+                - generic [ref=f2e512]: All Customers
+              - link [ref=f2e513] [cursor=pointer]:
+                - /url: /customers/overview
+                - generic [ref=f2e514]: Customer Overview
+              - link [ref=f2e515] [cursor=pointer]:
+                - /url: /customers/security
+                - generic [ref=f2e516]: Security
+              - link [ref=f2e517] [cursor=pointer]:
+                - /url: /customers/address-billing
+                - generic [ref=f2e518]: Address & Billing
+              - link [ref=f2e519] [cursor=pointer]:
+                - /url: /customers/notifications
+                - generic [ref=f2e520]: Notifications
+          - button [ref=f2e521] [cursor=pointer]:
+            - generic [ref=f2e54]: Vendors
+          - button [ref=f2e522] [cursor=pointer]:
+            - generic [ref=f2e65]: Marketing
+          - button [ref=f2e523] [cursor=pointer]:
+            - generic [ref=f2e75]: Analytics
+          - button [ref=f2e524] [cursor=pointer]:
+            - generic [ref=f2e84]: Logs
+          - button [ref=f2e525] [cursor=pointer]:
+            - generic [ref=f2e94]: Pages
+        - generic [ref=f2e102]:
+          - button [ref=f2e526] [cursor=pointer]:
+            - generic [ref=f2e106]: Settings
+          - button [ref=f2e527]:
+            - generic [ref=f2e116]: A
+            - generic [ref=f2e117]:
+              - paragraph [ref=f2e118]: Alex Morgan
+              - paragraph [ref=f2e119]: admin@example.com
+    - generic [ref=f2e120]:
+      - banner [ref=f2e121]:
+        - generic [ref=f2e122]:
+          - navigation [ref=f2e123]:
+            - generic [ref=f2e124]: Dashboard
+            - generic [ref=f2e127]: Customers
+          - generic [ref=f2e128]:
+            - button [ref=f2e528]:
+              - generic [ref=f2e130]: Toggle theme
+            - generic [ref=f2e138]:
+              - heading [level=1] [ref=f2e529]: Customers
+              - paragraph [ref=f2e140]: Manage customer information
+      - main [ref=f2e141]:
+        - generic [ref=f2e143]:
+          - navigation [ref=f2e144]:
+            - link [ref=f2e530] [cursor=pointer]:
+              - /url: /
+            - generic [ref=f2e149]: /
+            - generic [ref=f2e150]: Customer
+            - generic [ref=f2e151]: /
+            - generic [ref=f2e152]: All Customers
+          - generic [ref=f2e154]:
+            - generic [ref=f2e156]:
+              - paragraph [ref=f2e157]: 15,678
+              - paragraph [ref=f2e158]: Total Customers
+            - generic [ref=f2e166]:
+              - paragraph [ref=f2e167]: $75
+              - paragraph [ref=f2e168]: Average Order
+            - generic [ref=f2e175]:
+              - paragraph [ref=f2e176]: "560"
+              - paragraph [ref=f2e177]: New Customers
+            - generic [ref=f2e183]:
+              - paragraph [ref=f2e184]: 3,432
+              - paragraph [ref=f2e185]: Active Customers
+          - generic [ref=f2e191]:
+            - generic [ref=f2e192]:
+              - textbox [ref=f2e531]:
+                - /placeholder: Search User...
+              - generic [ref=f2e198]:
+                - combobox [ref=f2e199]:
+                  - generic: "10"
+                - button [ref=f2e532]:
+                  - generic [ref=f2e202]: Export
+                - button [ref=f2e533] [cursor=pointer]:
+                  - generic [ref=f2e204]: Add Customer
+            - table [ref=f2e206]:
+              - rowgroup [ref=f2e207]:
+                - row [ref=f2e534]:
+                  - columnheader [ref=f2e209]:
+                    - checkbox [ref=f2e212]
+                  - columnheader [ref=f2e535]: Customer
+                  - columnheader [ref=f2e536]: Customer ID
+                  - columnheader [ref=f2e537]: Country
+                  - columnheader [ref=f2e538]: Order
+                  - columnheader [ref=f2e539]: Total Spent
+                  - columnheader [ref=f2e540]: Actions
+              - rowgroup [ref=f2e222]:
+                - row [ref=f2e541]:
+                  - cell [ref=f2e224]:
+                    - checkbox [ref=f2e227]
+                  - cell [ref=f2e542]:
+                    - generic [ref=f2e235]:
+                      - link [ref=f2e544] [cursor=pointer]:
+                        - /url: /customers/c-1
+                        - text: Stanfield Baser
+                      - paragraph [ref=f2e237]: sbaser0@boston.com
+                  - cell [ref=f2e545]: "#879861"
+                  - cell [ref=f2e546]: Sri Lanka
+                  - cell [ref=f2e547]: "157"
+                  - cell [ref=f2e548]: $2,074.22
+                  - cell [ref=f2e549]:
+                    - button [ref=f2e550] [cursor=pointer]:
+                      - generic [ref=f2e244]: Actions
+                - row [ref=f2e551]:
+                  - cell [ref=f2e246]:
+                    - checkbox [ref=f2e249]
+                  - cell [ref=f2e552]:
+                    - generic [ref=f2e254]:
+                      - generic [ref=f2e255]: LD
+                      - generic [ref=f2e256]:
+                        - link [ref=f2e553] [cursor=pointer]:
+                          - /url: /customers/c-2
+                          - text: Laurie Dax
+                        - paragraph [ref=f2e258]: ldax1@lycos.com
+                  - cell [ref=f2e554]: "#178408"
+                  - cell [ref=f2e555]: Russia
+                  - cell [ref=f2e556]: "663"
+                  - cell [ref=f2e557]: $2,404.19
+                  - cell [ref=f2e558]:
+                    - button [ref=f2e559] [cursor=pointer]:
+                      - generic [ref=f2e265]: Actions
+                - row [ref=f2e560]:
+                  - cell [ref=f2e267]:
+                    - checkbox [ref=f2e270]
+                  - cell [ref=f2e561]:
+                    - generic [ref=f2e278]:
+                      - link [ref=f2e563] [cursor=pointer]:
+                        - /url: /customers/c-3
+                        - text: Maxine Kenrick
+                      - paragraph [ref=f2e280]: mkenrick2@eepurl.com
+                  - cell [ref=f2e564]: "#221092"
+                  - cell [ref=f2e565]: Guatemala
+                  - cell [ref=f2e566]: "64"
+                  - cell [ref=f2e567]: $8,821.40
+                  - cell [ref=f2e568]:
+                    - button [ref=f2e569] [cursor=pointer]:
+                      - generic [ref=f2e287]: Actions
+                - row [ref=f2e570]:
+                  - cell [ref=f2e289]:
+                    - checkbox [ref=f2e292]
+                  - cell [ref=f2e571]:
+                    - generic [ref=f2e297]:
+                      - generic [ref=f2e298]: HB
+                      - generic [ref=f2e299]:
+                        - link [ref=f2e572] [cursor=pointer]:
+                          - /url: /customers/c-4
+                          - text: Harman Burkill
+                        - paragraph [ref=f2e301]: hburkill3@drupal.org
+                  - cell [ref=f2e573]: "#645579"
+                  - cell [ref=f2e574]: Portugal
+                  - cell [ref=f2e575]: "640"
+                  - cell [ref=f2e576]: $5,294.35
+                  - cell [ref=f2e577]:
+                    - button [ref=f2e578] [cursor=pointer]:
+                      - generic [ref=f2e308]: Actions
+                - row [ref=f2e579]:
+                  - cell [ref=f2e310]:
+                    - checkbox [ref=f2e313]
+                  - cell [ref=f2e580]:
+                    - generic [ref=f2e321]:
+                      - link [ref=f2e582] [cursor=pointer]:
+                        - /url: /customers/c-5
+                        - text: Aubrey Borrow
+                      - paragraph [ref=f2e323]: aborrow4@jiathis.com
+                  - cell [ref=f2e583]: "#288765"
+                  - cell [ref=f2e584]: France
+                  - cell [ref=f2e585]: "184"
+                  - cell [ref=f2e586]: $1,003.30
+                  - cell [ref=f2e587]:
+                    - button [ref=f2e588] [cursor=pointer]:
+                      - generic [ref=f2e330]: Actions
+                - row [ref=f2e589]:
+                  - cell [ref=f2e332]:
+                    - checkbox [ref=f2e335]
+                  - cell [ref=f2e590]:
+                    - generic [ref=f2e340]:
+                      - generic [ref=f2e341]: NF
+                      - generic [ref=f2e342]:
+                        - link [ref=f2e591] [cursor=pointer]:
+                          - /url: /customers/c-6
+                          - text: Nester Fridd
+                        - paragraph [ref=f2e344]: nfridd5@cdbaby.com
+                  - cell [ref=f2e592]: "#321942"
+                  - cell [ref=f2e593]: China
+                  - cell [ref=f2e594]: "965"
+                  - cell [ref=f2e595]: $3,876.92
+                  - cell [ref=f2e596]:
+                    - button [ref=f2e597] [cursor=pointer]:
+                      - generic [ref=f2e351]: Actions
+                - row [ref=f2e598]:
+                  - cell [ref=f2e353]:
+                    - checkbox [ref=f2e356]
+                  - cell [ref=f2e599]:
+                    - generic [ref=f2e364]:
+                      - link [ref=f2e601] [cursor=pointer]:
+                        - /url: /customers/c-7
+                        - text: Lizzie Nicholes
+                      - paragraph [ref=f2e366]: lnicholes6@rediff.com
+                  - cell [ref=f2e602]: "#516109"
+                  - cell [ref=f2e603]: Brazil
+                  - cell [ref=f2e604]: "514"
+                  - cell [ref=f2e605]: $7,936.85
+                  - cell [ref=f2e606]:
+                    - button [ref=f2e607] [cursor=pointer]:
+                      - generic [ref=f2e373]: Actions
+                - row [ref=f2e608]:
+                  - cell [ref=f2e375]:
+                    - checkbox [ref=f2e378]
+                  - cell [ref=f2e609]:
+                    - generic [ref=f2e386]:
+                      - link [ref=f2e611] [cursor=pointer]:
+                        - /url: /customers/c-8
+                        - text: Amabel Scullion
+                      - paragraph [ref=f2e388]: ascullion7@wiley.com
+                  - cell [ref=f2e612]: "#403666"
+                  - cell [ref=f2e613]: Guatemala
+                  - cell [ref=f2e614]: "584"
+                  - cell [ref=f2e615]: $4,150.97
+                  - cell [ref=f2e616]:
+                    - button [ref=f2e617] [cursor=pointer]:
+                      - generic [ref=f2e395]: Actions
+                - row [ref=f2e618]:
+                  - cell [ref=f2e397]:
+                    - checkbox [ref=f2e400]
+                  - cell [ref=f2e619]:
+                    - generic [ref=f2e408]:
+                      - link [ref=f2e621] [cursor=pointer]:
+                        - /url: /customers/c-9
+                        - text: Zeke Arton
+                      - paragraph [ref=f2e410]: zarton8@weibo.com
+                  - cell [ref=f2e622]: "#895280"
+                  - cell [ref=f2e623]: Ukraine
+                  - cell [ref=f2e624]: "539"
+                  - cell [ref=f2e625]: $3,430.05
+                  - cell [ref=f2e626]:
+                    - button [ref=f2e627] [cursor=pointer]:
+                      - generic [ref=f2e417]: Actions
+                - row [ref=f2e628]:
+                  - cell [ref=f2e419]:
+                    - checkbox [ref=f2e422]
+                  - cell [ref=f2e629]:
+                    - generic [ref=f2e427]:
+                      - generic [ref=f2e428]: RM
+                      - generic [ref=f2e429]:
+                        - link [ref=f2e630] [cursor=pointer]:
+                          - /url: /customers/c-10
+                          - text: Rosy Medlicott
+                        - paragraph [ref=f2e431]: rmedlicott9@amazon.com
+                  - cell [ref=f2e631]: "#199195"
+                  - cell [ref=f2e632]: Russia
+                  - cell [ref=f2e633]: "4"
+                  - cell [ref=f2e634]: $8,646.75
+                  - cell [ref=f2e635]:
+                    - button [ref=f2e636] [cursor=pointer]:
+                      - generic [ref=f2e438]: Actions
+            - generic [ref=f2e439]:
+              - paragraph [ref=f2e440]: Showing 1 to 10 of 20 entries
+              - generic [ref=f2e441]:
+                - button [disabled]
+                - button [ref=f2e637]: "1"
+                - button [ref=f2e638]: "2"
+                - button [ref=f2e639]
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f2e450] [cursor=pointer]
+  - alert [ref=f2e640]
+  - dialog [ref=f2e455]:
+    - generic [ref=f2e456]:
+      - generic [ref=f2e457]:
+        - heading "Add New Customer" [level=2] [ref=f2e458]
+        - paragraph [ref=f2e459]: Enter customer profile details and initial shipping address.
+      - generic [ref=f2e460]:
+        - generic [ref=f2e461]:
+          - heading "Basic Information" [level=3] [ref=f2e462]
+          - generic [ref=f2e463]:
+            - generic [ref=f2e464]:
+              - text: Name
+              - generic [ref=f2e465]: "*"
+            - textbox "Name *" [ref=f2e466]:
+              - /placeholder: John Doe
+          - generic [ref=f2e467]:
+            - generic [ref=f2e468]:
+              - text: Email
+              - generic [ref=f2e469]: "*"
+            - textbox "Email *" [ref=f2e470]:
+              - /placeholder: john.doe@example.com
+          - generic [ref=f2e471]:
+            - generic [ref=f2e472]: Mobile
+            - textbox "Mobile" [ref=f2e473]:
+              - /placeholder: +(123) 456-7890
+        - generic [ref=f2e474]:
+          - heading "Shipping Information" [level=3] [ref=f2e475]
+          - generic [ref=f2e476]:
+            - generic [ref=f2e477]: Address Line 1
+            - textbox "Address Line 1" [ref=f2e478]:
+              - /placeholder: 45 Roker Terrace
+          - generic [ref=f2e479]:
+            - generic [ref=f2e480]: Address Line 2
+            - textbox "Address Line 2" [ref=f2e481]:
+              - /placeholder: Apartment, studio, or floor
+          - generic [ref=f2e482]:
+            - generic [ref=f2e483]:
+              - generic [ref=f2e484]: Town / City
+              - textbox "Town / City" [ref=f2e485]:
+                - /placeholder: New York
+            - generic [ref=f2e486]:
+              - generic [ref=f2e487]: State / Province
+              - textbox "State / Province" [ref=f2e488]:
+                - /placeholder: NY
+          - generic [ref=f2e489]:
+            - generic [ref=f2e490]:
+              - generic [ref=f2e491]: Country
+              - textbox "Country" [ref=f2e492]:
+                - /placeholder: United States
+            - generic [ref=f2e493]:
+              - generic [ref=f2e494]: Postcode
+              - textbox "Postcode" [ref=f2e495]:
+                - /placeholder: "10001"
+    - generic [ref=f2e496]:
+      - button "Discard" [active] [ref=f2e497]
+      - button "Add Customer" [ref=f2e498]
+    - button "Close" [ref=f2e499]

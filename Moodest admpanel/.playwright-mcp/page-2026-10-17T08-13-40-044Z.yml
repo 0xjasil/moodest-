@@ -1,0 +1,341 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - button "Menu" [ref=e6] [cursor=pointer]
+          - link "CommerceO" [ref=e8] [cursor=pointer]:
+            - /url: /
+        - generic [ref=e19]:
+          - button [ref=e20] [cursor=pointer]
+          - generic [ref=e21]:
+            - heading "Command Palette" [level=2] [ref=e22]
+            - paragraph [ref=e23]: Search for a command to run...
+          - button [ref=e24] [cursor=pointer]
+          - button [ref=e25] [cursor=pointer]
+          - button [ref=e26] [cursor=pointer]
+          - button [ref=e27] [cursor=pointer]
+          - button "JD" [ref=e28] [cursor=pointer]
+    - main [ref=e31]:
+      - generic [ref=e32]:
+        - navigation "breadcrumb" [ref=e34]:
+          - list [ref=e35]:
+            - listitem [ref=e36]:
+              - link [ref=e37] [cursor=pointer]:
+                - /url: /
+            - generic [ref=e40]:
+              - listitem [aria-hidden] [ref=e41]: /
+              - listitem [ref=e42]:
+                - link "Vendor" [ref=e43] [cursor=pointer]:
+                  - /url: /vendor/list
+            - generic [ref=e44]:
+              - listitem [aria-hidden] [ref=e45]: /
+              - listitem [ref=e46]:
+                - link "Vendor List" [disabled] [ref=e47]
+        - generic [ref=e48]:
+          - generic [ref=e54]:
+            - paragraph [ref=e55]: eCommerce Dashboard
+            - paragraph [ref=e56]: Earning reports
+          - generic [ref=e57]:
+            - generic [ref=e58]:
+              - paragraph [ref=e59]: $23k
+              - paragraph [ref=e60]: Sales
+            - generic [ref=e61]:
+              - paragraph [ref=e62]: 8.51k
+              - paragraph [ref=e63]: Customers
+            - generic [ref=e64]:
+              - paragraph [ref=e65]: 2.5k
+              - paragraph [ref=e66]: Products
+            - generic [ref=e67]:
+              - paragraph [ref=e68]: 1.2k
+              - paragraph [ref=e69]: Revenue
+        - generic [ref=e72]:
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - generic [ref=e78]:
+                - heading "250" [level=4] [ref=e79]
+                - paragraph [ref=e80]: Total Vendors
+              - separator [ref=e84]
+              - generic [ref=e86]:
+                - heading "$75" [level=4] [ref=e87]
+                - paragraph [ref=e88]: Average Revenue
+            - separator [ref=e92]
+            - generic [ref=e93]:
+              - generic [ref=e95]:
+                - heading "45" [level=4] [ref=e96]
+                - paragraph [ref=e97]: On Delivery
+              - separator [ref=e101]
+              - generic [ref=e103]:
+                - heading "89%" [level=4] [ref=e104]
+                - paragraph [ref=e105]: Vendor Satisfaction
+          - generic [ref=e109]:
+            - generic [ref=e110]:
+              - heading "All Vendors" [level=5] [ref=e111]
+              - generic [ref=e112]:
+                - generic [ref=e113]:
+                  - generic [ref=e114] [cursor=pointer]: Search
+                  - group [ref=e115]:
+                    - group [ref=e116]
+                    - textbox "Search" [ref=e119]:
+                      - /placeholder: Search Vendors
+                - generic [ref=e120]:
+                  - combobox [ref=e121] [cursor=pointer]:
+                    - generic [ref=e122]: "10"
+                  - textbox [aria-hidden] [ref=e123]: "10"
+                  - button "Export" [ref=e124] [cursor=pointer]
+                  - link "Add Vendor" [ref=e126] [cursor=pointer]:
+                    - /url: /vendor/create
+            - table [ref=e130]:
+              - rowgroup [ref=e131]:
+                - row [ref=e132]:
+                  - columnheader [ref=e133]:
+                    - checkbox "Select all" [ref=e134] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=e135]
+                  - columnheader "Vendor" [ref=e136]
+                  - columnheader "Contact" [ref=e138]
+                  - columnheader "Location" [ref=e140]
+                  - columnheader "Products" [ref=e142]
+                  - columnheader "Rating" [ref=e144]
+                  - columnheader "Status" [ref=e146]
+                  - columnheader "Actions" [ref=e148]
+              - rowgroup [ref=e149]:
+                - row [ref=e150]:
+                  - cell [ref=e151]:
+                    - checkbox "Select row" [ref=e152] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=e153]
+                  - cell "T TechMart Electronics Electronics" [ref=e154]:
+                    - generic [ref=e155]:
+                      - generic [ref=e156]: T
+                      - generic [ref=e158]:
+                        - generic [ref=e159]: TechMart Electronics
+                        - generic [ref=e160]: Electronics
+                  - cell "contact@techmart.com +1 (555) 123-4567" [ref=e161]:
+                    - generic [ref=e162]:
+                      - generic [ref=e163]: contact@techmart.com
+                      - generic [ref=e164]: +1 (555) 123-4567
+                  - cell "New York, USA" [ref=e165]
+                  - cell "245" [ref=e166]
+                  - cell "4.8" [ref=e167]
+                  - cell "Active" [ref=e180]
+                  - cell [ref=e182]:
+                    - button "Row actions" [ref=e183] [cursor=pointer]
+                - row [ref=e184]:
+                  - cell [ref=e185]:
+                    - checkbox "Select row" [ref=e186] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=e187]
+                  - cell "Fashion Hub Fashion Hub Fashion & Apparel" [ref=e188]:
+                    - generic [ref=e189]:
+                      - img "Fashion Hub" [ref=e191]
+                      - generic [ref=e192]:
+                        - generic [ref=e193]: Fashion Hub
+                        - generic [ref=e194]: Fashion & Apparel
+                  - cell "info@fashionhub.com +1 (555) 234-5678" [ref=e195]:
+                    - generic [ref=e196]:
+                      - generic [ref=e197]: info@fashionhub.com
+                      - generic [ref=e198]: +1 (555) 234-5678
+                  - cell "Los Angeles, USA" [ref=e199]
+                  - cell "189" [ref=e200]
+                  - cell "2.5" [ref=e201]
+                  - cell "Active" [ref=e214]
+                  - cell [ref=e216]:
+                    - button "Row actions" [ref=e217] [cursor=pointer]
+                - row [ref=e218]:
+                  - cell [ref=e219]:
+                    - checkbox "Select row" [ref=e220] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=e221]
+                  - cell "H Home & Garden Plus Home & Garden" [ref=e222]:
+                    - generic [ref=e223]:
+                      - generic [ref=e224]: H
+                      - generic [ref=e226]:
+                        - generic [ref=e227]: Home & Garden Plus
+                        - generic [ref=e228]: Home & Garden
+                  - cell "sales@homegardenplus.com +1 (555) 345-6789" [ref=e229]:
+                    - generic [ref=e230]:
+                      - generic [ref=e231]: sales@homegardenplus.com
+                      - generic [ref=e232]: +1 (555) 345-6789
+                  - cell "Chicago, USA" [ref=e233]
+                  - cell "156" [ref=e234]
+                  - cell "4.7" [ref=e235]
+                  - cell "Active" [ref=e248]
+                  - cell [ref=e250]:
+                    - button "Row actions" [ref=e251] [cursor=pointer]
+                - row [ref=e252]:
+                  - cell [ref=e253]:
+                    - checkbox "Select row" [ref=e254] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=e255]
+                  - cell "Sports World Sports World Sports & Fitness" [ref=e256]:
+                    - generic [ref=e257]:
+                      - img "Sports World" [ref=e259]
+                      - generic [ref=e260]:
+                        - generic [ref=e261]: Sports World
+                        - generic [ref=e262]: Sports & Fitness
+                  - cell "contact@sportsworld.com +1 (555) 456-7890" [ref=e263]:
+                    - generic [ref=e264]:
+                      - generic [ref=e265]: contact@sportsworld.com
+                      - generic [ref=e266]: +1 (555) 456-7890
+                  - cell "Miami, USA" [ref=e267]
+                  - cell "98" [ref=e268]
+                  - cell "4.3" [ref=e269]
+                  - cell "Pending" [ref=e282]
+                  - cell [ref=e284]:
+                    - button "Row actions" [ref=e285] [cursor=pointer]
+                - row [ref=e286]:
+                  - cell [ref=e287]:
+                    - checkbox "Select row" [ref=e288] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=e289]
+                  - cell "B BookStore Central Books & Media" [ref=e290]:
+                    - generic [ref=e291]:
+                      - generic [ref=e292]: B
+                      - generic [ref=e294]:
+                        - generic [ref=e295]: BookStore Central
+                        - generic [ref=e296]: Books & Media
+                  - cell "orders@bookstorecentral.com +1 (555) 567-8901" [ref=e297]:
+                    - generic [ref=e298]:
+                      - generic [ref=e299]: orders@bookstorecentral.com
+                      - generic [ref=e300]: +1 (555) 567-8901
+                  - cell "Boston, USA" [ref=e301]
+                  - cell "312" [ref=e302]
+                  - cell "4.9" [ref=e303]
+                  - cell "Active" [ref=e316]
+                  - cell [ref=e318]:
+                    - button "Row actions" [ref=e319] [cursor=pointer]
+                - row [ref=e320]:
+                  - cell [ref=e321]:
+                    - checkbox "Select row" [ref=e322] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=e323]
+                  - cell "B Beauty Corner Beauty & Cosmetics" [ref=e324]:
+                    - generic [ref=e325]:
+                      - generic [ref=e326]: B
+                      - generic [ref=e328]:
+                        - generic [ref=e329]: Beauty Corner
+                        - generic [ref=e330]: Beauty & Cosmetics
+                  - cell "info@beautycorner.com +1 (555) 678-9012" [ref=e331]:
+                    - generic [ref=e332]:
+                      - generic [ref=e333]: info@beautycorner.com
+                      - generic [ref=e334]: +1 (555) 678-9012
+                  - cell "San Francisco, USA" [ref=e335]
+                  - cell "87" [ref=e336]
+                  - cell "4.5" [ref=e337]
+                  - cell "Active" [ref=e350]
+                  - cell [ref=e352]:
+                    - button "Row actions" [ref=e353] [cursor=pointer]
+                - row [ref=e354]:
+                  - cell [ref=e355]:
+                    - checkbox "Select row" [ref=e356] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=e357]
+                  - cell "A Auto Parts Direct Automotive" [ref=e358]:
+                    - generic [ref=e359]:
+                      - generic [ref=e360]: A
+                      - generic [ref=e362]:
+                        - generic [ref=e363]: Auto Parts Direct
+                        - generic [ref=e364]: Automotive
+                  - cell "sales@autopartsdirect.com +1 (555) 789-0123" [ref=e365]:
+                    - generic [ref=e366]:
+                      - generic [ref=e367]: sales@autopartsdirect.com
+                      - generic [ref=e368]: +1 (555) 789-0123
+                  - cell "Detroit, USA" [ref=e369]
+                  - cell "423" [ref=e370]
+                  - cell "4.2" [ref=e371]
+                  - cell "Inactive" [ref=e384]
+                  - cell [ref=e386]:
+                    - button "Row actions" [ref=e387] [cursor=pointer]
+                - row [ref=e388]:
+                  - cell [ref=e389]:
+                    - checkbox "Select row" [ref=e390] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=e391]
+                  - cell "Toy Kingdom Toy Kingdom Toys & Games" [ref=e392]:
+                    - generic [ref=e393]:
+                      - img "Toy Kingdom" [ref=e395]
+                      - generic [ref=e396]:
+                        - generic [ref=e397]: Toy Kingdom
+                        - generic [ref=e398]: Toys & Games
+                  - cell "contact@toykingdom.com +1 (555) 890-1234" [ref=e399]:
+                    - generic [ref=e400]:
+                      - generic [ref=e401]: contact@toykingdom.com
+                      - generic [ref=e402]: +1 (555) 890-1234
+                  - cell "Orlando, USA" [ref=e403]
+                  - cell "167" [ref=e404]
+                  - cell "4.8" [ref=e405]
+                  - cell "Active" [ref=e418]
+                  - cell [ref=e420]:
+                    - button "Row actions" [ref=e421] [cursor=pointer]
+                - row [ref=e422]:
+                  - cell [ref=e423]:
+                    - checkbox "Select row" [ref=e424] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=e425]
+                  - cell "K Kitchen Essentials Kitchen & Dining" [ref=e426]:
+                    - generic [ref=e427]:
+                      - generic [ref=e428]: K
+                      - generic [ref=e430]:
+                        - generic [ref=e431]: Kitchen Essentials
+                        - generic [ref=e432]: Kitchen & Dining
+                  - cell "orders@kitchenessentials.com +1 (555) 901-2345" [ref=e433]:
+                    - generic [ref=e434]:
+                      - generic [ref=e435]: orders@kitchenessentials.com
+                      - generic [ref=e436]: +1 (555) 901-2345
+                  - cell "Seattle, USA" [ref=e437]
+                  - cell "134" [ref=e438]
+                  - cell "4.4" [ref=e439]
+                  - cell "Active" [ref=e452]
+                  - cell [ref=e454]:
+                    - button "Row actions" [ref=e455] [cursor=pointer]
+                - row [ref=e456]:
+                  - cell [ref=e457]:
+                    - checkbox "Select row" [ref=e458] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=e459]
+                  - cell "P Pet Paradise Pet Supplies" [ref=e460]:
+                    - generic [ref=e461]:
+                      - generic [ref=e462]: P
+                      - generic [ref=e464]:
+                        - generic [ref=e465]: Pet Paradise
+                        - generic [ref=e466]: Pet Supplies
+                  - cell "info@petparadise.com +1 (555) 012-3456" [ref=e467]:
+                    - generic [ref=e468]:
+                      - generic [ref=e469]: info@petparadise.com
+                      - generic [ref=e470]: +1 (555) 012-3456
+                  - cell "Denver, USA" [ref=e471]
+                  - cell "89" [ref=e472]
+                  - cell "4.6" [ref=e473]
+                  - cell "Suspended" [ref=e486]
+                  - cell [ref=e488]:
+                    - button "Row actions" [ref=e489] [cursor=pointer]
+            - generic [ref=e490]:
+              - paragraph [ref=e491]: Showing 1 to 10 of 20 entries
+              - navigation "pagination" [ref=e492]:
+                - list [ref=e493]:
+                  - listitem [ref=e494]:
+                    - button "‹" [disabled]
+                  - listitem [ref=e495]:
+                    - button "1" [ref=e496] [cursor=pointer]
+                  - listitem [ref=e497]:
+                    - button "2" [ref=e498] [cursor=pointer]
+                  - listitem [ref=e499]:
+                    - button "›" [ref=e500] [cursor=pointer]
+    - contentinfo [ref=e501]:
+      - generic [ref=e502]:
+        - paragraph [ref=e503]:
+          - text: ©2026
+          - link "shadcn/studio" [ref=e504] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=e505]:
+          - link "All Products" [ref=e506] [cursor=pointer]:
+            - /url: "#"
+          - link "Countries" [ref=e507] [cursor=pointer]:
+            - /url: "#"
+          - link "License" [ref=e508] [cursor=pointer]:
+            - /url: "#"
+          - link "FAQ" [ref=e509] [cursor=pointer]:
+            - /url: "#"
+          - link "Support" [ref=e510] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=e511]:
+          - link [ref=e512] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=e515] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=e519] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=e523] [cursor=pointer]:
+            - /url: "#"
+  - button "Buy Now" [ref=e526] [cursor=pointer]
+  - alert [ref=e527]

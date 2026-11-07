@@ -1,0 +1,180 @@
+- generic [active] [ref=f10e1]:
+  - generic [ref=f10e2]:
+    - complementary [ref=f10e3]:
+      - generic [ref=f10e4]:
+        - generic [ref=f10e5]:
+          - link "AP Admin Panel" [ref=f10e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f10e7]: AP
+            - generic [ref=f10e9]: Admin Panel
+          - button "Collapse sidebar (Ctrl+B)" [ref=f10e10]
+        - generic [ref=f10e11]:
+          - link "Dashboard" [ref=f10e12] [cursor=pointer]:
+            - /url: /
+          - button "Products" [ref=f10e19] [cursor=pointer]
+          - button "Orders 12" [ref=f10e29] [cursor=pointer]:
+            - generic [ref=f10e30]: Orders
+            - generic [ref=f10e36]: "12"
+          - button "Customers" [ref=f10e41] [cursor=pointer]
+          - button "Vendors" [ref=f10e53] [cursor=pointer]
+          - button "Marketing" [ref=f10e64] [cursor=pointer]
+          - button "Analytics" [ref=f10e74] [cursor=pointer]
+          - button "Logs" [ref=f10e83] [cursor=pointer]
+          - button "Pages" [ref=f10e93] [cursor=pointer]
+        - generic [ref=f10e102]:
+          - button "Settings" [ref=f10e105] [cursor=pointer]
+          - button "A Admin @philOhme" [ref=f10e115]:
+            - generic [ref=f10e116]: A
+            - generic [ref=f10e117]:
+              - paragraph [ref=f10e118]: Admin
+              - paragraph [ref=f10e119]: "@philOhme"
+    - generic [ref=f10e120]:
+      - banner [ref=f10e121]:
+        - generic [ref=f10e122]:
+          - navigation [ref=f10e123]:
+            - generic [ref=f10e124]: Dashboard
+            - generic [ref=f10e127]: Dashboard
+          - generic [ref=f10e128]:
+            - button "Toggle theme" [ref=f10e129]
+            - generic [ref=f10e138]:
+              - heading "Dashboard" [level=1] [ref=f10e139]
+              - paragraph [ref=f10e140]: Overview of your store
+      - main [ref=f10e141]:
+        - generic [ref=f10e142]:
+          - navigation [ref=f10e143]:
+            - link "Home" [ref=f10e144] [cursor=pointer]:
+              - /url: /
+            - generic [ref=f10e148]: /
+            - link "Customer" [ref=f10e149] [cursor=pointer]:
+              - /url: /customers
+            - generic [ref=f10e150]: /
+            - generic [ref=f10e151]: Security
+          - generic [ref=f10e152]:
+            - generic [ref=f10e153]:
+              - 'heading "Customer ID #634759" [level=1] [ref=f10e154]'
+              - paragraph [ref=f10e155]: Aug 17, 2020, 5:48 (ET)
+            - button "Delete Customer" [ref=f10e156] [cursor=pointer]
+          - generic [ref=f10e157]:
+            - link "Overview" [ref=f10e158] [cursor=pointer]:
+              - /url: /customers/overview
+            - link "Security" [ref=f10e163] [cursor=pointer]:
+              - /url: /customers/security
+            - link "Address & Billing" [ref=f10e167] [cursor=pointer]:
+              - /url: /customers/address-billing
+            - link "Notifications" [ref=f10e172] [cursor=pointer]:
+              - /url: /customers/notifications
+          - generic [ref=f10e177]:
+            - generic [ref=f10e178]:
+              - generic [ref=f10e179]:
+                - generic [ref=f10e180]:
+                  - img "Lorine Hischke" [ref=f10e182]
+                  - heading "Lorine Hischke" [level=2] [ref=f10e183]
+                  - paragraph [ref=f10e184]: "Customer ID #634759"
+                - generic [ref=f10e185]:
+                  - generic [ref=f10e192]:
+                    - paragraph [ref=f10e193]: "184"
+                    - paragraph [ref=f10e194]: Orders
+                  - generic [ref=f10e199]:
+                    - paragraph [ref=f10e200]: $12,378
+                    - paragraph [ref=f10e201]: Spent
+                - generic [ref=f10e202]:
+                  - heading "Details" [level=3] [ref=f10e203]
+                  - generic [ref=f10e204]:
+                    - generic [ref=f10e205]:
+                      - generic [ref=f10e206]: "Username:"
+                      - generic [ref=f10e207]: lorine.hischke
+                    - generic [ref=f10e208]:
+                      - generic [ref=f10e209]: "Email:"
+                      - generic [ref=f10e210]: vafgot@vultukir.org
+                    - generic [ref=f10e211]:
+                      - generic [ref=f10e212]: "Status:"
+                      - generic [ref=f10e213]: Active
+                    - generic [ref=f10e214]:
+                      - generic [ref=f10e215]: "Contact:"
+                      - generic [ref=f10e216]: (123) 456-7890
+                    - generic [ref=f10e217]:
+                      - generic [ref=f10e218]: "Country:"
+                      - generic [ref=f10e219]: USA
+                - button "Edit Details" [ref=f10e220] [cursor=pointer]
+              - generic [ref=f10e222]:
+                - generic [ref=f10e224]:
+                  - heading "Upgrade to premium" [level=3] [ref=f10e225]
+                  - paragraph [ref=f10e226]: Upgrade customer to premium membership to access pro features.
+                - button "Select Plan" [ref=f10e233] [cursor=pointer]
+            - generic [ref=f10e235]:
+              - generic [ref=f10e236]:
+                - heading "Change Password" [level=2] [ref=f10e238]
+                - generic [ref=f10e239]:
+                  - generic [ref=f10e243]:
+                    - paragraph [ref=f10e244]: Ensure that these requirements are met
+                    - paragraph [ref=f10e245]: Minimum 8 characters long, uppercase & symbol
+                  - button "Dismiss alert" [ref=f10e246] [cursor=pointer]
+                - generic [ref=f10e250]:
+                  - generic [ref=f10e251]:
+                    - generic [ref=f10e252]:
+                      - generic [ref=f10e253]: New Password
+                      - generic [ref=f10e254]:
+                        - textbox "New Password" [ref=f10e255]:
+                          - /placeholder: ············
+                        - button [ref=f10e256]
+                    - generic [ref=f10e260]:
+                      - generic [ref=f10e261]: Confirm New Password
+                      - generic [ref=f10e262]:
+                        - textbox "Confirm New Password" [ref=f10e263]:
+                          - /placeholder: ············
+                        - button [ref=f10e264]
+                  - button "Change Password" [ref=f10e268] [cursor=pointer]
+              - generic [ref=f10e269]:
+                - generic [ref=f10e270]:
+                  - heading "Two-steps verification" [level=2] [ref=f10e271]
+                  - paragraph [ref=f10e272]: Keep your account secure with authentication step.
+                - generic [ref=f10e273]:
+                  - heading "SMS" [level=3] [ref=f10e274]
+                  - generic [ref=f10e275]:
+                    - textbox [ref=f10e276]: +1 (609) 972-22-22
+                    - button "Edit Phone Number" [ref=f10e277] [cursor=pointer]
+                    - button "Remove Phone Number" [ref=f10e278] [cursor=pointer]
+                  - paragraph [ref=f10e279]:
+                    - text: Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in.
+                    - button "Learn more." [ref=f10e280] [cursor=pointer]
+              - generic [ref=f10e281]:
+                - heading "Recent Devices" [level=2] [ref=f10e283]
+                - table [ref=f10e285]:
+                  - rowgroup [ref=f10e286]:
+                    - row [ref=f10e287]:
+                      - columnheader "Browser" [ref=f10e288]
+                      - columnheader "Device" [ref=f10e289]
+                      - columnheader "Location" [ref=f10e290]
+                      - columnheader "Recent Activity" [ref=f10e291]
+                  - rowgroup [ref=f10e292]:
+                    - row [ref=f10e293]:
+                      - cell "Chrome on Windows" [ref=f10e294]
+                      - cell "HP Spectre 360" [ref=f10e299]
+                      - cell "Switzerland" [ref=f10e300]
+                      - cell "10, July 2021 20:07" [ref=f10e301]
+                    - row [ref=f10e302]:
+                      - cell "Chrome on iPhone" [ref=f10e303]
+                      - cell "iPhone 12x" [ref=f10e308]
+                      - cell "Australia" [ref=f10e309]
+                      - cell "13, July 2021 10:10" [ref=f10e310]
+                    - row [ref=f10e311]:
+                      - cell "Chrome on Android" [ref=f10e312]
+                      - cell "Oneplus 9 Pro" [ref=f10e317]
+                      - cell "Dubai" [ref=f10e318]
+                      - cell "14, July 2021 15:15" [ref=f10e319]
+                    - row [ref=f10e320]:
+                      - cell "Chrome on MacOS" [ref=f10e321]
+                      - cell "Apple iMac" [ref=f10e326]
+                      - cell "India" [ref=f10e327]
+                      - cell "16, July 2021 16:17" [ref=f10e328]
+                    - row [ref=f10e329]:
+                      - cell "Firefox on Windows" [ref=f10e330]
+                      - cell "Lenovo ThinkPad" [ref=f10e336]
+                      - cell "United States" [ref=f10e337]
+                      - cell "18, July 2021 19:42" [ref=f10e338]
+                    - row [ref=f10e339]:
+                      - cell "Safari on iPadOS" [ref=f10e340]
+                      - cell "iPad Pro 11" [ref=f10e345]
+                      - cell "Canada" [ref=f10e346]
+                      - cell "20, July 2021 11:25" [ref=f10e347]
+  - region "Notifications alt+T"

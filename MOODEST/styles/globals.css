@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Utilities ──────────────────────────────────────────────── */
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+
+/* ── PREMIUM ABAYA E-COMMERCE BRAND THEME ── */
+:root {
+  /* 60% — DOMINANT WARM IVORY */
+  --color-bg:               #F5EDE6;
+  --color-surface:          #FBF7F3;
+  --color-surface-strong:   #EAD9D2;
+
+  /* 30% — VISIBLE DUSTY ROSE */
+  --color-secondary:        #D29A90;
+  --color-secondary-light:  #E8C3BA;
+  --color-secondary-dark:   #A96F68;
+
+  /* 10% — DEEP BURGUNDY */
+  --color-primary:          #5C1A24;
+  --color-primary-hover:    #42121B;
+  --color-accent:           #8D414A;
+  --color-accent-deep:      #2D1A1F;
+
+  /* Luxury details */
+  --color-gold:             #C6A477;
+  --color-gold-deep:        #967347;
+
+  /* Typography */
+  --color-text-main:        #2D1A1F;
+  --color-text-body:        #514044;
+  --color-text-muted:       #806D6D;
+  --color-text-placeholder: #9B8581;
+  --color-button-text:      #FFFFFF;
+
+  /* Borders */
+  --color-border:           #DCC1B9;
+  --color-border-lite:      #EBDDD7;
+
+  /* Functional */
+  --color-success:          #55765A;
+  --color-error:            #A83A45;
+
+  /* Compatibility aliases */
+  --white:                  #FFFFFF;
+  --surface:                var(--color-surface);
+  --text:                   var(--color-text-main);
+  --muted:                  var(--color-text-muted);
+  --accent:                 var(--color-accent);
+  --primary:                var(--color-primary);
+  --border:                 var(--color-border);
+  --border-lite:            var(--color-border-lite);
+  --dim:                    var(--color-text-muted);
+
+  --blue-bg:                var(--color-surface-strong);
+  --pink-bg:                var(--color-secondary-light);
+  --green-rate:             var(--color-success);
+  --sale-bg:                var(--color-primary);
+
+  /* Shadows */
+  --shadow-card:
+    0 3px 16px rgba(92, 26, 36, 0.08);
+  --shadow-dropdown:
+    0 5px 22px rgba(45, 26, 31, 0.15);
+
+  /* Typography */
+  --font-serif:
+    "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-sans:
+    "Jost", system-ui, -apple-system, sans-serif;
+  --font: var(--font-sans);
+
+  /* ══ Motion ═════════════════════════════════════════════════ */
+  --ease:                   0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+}
+
+/* ── Reset & Global Typography ──────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  background-color: var(--color-bg);
+  color: var(--color-text-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  color: var(--color-text-main);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: var(--font-sans); cursor: pointer; border: none; background: none; padding: 0; }
+img { max-width: 100%; display: block; }
+a, button, [role="button"] { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+/* ── Custom Component Utilities ─────────────────────────────── */
+.luxury-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+  border-radius: 12px;
+}
+
+.luxury-btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-button-text);
+  font-weight: 600;
+  border-radius: 10px;
+  transition: background-color var(--ease), transform var(--ease);
+}
+.luxury-btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.luxury-btn-secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all var(--ease);
+}
+.luxury-btn-secondary:hover {
+  background-color: var(--color-surface);
+}
+
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+}
+
+.rose-gold-gradient {
+  background: linear-gradient(135deg, #E6C7B8, #D4A5A8, #B76B7A);
+}
+
+/* ── SR-only ────────────────────────────────────────────────── */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0;
+  margin: -1px; overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border-width: 0;
+}
+.sr-only:focus-visible {
+  position: static; width: auto; height: auto;
+  padding: 4px 8px; margin: 0; overflow: visible;
+  clip: auto; white-space: normal;
+}
+
+/* ── Line clamp ─────────────────────────────────────────────── */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Reduced motion ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

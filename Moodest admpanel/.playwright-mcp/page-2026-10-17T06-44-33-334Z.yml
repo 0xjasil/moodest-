@@ -1,0 +1,251 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - complementary [ref=f2e3]:
+      - generic [ref=f2e4]:
+        - generic [ref=f2e5]:
+          - link "AP Admin Panel" [ref=f2e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f2e7]: AP
+            - generic [ref=f2e9]: Admin Panel
+          - button "Collapse sidebar (Ctrl+B)" [ref=f2e10]
+        - generic [ref=f2e11]:
+          - link "Dashboard" [ref=f2e12] [cursor=pointer]:
+            - /url: /
+          - button "Products" [ref=f2e19] [cursor=pointer]
+          - button "Orders 12" [ref=f2e29] [cursor=pointer]:
+            - generic [ref=f2e30]: Orders
+            - generic [ref=f2e36]: "12"
+          - button "Customers" [ref=f2e41] [cursor=pointer]
+          - button "Vendors" [ref=f2e53] [cursor=pointer]
+          - button "Marketing" [ref=f2e64] [cursor=pointer]
+          - button "Analytics" [ref=f2e74] [cursor=pointer]
+          - button "Logs" [ref=f2e83] [cursor=pointer]
+          - button "Pages" [ref=f2e93] [cursor=pointer]
+        - generic [ref=f2e102]:
+          - button "Settings" [ref=f2e105] [cursor=pointer]
+          - button "A Admin @philOhme" [ref=f2e115]:
+            - generic [ref=f2e116]: A
+            - generic [ref=f2e117]:
+              - paragraph [ref=f2e118]: Admin
+              - paragraph [ref=f2e119]: "@philOhme"
+    - generic [ref=f2e120]:
+      - banner [ref=f2e121]:
+        - generic [ref=f2e122]:
+          - navigation [ref=f2e123]:
+            - generic [ref=f2e124]: Dashboard
+            - generic [ref=f2e127]: Customers
+          - generic [ref=f2e128]:
+            - button "Toggle theme" [ref=f2e129]
+            - generic [ref=f2e138]:
+              - heading "Customers" [level=1] [ref=f2e139]
+              - paragraph [ref=f2e140]: Manage customer information
+      - main [ref=f2e141]:
+        - generic [ref=f2e143]:
+          - navigation [ref=f2e144]:
+            - link "Home" [ref=f2e145] [cursor=pointer]:
+              - /url: /
+            - generic [ref=f2e149]: /
+            - generic [ref=f2e150]: Customer
+            - generic [ref=f2e151]: /
+            - generic [ref=f2e152]: All Customers
+          - generic [ref=f2e154]:
+            - generic [ref=f2e156]:
+              - paragraph [ref=f2e157]: 15,678
+              - paragraph [ref=f2e158]: Total Customers
+            - generic [ref=f2e166]:
+              - paragraph [ref=f2e167]: $75
+              - paragraph [ref=f2e168]: Average Order
+            - generic [ref=f2e175]:
+              - paragraph [ref=f2e176]: "560"
+              - paragraph [ref=f2e177]: New Customers
+            - generic [ref=f2e183]:
+              - paragraph [ref=f2e184]: 3,432
+              - paragraph [ref=f2e185]: Active Customers
+          - generic [ref=f2e191]:
+            - generic [ref=f2e192]:
+              - textbox "Search User..." [ref=f2e197]
+              - generic [ref=f2e198]:
+                - combobox [ref=f2e199]
+                - combobox [aria-hidden] [ref=f2e200]
+                - button "Export" [ref=f2e201]
+                - button "Add Customer" [ref=f2e203] [cursor=pointer]
+            - table [ref=f2e206]:
+              - rowgroup [ref=f2e207]:
+                - row [ref=f2e208]:
+                  - columnheader [ref=f2e209]:
+                    - checkbox [ref=f2e212]
+                  - columnheader "Customer" [ref=f2e216]
+                  - columnheader "Customer ID" [ref=f2e217]
+                  - columnheader "Country" [ref=f2e218]
+                  - columnheader "Order" [ref=f2e219]
+                  - columnheader "Total Spent" [ref=f2e220]
+                  - columnheader "Actions" [ref=f2e221]
+              - rowgroup [ref=f2e222]:
+                - row [ref=f2e223]:
+                  - cell [ref=f2e224]:
+                    - checkbox [ref=f2e227]
+                  - cell [ref=f2e231]:
+                    - generic [ref=f2e232]:
+                      - img "Stanfield Baser" [ref=f2e234]
+                      - generic [ref=f2e235]:
+                        - link "Stanfield Baser" [ref=f2e236] [cursor=pointer]:
+                          - /url: /customers/c-1
+                        - paragraph [ref=f2e237]: sbaser0@boston.com
+                  - cell "#879861" [ref=f2e238]
+                  - cell "Sri Lanka" [ref=f2e239]
+                  - cell "157" [ref=f2e240]
+                  - cell "$2,074.22" [ref=f2e241]
+                  - cell [ref=f2e242]:
+                    - button "Actions" [ref=f2e243] [cursor=pointer]
+                - row [ref=f2e245]:
+                  - cell [ref=f2e246]:
+                    - checkbox [ref=f2e249]
+                  - cell "LD Laurie Dax ldax1@lycos.com" [ref=f2e253]:
+                    - generic [ref=f2e254]:
+                      - generic [ref=f2e255]: LD
+                      - generic [ref=f2e256]:
+                        - link "Laurie Dax" [ref=f2e257] [cursor=pointer]:
+                          - /url: /customers/c-2
+                        - paragraph [ref=f2e258]: ldax1@lycos.com
+                  - cell "#178408" [ref=f2e259]
+                  - cell "Russia" [ref=f2e260]
+                  - cell "663" [ref=f2e261]
+                  - cell "$2,404.19" [ref=f2e262]
+                  - cell [ref=f2e263]:
+                    - button "Actions" [ref=f2e264] [cursor=pointer]
+                - row [ref=f2e266]:
+                  - cell [ref=f2e267]:
+                    - checkbox [ref=f2e270]
+                  - cell [ref=f2e274]:
+                    - generic [ref=f2e275]:
+                      - img "Maxine Kenrick" [ref=f2e277]
+                      - generic [ref=f2e278]:
+                        - link "Maxine Kenrick" [ref=f2e279] [cursor=pointer]:
+                          - /url: /customers/c-3
+                        - paragraph [ref=f2e280]: mkenrick2@eepurl.com
+                  - cell "#221092" [ref=f2e281]
+                  - cell "Guatemala" [ref=f2e282]
+                  - cell "64" [ref=f2e283]
+                  - cell "$8,821.40" [ref=f2e284]
+                  - cell [ref=f2e285]:
+                    - button "Actions" [ref=f2e286] [cursor=pointer]
+                - row [ref=f2e288]:
+                  - cell [ref=f2e289]:
+                    - checkbox [ref=f2e292]
+                  - cell "HB Harman Burkill hburkill3@drupal.org" [ref=f2e296]:
+                    - generic [ref=f2e297]:
+                      - generic [ref=f2e298]: HB
+                      - generic [ref=f2e299]:
+                        - link "Harman Burkill" [ref=f2e300] [cursor=pointer]:
+                          - /url: /customers/c-4
+                        - paragraph [ref=f2e301]: hburkill3@drupal.org
+                  - cell "#645579" [ref=f2e302]
+                  - cell "Portugal" [ref=f2e303]
+                  - cell "640" [ref=f2e304]
+                  - cell "$5,294.35" [ref=f2e305]
+                  - cell [ref=f2e306]:
+                    - button "Actions" [ref=f2e307] [cursor=pointer]
+                - row [ref=f2e309]:
+                  - cell [ref=f2e310]:
+                    - checkbox [ref=f2e313]
+                  - cell [ref=f2e317]:
+                    - generic [ref=f2e318]:
+                      - img "Aubrey Borrow" [ref=f2e320]
+                      - generic [ref=f2e321]:
+                        - link "Aubrey Borrow" [ref=f2e322] [cursor=pointer]:
+                          - /url: /customers/c-5
+                        - paragraph [ref=f2e323]: aborrow4@jiathis.com
+                  - cell "#288765" [ref=f2e324]
+                  - cell "France" [ref=f2e325]
+                  - cell "184" [ref=f2e326]
+                  - cell "$1,003.30" [ref=f2e327]
+                  - cell [ref=f2e328]:
+                    - button "Actions" [ref=f2e329] [cursor=pointer]
+                - row [ref=f2e331]:
+                  - cell [ref=f2e332]:
+                    - checkbox [ref=f2e335]
+                  - cell "NF Nester Fridd nfridd5@cdbaby.com" [ref=f2e339]:
+                    - generic [ref=f2e340]:
+                      - generic [ref=f2e341]: NF
+                      - generic [ref=f2e342]:
+                        - link "Nester Fridd" [ref=f2e343] [cursor=pointer]:
+                          - /url: /customers/c-6
+                        - paragraph [ref=f2e344]: nfridd5@cdbaby.com
+                  - cell "#321942" [ref=f2e345]
+                  - cell "China" [ref=f2e346]
+                  - cell "965" [ref=f2e347]
+                  - cell "$3,876.92" [ref=f2e348]
+                  - cell [ref=f2e349]:
+                    - button "Actions" [ref=f2e350] [cursor=pointer]
+                - row [ref=f2e352]:
+                  - cell [ref=f2e353]:
+                    - checkbox [ref=f2e356]
+                  - cell [ref=f2e360]:
+                    - generic [ref=f2e361]:
+                      - img "Lizzie Nicholes" [ref=f2e363]
+                      - generic [ref=f2e364]:
+                        - link "Lizzie Nicholes" [ref=f2e365] [cursor=pointer]:
+                          - /url: /customers/c-7
+                        - paragraph [ref=f2e366]: lnicholes6@rediff.com
+                  - cell "#516109" [ref=f2e367]
+                  - cell "Brazil" [ref=f2e368]
+                  - cell "514" [ref=f2e369]
+                  - cell "$7,936.85" [ref=f2e370]
+                  - cell [ref=f2e371]:
+                    - button "Actions" [ref=f2e372] [cursor=pointer]
+                - row [ref=f2e374]:
+                  - cell [ref=f2e375]:
+                    - checkbox [ref=f2e378]
+                  - cell [ref=f2e382]:
+                    - generic [ref=f2e383]:
+                      - img "Amabel Scullion" [ref=f2e385]
+                      - generic [ref=f2e386]:
+                        - link "Amabel Scullion" [ref=f2e387] [cursor=pointer]:
+                          - /url: /customers/c-8
+                        - paragraph [ref=f2e388]: ascullion7@wiley.com
+                  - cell "#403666" [ref=f2e389]
+                  - cell "Guatemala" [ref=f2e390]
+                  - cell "584" [ref=f2e391]
+                  - cell "$4,150.97" [ref=f2e392]
+                  - cell [ref=f2e393]:
+                    - button "Actions" [ref=f2e394] [cursor=pointer]
+                - row [ref=f2e396]:
+                  - cell [ref=f2e397]:
+                    - checkbox [ref=f2e400]
+                  - cell [ref=f2e404]:
+                    - generic [ref=f2e405]:
+                      - img "Zeke Arton" [ref=f2e407]
+                      - generic [ref=f2e408]:
+                        - link "Zeke Arton" [ref=f2e409] [cursor=pointer]:
+                          - /url: /customers/c-9
+                        - paragraph [ref=f2e410]: zarton8@weibo.com
+                  - cell "#895280" [ref=f2e411]
+                  - cell "Ukraine" [ref=f2e412]
+                  - cell "539" [ref=f2e413]
+                  - cell "$3,430.05" [ref=f2e414]
+                  - cell [ref=f2e415]:
+                    - button "Actions" [ref=f2e416] [cursor=pointer]
+                - row [ref=f2e418]:
+                  - cell [ref=f2e419]:
+                    - checkbox [ref=f2e422]
+                  - cell "RM Rosy Medlicott rmedlicott9@amazon.com" [ref=f2e426]:
+                    - generic [ref=f2e427]:
+                      - generic [ref=f2e428]: RM
+                      - generic [ref=f2e429]:
+                        - link "Rosy Medlicott" [ref=f2e430] [cursor=pointer]:
+                          - /url: /customers/c-10
+                        - paragraph [ref=f2e431]: rmedlicott9@amazon.com
+                  - cell "#199195" [ref=f2e432]
+                  - cell "Russia" [ref=f2e433]
+                  - cell "4" [ref=f2e434]
+                  - cell "$8,646.75" [ref=f2e435]
+                  - cell [ref=f2e436]:
+                    - button "Actions" [ref=f2e437] [cursor=pointer]
+            - generic [ref=f2e439]:
+              - paragraph [ref=f2e440]: Showing 1 to 10 of 20 entries
+              - generic [ref=f2e441]:
+                - button "Previous page" [disabled]
+                - button "1" [ref=f2e442]
+                - button "2" [ref=f2e443]
+                - button "Next page" [ref=f2e444]
+  - region "Notifications alt+T"

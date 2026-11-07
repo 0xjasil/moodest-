@@ -1,0 +1,238 @@
+{
+  "user": {
+    "name": "Alex Morgan",
+    "role": "ADMINISTRATOR",
+    "avatar": "/images/avatars/1.webp",
+    "avatarBg": "#FCA5A5"
+  },
+  "sections": [
+    {
+      "id": "main",
+      "label": "MAIN",
+      "items": [
+        {
+          "id": "dashboard",
+          "title": "Dashboard",
+          "href": "/",
+          "icon": "Home"
+        },
+        {
+          "id": "products",
+          "title": "Products",
+          "icon": "Tag",
+          "href": "/products",
+          "children": [
+            {
+              "id": "product-list",
+              "title": "Product List",
+              "href": "/products/list"
+            },
+            {
+              "id": "add-product",
+              "title": "Add Product",
+              "href": "/products/add"
+            },
+            {
+              "id": "categories-list",
+              "title": "Categories List",
+              "href": "/products/categories-list"
+            },
+            {
+              "id": "discount-coupons",
+              "title": "Discount Coupons",
+              "href": "/products/discount-coupons"
+            }
+          ]
+        },
+        {
+          "id": "orders",
+          "title": "Orders",
+          "icon": "ShoppingCart",
+          "href": "/orders",
+          "badge": 12,
+          "children": [
+            {
+              "id": "order-list",
+              "title": "Order List",
+              "href": "/orders"
+            },
+            {
+              "id": "order-details",
+              "title": "Order Details",
+              "href": "/orders/ORD-9421"
+            },
+            {
+              "id": "order-tracking",
+              "title": "Order Tracking",
+              "href": "/orders/tracking"
+            }
+          ]
+        },
+        {
+          "id": "customers",
+          "title": "Customers",
+          "icon": "Users",
+          "href": "/customers",
+          "children": [
+            {
+              "id": "all-customers",
+              "title": "All Customers",
+              "href": "/customers"
+            },
+            {
+              "id": "customer-overview",
+              "title": "Customer Overview",
+              "href": "/customers/overview"
+            },
+            {
+              "id": "customer-security",
+              "title": "Security",
+              "href": "/customers/security"
+            },
+            {
+              "id": "customer-address",
+              "title": "Address & Billing",
+              "href": "/customers/address-billing"
+            },
+            {
+              "id": "customer-notifications",
+              "title": "Notifications",
+              "href": "/customers/notifications"
+            }
+          ]
+        },
+        {
+          "id": "marketing",
+          "title": "Marketing",
+          "icon": "Megaphone",
+          "href": "/coupons",
+          "children": [
+            {
+              "id": "coupons",
+              "title": "Coupons",
+              "href": "/coupons"
+            },
+            {
+              "id": "banners",
+              "title": "Banners",
+              "href": "/banners"
+            }
+          ]
+        },
+        {
+          "id": "analytics",
+          "title": "Analytics",
+          "icon": "BarChart3",
+          "href": "/analytics",
+          "children": [
+            {
+              "id": "analytics-overview",
+              "title": "Overview",
+              "href": "/analytics"
+            },
+            {
+              "id": "order-reports",
+              "title": "Order Reports",
+              "href": "/reports/order-reports"
+            },
+            {
+              "id": "customer-reports",
+              "title": "Customer Reports",
+              "href": "/reports/customer-reports"
+            }
+          ]
+        },
+        {
+          "id": "logs",
+          "title": "Logs",
+          "icon": "ScrollText",
+          "href": "/activity-logs",
+          "children": [
+            {
+              "id": "activity-logs",
+              "title": "Activity Logs",
+              "href": "/activity-logs"
+            },
+            {
+              "id": "payment-logs",
+              "title": "Payment Logs",
+              "href": "/payment-logs"
+            }
+          ]
+        },
+        {
+          "id": "pages",
+          "title": "Pages",
+          "icon": "FileText",
+          "href": "/pages",
+          "children": [
+            {
+              "id": "profile",
+              "title": "Profile",
+              "href": "/profile"
+            },
+            {
+              "id": "profile-teams",
+              "title": "Teams",
+              "href": "/profile/teams"
+            },
+            {
+              "id": "misc-404",
+              "title": "404 Error",
+              "href": "/misc/404"
+            },
+            {
+              "id": "misc-maintenance",
+              "title": "Maintenance",
+              "href": "/misc/maintenance"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "settings-group",
+      "label": "SETTINGS",
+      "items": [
+        {
+          "id": "settings",
+          "title": "Settings",
+          "icon": "Settings",
+          "href": "/settings",
+          "children": [
+            {
+              "id": "settings-store-details",
+              "title": "Store Details",
+              "href": "/settings/store-details"
+            },
+            {
+              "id": "settings-payments",
+              "title": "Payments",
+              "href": "/settings/payments"
+            },
+            {
+              "id": "settings-checkout",
+              "title": "Checkout",
+              "href": "/settings/checkout"
+            },
+            {
+              "id": "settings-shipping",
+              "title": "Shipping",
+              "href": "/settings/shipping"
+            },
+            {
+              "id": "settings-locations",
+              "title": "Locations",
+              "href": "/settings/locations"
+            },
+            {
+              "id": "settings-notifications",
+              "title": "Notifications",
+              "href": "/settings/notifications"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

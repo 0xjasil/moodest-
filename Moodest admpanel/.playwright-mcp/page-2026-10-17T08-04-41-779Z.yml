@@ -1,0 +1,159 @@
+- generic [active] [ref=f11e1]:
+  - generic [ref=f11e2]:
+    - complementary [ref=f11e3]:
+      - generic [ref=f11e4]:
+        - generic [ref=f11e5]:
+          - link "AP Admin Panel" [ref=f11e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f11e7]: AP
+            - generic [ref=f11e9]: Admin Panel
+          - button "Collapse sidebar (Ctrl+B)" [ref=f11e10]
+        - generic [ref=f11e11]:
+          - link "Dashboard" [ref=f11e12] [cursor=pointer]:
+            - /url: /
+          - button "Products" [ref=f11e19] [cursor=pointer]
+          - button "Orders 12" [ref=f11e29] [cursor=pointer]:
+            - generic [ref=f11e30]: Orders
+            - generic [ref=f11e36]: "12"
+          - button "Customers" [ref=f11e41] [cursor=pointer]
+          - button "Vendors" [ref=f11e53] [cursor=pointer]
+          - button "Marketing" [ref=f11e64] [cursor=pointer]
+          - button "Analytics" [ref=f11e74] [cursor=pointer]
+          - button "Logs" [ref=f11e83] [cursor=pointer]
+          - button "Pages" [ref=f11e93] [cursor=pointer]
+        - generic [ref=f11e102]:
+          - button "Settings" [ref=f11e105] [cursor=pointer]
+          - button "A Admin @philOhme" [ref=f11e115]:
+            - generic [ref=f11e116]: A
+            - generic [ref=f11e117]:
+              - paragraph [ref=f11e118]: Admin
+              - paragraph [ref=f11e119]: "@philOhme"
+    - generic [ref=f11e120]:
+      - banner [ref=f11e121]:
+        - generic [ref=f11e122]:
+          - navigation [ref=f11e123]:
+            - generic [ref=f11e124]: Dashboard
+            - generic [ref=f11e127]: Dashboard
+          - generic [ref=f11e128]:
+            - button "Toggle theme" [ref=f11e129]
+            - generic [ref=f11e138]:
+              - heading "Dashboard" [level=1] [ref=f11e139]
+              - paragraph [ref=f11e140]: Overview of your store
+      - main [ref=f11e141]:
+        - generic [ref=f11e142]:
+          - navigation [ref=f11e143]:
+            - link "Home" [ref=f11e144] [cursor=pointer]:
+              - /url: /
+            - generic [ref=f11e148]: /
+            - link "Customer" [ref=f11e149] [cursor=pointer]:
+              - /url: /customers
+            - generic [ref=f11e150]: /
+            - generic [ref=f11e151]: Address & Billing
+          - generic [ref=f11e152]:
+            - generic [ref=f11e153]:
+              - 'heading "Customer ID #634759" [level=1] [ref=f11e154]'
+              - paragraph [ref=f11e155]: Aug 17, 2020, 5:48 (ET)
+            - button "Delete Customer" [ref=f11e156] [cursor=pointer]
+          - generic [ref=f11e157]:
+            - link "Overview" [ref=f11e158] [cursor=pointer]:
+              - /url: /customers/overview
+            - link "Security" [ref=f11e163] [cursor=pointer]:
+              - /url: /customers/security
+            - link "Address & Billing" [ref=f11e167] [cursor=pointer]:
+              - /url: /customers/address-billing
+            - link "Notifications" [ref=f11e172] [cursor=pointer]:
+              - /url: /customers/notifications
+          - generic [ref=f11e177]:
+            - generic [ref=f11e178]:
+              - generic [ref=f11e179]:
+                - generic [ref=f11e180]:
+                  - img "Lorine Hischke" [ref=f11e182]
+                  - heading "Lorine Hischke" [level=2] [ref=f11e183]
+                  - paragraph [ref=f11e184]: "Customer ID #634759"
+                - generic [ref=f11e185]:
+                  - generic [ref=f11e192]:
+                    - paragraph [ref=f11e193]: "184"
+                    - paragraph [ref=f11e194]: Orders
+                  - generic [ref=f11e199]:
+                    - paragraph [ref=f11e200]: $12,378
+                    - paragraph [ref=f11e201]: Spent
+                - generic [ref=f11e202]:
+                  - heading "Details" [level=3] [ref=f11e203]
+                  - generic [ref=f11e204]:
+                    - generic [ref=f11e205]:
+                      - generic [ref=f11e206]: "Username:"
+                      - generic [ref=f11e207]: lorine.hischke
+                    - generic [ref=f11e208]:
+                      - generic [ref=f11e209]: "Email:"
+                      - generic [ref=f11e210]: vafgot@vultukir.org
+                    - generic [ref=f11e211]:
+                      - generic [ref=f11e212]: "Status:"
+                      - generic [ref=f11e213]: Active
+                    - generic [ref=f11e214]:
+                      - generic [ref=f11e215]: "Contact:"
+                      - generic [ref=f11e216]: (123) 456-7890
+                    - generic [ref=f11e217]:
+                      - generic [ref=f11e218]: "Country:"
+                      - generic [ref=f11e219]: USA
+                - button "Edit Details" [ref=f11e220] [cursor=pointer]
+              - generic [ref=f11e222]:
+                - generic [ref=f11e224]:
+                  - heading "Upgrade to premium" [level=3] [ref=f11e225]
+                  - paragraph [ref=f11e226]: Upgrade customer to premium membership to access pro features.
+                - button "Select Plan" [ref=f11e233] [cursor=pointer]
+            - generic [ref=f11e235]:
+              - generic [ref=f11e236]:
+                - generic [ref=f11e237]:
+                  - heading "Address Book" [level=2] [ref=f11e239]
+                  - button "Add new address" [ref=f11e240] [cursor=pointer]
+                - generic [ref=f11e241]:
+                  - generic [ref=f11e242]:
+                    - button "Home Default Address 23 Shatinon Mekalan" [ref=f11e243] [cursor=pointer]:
+                      - generic [ref=f11e247]:
+                        - generic [ref=f11e248]: Home
+                        - generic [ref=f11e249]: Default Address
+                        - generic [ref=f11e250]: 23 Shatinon Mekalan
+                    - generic [ref=f11e251]:
+                      - paragraph [ref=f11e253]:
+                        - generic [ref=f11e254]: Violet Mendoza
+                        - text: 23 Shatinon Mekalan,Melbourne, VIC 3000,London UK
+                      - button "Delete" [ref=f11e256] [cursor=pointer]
+                  - button "Office 45 Roker Terrace" [ref=f11e258] [cursor=pointer]:
+                    - generic [ref=f11e262]:
+                      - generic [ref=f11e263]: Office
+                      - generic [ref=f11e264]: 45 Roker Terrace
+                  - button "Family 512 Water Plant Ave" [ref=f11e266] [cursor=pointer]:
+                    - generic [ref=f11e270]:
+                      - generic [ref=f11e271]: Family
+                      - generic [ref=f11e272]: 512 Water Plant Ave
+              - generic [ref=f11e273]:
+                - generic [ref=f11e274]:
+                  - heading "Payment Methods" [level=2] [ref=f11e276]
+                  - button "Add payment methods" [ref=f11e277] [cursor=pointer]
+                - generic [ref=f11e278]:
+                  - generic [ref=f11e279]:
+                    - button "Mastercard Expires 04/2028 Primary" [ref=f11e280] [cursor=pointer]:
+                      - generic [ref=f11e287]:
+                        - generic [ref=f11e288]: Mastercard
+                        - generic [ref=f11e289]: Expires 04/2028
+                        - generic [ref=f11e290]: Primary
+                    - generic [ref=f11e291]:
+                      - list [ref=f11e294]:
+                        - listitem [ref=f11e295]: "Name:"
+                        - listitem [ref=f11e296]: Violet Mendoza
+                        - listitem [ref=f11e297]: "Number:"
+                        - listitem [ref=f11e298]: "**** 4487"
+                        - listitem [ref=f11e299]: "Expires:"
+                        - listitem [ref=f11e300]: 04/2028
+                        - listitem [ref=f11e301]: "Type:"
+                        - listitem [ref=f11e302]: Mastercard credit card
+                        - listitem [ref=f11e303]: "Issuer:"
+                        - listitem [ref=f11e304]: VICBANK
+                      - button "Delete" [ref=f11e306] [cursor=pointer]
+                  - button "VISA Visa Expires 11/2027" [ref=f11e308] [cursor=pointer]:
+                    - generic [ref=f11e309]:
+                      - generic [ref=f11e312]: VISA
+                      - generic [ref=f11e313]:
+                        - generic [ref=f11e314]: Visa
+                        - generic [ref=f11e315]: Expires 11/2027
+  - region "Notifications alt+T"

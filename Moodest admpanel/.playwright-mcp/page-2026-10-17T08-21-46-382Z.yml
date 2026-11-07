@@ -1,0 +1,104 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - complementary [ref=f3e3]:
+      - generic [ref=f3e4]:
+        - generic [ref=f3e5]:
+          - link "AP Admin Panel" [ref=f3e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f3e7]: AP
+            - generic [ref=f3e9]: Admin Panel
+          - button "Collapse sidebar (Ctrl+B)" [ref=f3e10]
+        - generic [ref=f3e11]:
+          - link "Dashboard" [ref=f3e12] [cursor=pointer]:
+            - /url: /
+          - button "Products" [ref=f3e19] [cursor=pointer]
+          - button "Orders 12" [ref=f3e29] [cursor=pointer]:
+            - generic [ref=f3e30]: Orders
+            - generic [ref=f3e36]: "12"
+          - button "Customers" [ref=f3e41] [cursor=pointer]
+          - button "Vendors" [ref=f3e53] [cursor=pointer]
+          - button "Marketing" [ref=f3e64] [cursor=pointer]
+          - button "Analytics" [ref=f3e74] [cursor=pointer]
+          - button "Logs" [ref=f3e83] [cursor=pointer]
+          - button "Pages" [ref=f3e93] [cursor=pointer]
+        - generic [ref=f3e102]:
+          - button "Settings" [ref=f3e105] [cursor=pointer]
+          - button "A Admin @philOhme" [ref=f3e115]:
+            - generic [ref=f3e116]: A
+            - generic [ref=f3e117]:
+              - paragraph [ref=f3e118]: Admin
+              - paragraph [ref=f3e119]: "@philOhme"
+    - generic [ref=f3e120]:
+      - banner [ref=f3e121]:
+        - generic [ref=f3e122]:
+          - navigation [ref=f3e123]:
+            - generic [ref=f3e124]: Dashboard
+            - generic [ref=f3e127]: Vendors
+          - generic [ref=f3e128]:
+            - button "Toggle theme" [ref=f3e129]
+            - generic [ref=f3e137]:
+              - heading "Vendors" [level=1] [ref=f3e138]
+              - paragraph [ref=f3e139]: Manage partner stores, suppliers and catalog
+      - main [ref=f3e140]:
+        - generic [ref=f3e141]:
+          - navigation [ref=f3e142]:
+            - link "Home" [ref=f3e143] [cursor=pointer]:
+              - /url: /
+            - generic [ref=f3e147]: /
+            - generic [ref=f3e148]: Vendor
+            - generic [ref=f3e149]: /
+            - generic [ref=f3e150]: Vendor List
+          - generic [ref=f3e151]:
+            - generic [ref=f3e153]:
+              - generic [ref=f3e154]: "250"
+              - generic [ref=f3e155]: Total Vendors
+            - generic [ref=f3e162]:
+              - generic [ref=f3e163]: $75k
+              - generic [ref=f3e164]: Average Revenue
+            - generic [ref=f3e169]:
+              - generic [ref=f3e170]: "45"
+              - generic [ref=f3e171]: On Delivery
+            - generic [ref=f3e179]:
+              - generic [ref=f3e180]: 89%
+              - generic [ref=f3e181]: Vendor Satisfaction
+          - generic [ref=f3e185]:
+            - generic [ref=f3e186]:
+              - generic [ref=f3e187]:
+                - heading "All Vendors" [level=2] [ref=f3e188]
+                - paragraph [ref=f3e189]: Manage your network of trusted vendors and suppliers
+              - generic [ref=f3e190]:
+                - textbox "Search..." [ref=f3e192]
+                - combobox "Rows per page" [ref=f3e193] [cursor=pointer]:
+                  - option "10" [selected]
+                  - option "25"
+                  - option "50"
+                - combobox "Filter vendors by status" [ref=f3e194] [cursor=pointer]:
+                  - option "All Status" [selected]
+                  - option "Active"
+                  - option "Pending"
+                  - option "Inactive"
+                - button "Export" [ref=f3e195] [cursor=pointer]
+                - link "Add Vendor" [ref=f3e196] [cursor=pointer]:
+                  - /url: /vendors/add-vendor
+            - table [ref=f3e198]:
+              - rowgroup [ref=f3e199]:
+                - row [ref=f3e200]:
+                  - columnheader [ref=f3e201]:
+                    - checkbox "Select all vendors on this page" [ref=f3e202] [cursor=pointer]
+                  - columnheader "Vendor" [ref=f3e203]
+                  - columnheader "Contact" [ref=f3e204]
+                  - columnheader "Location" [ref=f3e205]
+                  - columnheader "Products" [ref=f3e206]
+                  - columnheader "Rating" [ref=f3e207]
+                  - columnheader "Status" [ref=f3e208]
+                  - columnheader "Actions" [ref=f3e209]
+              - rowgroup [ref=f3e210]:
+                - row [ref=f3e211]:
+                  - cell "No vendors found matching your filter criteria." [ref=f3e212]
+            - generic [ref=f3e213]:
+              - generic [ref=f3e214]: Showing 0 to 0 of 0 entries
+              - generic [ref=f3e215]:
+                - button "Previous" [disabled]
+                - button "1" [ref=f3e216] [cursor=pointer]
+                - button "Next" [disabled]
+  - region "Notifications alt+T"

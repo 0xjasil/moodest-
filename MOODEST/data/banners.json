@@ -1,0 +1,66 @@
+[
+  {
+    "id": "banner-1",
+    "title": "New Arrivals Worth The Wait \u2014 Luxury Abayas & Modest Wear",
+    "image": "/banners/top-promo-banner.jpg",
+    "link": "/category/all",
+    "callout": "Atelier 2026 | All Sizes 50-62",
+    "alt": "Modest Studio New Arrivals"
+  },
+  {
+    "id": "banner-2",
+    "title": "Match The Mood \u2014 Handwork, Embroidery & Bridal Edits",
+    "image": "/banners/category-highlights-banner.jpg",
+    "link": "/category/bridal-wear",
+    "callout": "Luxury Occasion | Crystals & Pearls",
+    "alt": "Handwork and Bridal Abayas"
+  },
+  {
+    "id": "banner-3",
+    "title": "Beauty in Modesty \u2014 Timeless Elegance & Daily Comfort",
+    "image": "/banners/timeless-beauty-banner.jpg",
+    "link": "/category/all",
+    "callout": "Free Shipping on \u20b91,999+",
+    "alt": "Modest Studio Timeless Beauty"
+  },
+  {
+    "id": "banner-4",
+    "title": "Front Open Abayas & Two-Piece Shrug Sets",
+    "image": "/abaya/hero/hero-1.jpg",
+    "link": "/category/front-open",
+    "callout": "Signature Cut | Up To 25% Off",
+    "alt": "Front Open Abayas"
+  },
+  {
+    "id": "banner-5",
+    "title": "Basic Kaftans & Relaxed Everyday Silhouettes",
+    "image": "/abaya/hero/hero-2.jpg",
+    "link": "/category/basic-kaftan",
+    "callout": "Pure Nida Matte | Breathable Comfort",
+    "alt": "Basic Kaftan Abayas"
+  },
+  {
+    "id": "banner-6",
+    "title": "Korean Silk Kimonos & Modern Wide Sleeve Abayas",
+    "image": "/abaya/hero/hero-3.jpg",
+    "link": "/category/kimono-abaya",
+    "callout": "New Season Drop | Japanese Crepe",
+    "alt": "Kimono Abayas"
+  },
+  {
+    "id": "banner-7",
+    "title": "Complete Coverage Jilbabs & 2-Piece Overhead Sets",
+    "image": "/abaya/hero/hero-4.jpg",
+    "link": "/category/jilbabs",
+    "callout": "Flawless Drape | Elegant Modesty",
+    "alt": "Jilbabs Collection"
+  },
+  {
+    "id": "banner-8",
+    "title": "Malaysian Chiffon Premium Stoles & Hijab Caps",
+    "image": "/abaya/hero/hero-5.jpg",
+    "link": "/category/hijabs-stoles",
+    "callout": "Featherlight Non-Slip | 12 Shades",
+    "alt": "Chiffon Stoles and Hijab Accessories"
+  }
+]

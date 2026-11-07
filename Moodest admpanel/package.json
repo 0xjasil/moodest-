@@ -1,0 +1,24 @@
+{
+  "name": "ecommerce-admin-template",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "start": "turbo start",
+    "lint": "turbo lint",
+    "db:generate": "turbo db:generate",
+    "db:seed": "pnpm --filter @repo/db seed"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.2.7",
+      "@types/react-dom": "19.2.3"
+    }
+  },
+  "description": "Reusable e-commerce admin panel (Next.js + Prisma, MongoDB) in a pnpm/Turborepo monorepo"
+}

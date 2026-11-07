@@ -1,0 +1,146 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e5]:
+          - link "AP Admin Panel" [ref=f1e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f1e7]: AP
+            - generic [ref=f1e9]: Admin Panel
+          - button "Collapse sidebar (Ctrl+B)" [ref=f1e10]
+        - generic [ref=f1e11]:
+          - link "Home" [ref=f1e12] [cursor=pointer]:
+            - /url: /
+          - link "Orders 12" [ref=f1e18] [cursor=pointer]:
+            - /url: /orders
+            - generic [ref=f1e19]: Orders
+            - generic [ref=f1e25]: "12"
+          - button "Products" [ref=f1e27] [cursor=pointer]
+          - link "Customers" [ref=f1e36] [cursor=pointer]:
+            - /url: /customers
+          - button "Marketing" [ref=f1e45] [cursor=pointer]
+          - button "Analytics" [ref=f1e55] [cursor=pointer]
+          - button "Logs" [ref=f1e64] [cursor=pointer]
+        - generic [ref=f1e73]:
+          - link "Settings" [ref=f1e75] [cursor=pointer]:
+            - /url: /settings
+          - generic [ref=f1e81]:
+            - generic [ref=f1e82]:
+              - generic [ref=f1e83]: A
+              - generic [ref=f1e84]:
+                - paragraph [ref=f1e85]: Alex Morgan
+                - paragraph [ref=f1e86]: admin@example.com
+            - button "Logout" [ref=f1e87]
+    - generic [ref=f1e88]:
+      - banner [ref=f1e89]:
+        - generic [ref=f1e90]:
+          - navigation [ref=f1e91]:
+            - generic [ref=f1e92]: Dashboard
+            - generic [ref=f1e95]: Dashboard
+          - generic [ref=f1e96]:
+            - button "Toggle theme" [ref=f1e97]
+            - generic [ref=f1e106]:
+              - heading "Dashboard" [level=1] [ref=f1e107]
+              - paragraph [ref=f1e108]: Overview of your store
+      - main [ref=f1e109]:
+        - generic [ref=f1e112]:
+          - generic [ref=f1e114]:
+            - heading "Dashboard" [level=1] [ref=f1e115]
+            - paragraph [ref=f1e116]: Welcome back! Here's what's happening with your store.
+          - generic [ref=f1e117]:
+            - generic [ref=f1e118]:
+              - generic [ref=f1e119]: Total Products
+              - generic [ref=f1e126]:
+                - generic [ref=f1e127]: "4"
+                - paragraph [ref=f1e128]: 8 total variants
+            - generic [ref=f1e131]:
+              - generic [ref=f1e132]: Low Stock Variants
+              - generic [ref=f1e137]:
+                - generic [ref=f1e138]: "1"
+                - paragraph [ref=f1e139]: Variants need restocking
+            - generic [ref=f1e142]:
+              - generic [ref=f1e143]: Total Brands
+              - generic [ref=f1e149]:
+                - generic [ref=f1e150]: "5"
+                - paragraph [ref=f1e151]: Active brands
+            - generic [ref=f1e154]:
+              - generic [ref=f1e155]: Categories
+              - generic [ref=f1e162]:
+                - generic [ref=f1e163]: "4"
+                - paragraph [ref=f1e164]: 4 subcategories
+            - generic [ref=f1e167]:
+              - generic [ref=f1e168]: Total Orders
+              - generic [ref=f1e175]:
+                - generic [ref=f1e176]: "342"
+                - paragraph [ref=f1e177]: +0.0% from last month
+            - generic [ref=f1e181]:
+              - generic [ref=f1e182]: Revenue
+              - generic [ref=f1e187]:
+                - generic [ref=f1e188]: ₹ 124,580
+                - paragraph [ref=f1e189]: +0.0% from last month
+            - generic [ref=f1e193]:
+              - generic [ref=f1e194]: Average Order
+              - generic [ref=f1e200]:
+                - generic [ref=f1e201]: ₹ 364.27
+                - paragraph [ref=f1e202]: Average order value
+            - generic [ref=f1e205]:
+              - generic [ref=f1e206]: Product Variants
+              - generic [ref=f1e212]:
+                - generic [ref=f1e213]: "8"
+                - paragraph [ref=f1e214]: Total SKUs in inventory
+          - generic [ref=f1e217]:
+            - generic [ref=f1e218]:
+              - generic [ref=f1e219]:
+                - generic [ref=f1e220]: Recent Orders
+                - generic [ref=f1e221]: Latest orders from your customers
+              - generic [ref=f1e222]:
+                - generic [ref=f1e223]:
+                  - generic [ref=f1e224]:
+                    - generic [ref=f1e225]:
+                      - paragraph [ref=f1e226]: "#ORD-9421"
+                      - paragraph
+                    - generic [ref=f1e227]:
+                      - paragraph [ref=f1e228]: ₹ 438.00
+                      - paragraph [ref=f1e229]: DELIVERED
+                  - generic [ref=f1e230]:
+                    - generic [ref=f1e231]:
+                      - paragraph [ref=f1e232]: "#ORD-9422"
+                      - paragraph
+                    - generic [ref=f1e233]:
+                      - paragraph [ref=f1e234]: ₹ 299.00
+                      - paragraph [ref=f1e235]: SHIPPED
+                  - generic [ref=f1e236]:
+                    - generic [ref=f1e237]:
+                      - paragraph [ref=f1e238]: "#ORD-9423"
+                      - paragraph
+                    - generic [ref=f1e239]:
+                      - paragraph [ref=f1e240]: ₹ 119.00
+                      - paragraph [ref=f1e241]: PENDING
+                - link "View all orders →" [ref=f1e243] [cursor=pointer]:
+                  - /url: /orders
+            - generic [ref=f1e244]:
+              - generic [ref=f1e245]:
+                - generic [ref=f1e246]: Stock Alerts
+                - generic [ref=f1e250]: Product variants running low on inventory
+              - generic [ref=f1e253]:
+                - generic [ref=f1e254]:
+                  - paragraph [ref=f1e255]: Merino Wool Knit Overshirt
+                  - paragraph [ref=f1e256]: "Default Variant • SKU:"
+                  - paragraph [ref=f1e257]: No Brand
+                - paragraph [ref=f1e259]: 4 left
+            - generic [ref=f1e260]:
+              - generic [ref=f1e261]:
+                - generic [ref=f1e262]: Quick Actions
+                - generic [ref=f1e263]: Common administrative tasks
+              - generic [ref=f1e265]:
+                - link "Manage Products" [ref=f1e266] [cursor=pointer]:
+                  - /url: /products
+                - link "View Orders" [ref=f1e273] [cursor=pointer]:
+                  - /url: /orders
+                - link "Customer Management" [ref=f1e280] [cursor=pointer]:
+                  - /url: /customers
+                - link "Inventory Reports" [ref=f1e288] [cursor=pointer]:
+                  - /url: /inventory
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f1e298] [cursor=pointer]
+  - alert [ref=f1e302]

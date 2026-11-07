@@ -1,0 +1,168 @@
+- generic [active] [ref=f8e1]:
+  - generic [ref=f8e2]:
+    - banner [ref=f8e3]:
+      - generic [ref=f8e4]:
+        - generic [ref=f8e5]:
+          - button "Menu" [ref=f8e6] [cursor=pointer]
+          - link "CommerceO" [ref=f8e8] [cursor=pointer]:
+            - /url: /
+        - generic [ref=f8e19]:
+          - button [ref=f8e20] [cursor=pointer]
+          - generic [ref=f8e21]:
+            - heading "Command Palette" [level=2] [ref=f8e22]
+            - paragraph [ref=f8e23]: Search for a command to run...
+          - button [ref=f8e24] [cursor=pointer]
+          - button [ref=f8e25] [cursor=pointer]
+          - button [ref=f8e26] [cursor=pointer]
+          - button [ref=f8e27] [cursor=pointer]
+          - button "JD" [ref=f8e28] [cursor=pointer]
+    - main [ref=f8e31]:
+      - generic [ref=f8e32]:
+        - navigation "breadcrumb" [ref=f8e34]:
+          - list [ref=f8e35]:
+            - listitem [ref=f8e36]:
+              - link [ref=f8e37] [cursor=pointer]:
+                - /url: /
+            - generic [ref=f8e40]:
+              - listitem [aria-hidden] [ref=f8e41]: /
+              - listitem [ref=f8e42]:
+                - link "Customer" [ref=f8e43] [cursor=pointer]:
+                  - /url: /customer/all
+            - generic [ref=f8e44]:
+              - listitem [aria-hidden] [ref=f8e45]: /
+              - listitem [ref=f8e46]:
+                - link "Address & Billing" [disabled] [ref=f8e47]
+        - generic [ref=f8e48]:
+          - generic [ref=f8e54]:
+            - paragraph [ref=f8e55]: eCommerce Dashboard
+            - paragraph [ref=f8e56]: Earning reports
+          - generic [ref=f8e57]:
+            - generic [ref=f8e58]:
+              - paragraph [ref=f8e59]: $23k
+              - paragraph [ref=f8e60]: Sales
+            - generic [ref=f8e61]:
+              - paragraph [ref=f8e62]: 8.51k
+              - paragraph [ref=f8e63]: Customers
+            - generic [ref=f8e64]:
+              - paragraph [ref=f8e65]: 2.5k
+              - paragraph [ref=f8e66]: Products
+            - generic [ref=f8e67]:
+              - paragraph [ref=f8e68]: 1.2k
+              - paragraph [ref=f8e69]: Revenue
+        - generic [ref=f8e72]:
+          - generic [ref=f8e73]:
+            - generic [ref=f8e74]:
+              - 'heading "Customer ID #634759" [level=5] [ref=f8e75]'
+              - paragraph [ref=f8e76]: Aug 17, 2020, 5:48 (ET)
+            - link "Delete Customer" [ref=f8e77] [cursor=pointer]:
+              - /url: "#"
+          - generic [ref=f8e78]:
+            - generic [ref=f8e79]:
+              - generic [ref=f8e81]:
+                - generic [ref=f8e82]:
+                  - generic [ref=f8e83]: LH
+                  - generic [ref=f8e85]:
+                    - heading "Lorine Hischke" [level=5] [ref=f8e86]
+                    - text: "Customer ID #634759"
+                - generic [ref=f8e87]:
+                  - generic [ref=f8e92]:
+                    - heading "184" [level=5] [ref=f8e93]
+                    - text: Orders
+                  - generic [ref=f8e94]:
+                    - generic [ref=f8e95]: $
+                    - generic [ref=f8e97]:
+                      - heading "$12,378" [level=5] [ref=f8e98]
+                      - text: Spent
+                - heading "Details" [level=5] [ref=f8e99]
+                - separator [ref=f8e100]
+                - list [ref=f8e101]:
+                  - listitem [ref=f8e102]: "Username: lorine.hischke"
+                  - listitem [ref=f8e103]: "Email: vafgot@vultukir.org"
+                  - listitem [ref=f8e104]:
+                    - generic [ref=f8e105]: "Status:"
+                    - generic [ref=f8e106]: Active
+                  - listitem [ref=f8e107]: "Contact: (123) 456-7890"
+                  - listitem [ref=f8e108]: "Country: USA"
+                - button "Edit Details" [ref=f8e109] [cursor=pointer]
+              - generic [ref=f8e111]:
+                - generic [ref=f8e112]:
+                  - generic [ref=f8e113]:
+                    - heading "Upgrade to premium" [level=5] [ref=f8e114]
+                    - paragraph [ref=f8e115]: Upgrade customer to premium membership to access pro features.
+                  - img "3dRocket" [ref=f8e116]
+                - button "Select Plan" [ref=f8e117] [cursor=pointer]
+            - generic [ref=f8e118]:
+              - generic [ref=f8e119]:
+                - link "Overview" [ref=f8e120] [cursor=pointer]:
+                  - /url: /customer/overview
+                - link "Security" [ref=f8e122] [cursor=pointer]:
+                  - /url: /customer/security
+                - link "Address & Billing" [ref=f8e124] [cursor=pointer]:
+                  - /url: /customer/billing
+                - link "Notifications" [ref=f8e126] [cursor=pointer]:
+                  - /url: /customer/notifications
+              - generic [ref=f8e128]:
+                - generic [ref=f8e129]:
+                  - generic [ref=f8e130]:
+                    - heading "Address Book" [level=5] [ref=f8e131]
+                    - button "Add new address" [ref=f8e132] [cursor=pointer]
+                  - generic [ref=f8e134]:
+                    - generic [ref=f8e135]:
+                      - button "Home Default Address 23 Shatinon Mekalan" [expanded] [ref=f8e136] [cursor=pointer]:
+                        - generic [ref=f8e139]:
+                          - generic [ref=f8e140]: Home
+                          - generic [ref=f8e141]: Default Address
+                          - generic [ref=f8e142]: 23 Shatinon Mekalan
+                      - paragraph [ref=f8e144]: Violet Mendoza 23 Shatinon Mekalan, Melbourne, VIC 3000, London UK
+                    - button "Office 45 Roker Terrace" [ref=f8e146] [cursor=pointer]:
+                      - generic [ref=f8e149]:
+                        - generic [ref=f8e150]: Office
+                        - generic [ref=f8e151]: 45 Roker Terrace
+                    - button "Family 512 Water Plant" [ref=f8e153] [cursor=pointer]:
+                      - generic [ref=f8e156]:
+                        - generic [ref=f8e157]: Family
+                        - generic [ref=f8e158]: 512 Water Plant
+                - generic [ref=f8e159]:
+                  - generic [ref=f8e160]:
+                    - heading "Payment Methods" [level=5] [ref=f8e161]
+                    - button "Add payment methods" [ref=f8e162] [cursor=pointer]
+                  - generic [ref=f8e165]:
+                    - button "MastercardExpires Apr 2028" [expanded] [ref=f8e166] [cursor=pointer]
+                    - list [ref=f8e175]:
+                      - listitem [ref=f8e176]: "Name:"
+                      - listitem [ref=f8e177]: Violet Mendoza
+                      - listitem [ref=f8e178]: "Number:"
+                      - listitem [ref=f8e179]: "**** 4487"
+                      - listitem [ref=f8e180]: "Expires:"
+                      - listitem [ref=f8e181]: 04/2028
+                      - listitem [ref=f8e182]: "Type:"
+                      - listitem [ref=f8e183]: Visa credit card
+                      - listitem [ref=f8e184]: "Issuer:"
+                      - listitem [ref=f8e185]: VICBANK
+    - contentinfo [ref=f8e186]:
+      - generic [ref=f8e187]:
+        - paragraph [ref=f8e188]:
+          - text: ©2026
+          - link "shadcn/studio" [ref=f8e189] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=f8e190]:
+          - link "All Products" [ref=f8e191] [cursor=pointer]:
+            - /url: "#"
+          - link "Countries" [ref=f8e192] [cursor=pointer]:
+            - /url: "#"
+          - link "License" [ref=f8e193] [cursor=pointer]:
+            - /url: "#"
+          - link "FAQ" [ref=f8e194] [cursor=pointer]:
+            - /url: "#"
+          - link "Support" [ref=f8e195] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=f8e196]:
+          - link [ref=f8e197] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=f8e200] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=f8e204] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=f8e208] [cursor=pointer]:
+            - /url: "#"
+  - button "Buy Now" [ref=f8e211] [cursor=pointer]

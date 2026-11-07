@@ -1,0 +1,271 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e5]:
+          - link "AP Admin Panel" [ref=f1e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f1e7]: AP
+            - generic [ref=f1e9]: Admin Panel
+          - button "Collapse sidebar (Ctrl+B)" [ref=f1e10]
+        - generic [ref=f1e11]:
+          - link "Dashboard" [ref=f1e12] [cursor=pointer]:
+            - /url: /
+          - button "Products" [ref=f1e19] [cursor=pointer]
+          - button "Orders 12" [ref=f1e29] [cursor=pointer]:
+            - generic [ref=f1e30]: Orders
+            - generic [ref=f1e36]: "12"
+          - button "Customers" [ref=f1e41] [cursor=pointer]
+          - button "Vendors" [ref=f1e53] [cursor=pointer]
+          - button "Marketing" [ref=f1e64] [cursor=pointer]
+          - button "Analytics" [ref=f1e74] [cursor=pointer]
+          - button "Logs" [ref=f1e83] [cursor=pointer]
+          - button "Pages" [ref=f1e93] [cursor=pointer]
+        - generic [ref=f1e102]:
+          - button "Settings" [ref=f1e105] [cursor=pointer]
+          - button "A Admin @philOhme" [ref=f1e115]:
+            - generic [ref=f1e116]: A
+            - generic [ref=f1e117]:
+              - paragraph [ref=f1e118]: Admin
+              - paragraph [ref=f1e119]: "@philOhme"
+    - generic [ref=f1e120]:
+      - banner [ref=f1e121]:
+        - generic [ref=f1e122]:
+          - navigation [ref=f1e123]:
+            - generic [ref=f1e124]: Dashboard
+            - generic [ref=f1e127]: Dashboard
+          - generic [ref=f1e128]:
+            - button "Toggle theme" [ref=f1e129]
+            - generic [ref=f1e138]:
+              - heading "Dashboard" [level=1] [ref=f1e139]
+              - paragraph [ref=f1e140]: Overview of your store
+      - main [ref=f1e141]:
+        - generic [ref=f1e142]:
+          - generic [ref=f1e143]:
+            - heading "Product List" [level=1] [ref=f1e144]
+            - paragraph [ref=f1e145]: Manage product catalog, real-time stock toggles, pricing, and fulfillment status.
+          - generic [ref=f1e146]:
+            - generic [ref=f1e148]:
+              - generic [ref=f1e150]:
+                - paragraph [ref=f1e151]: In-store Sales
+                - paragraph [ref=f1e152]: $5,345.43
+                - generic [ref=f1e153]:
+                  - generic [ref=f1e154]: 5k orders
+                  - generic [ref=f1e155]: +5.7%
+              - generic [ref=f1e162]:
+                - paragraph [ref=f1e163]: Website Sales
+                - paragraph [ref=f1e164]: $674,347.12
+                - generic [ref=f1e165]:
+                  - generic [ref=f1e166]: 21k orders
+                  - generic [ref=f1e167]: +12.4%
+              - generic [ref=f1e173]:
+                - paragraph [ref=f1e174]: Discount
+                - paragraph [ref=f1e175]: $14,235.12
+                - generic [ref=f1e176]: 6k orders
+              - generic [ref=f1e184]:
+                - paragraph [ref=f1e185]: Affiliate
+                - paragraph [ref=f1e186]: $8,345.23
+                - generic [ref=f1e187]:
+                  - generic [ref=f1e188]: 150 orders
+                  - generic [ref=f1e189]: "-3.5%"
+            - generic [ref=f1e196]:
+              - generic [ref=f1e197]:
+                - heading "Filter" [level=2] [ref=f1e199]
+                - generic [ref=f1e200]:
+                  - combobox [ref=f1e201]
+                  - combobox [aria-hidden] [ref=f1e202]
+                  - combobox [ref=f1e203]
+                  - combobox [aria-hidden] [ref=f1e204]
+                  - combobox [ref=f1e205]
+                  - combobox [aria-hidden] [ref=f1e206]
+              - generic [ref=f1e207]:
+                - textbox "Search products..." [ref=f1e212]
+                - generic [ref=f1e213]:
+                  - combobox [ref=f1e214]
+                  - combobox [aria-hidden] [ref=f1e215]
+                  - button "Export" [ref=f1e216]
+                  - link [ref=f1e217] [cursor=pointer]:
+                    - /url: /products/add-product
+                    - button "Add Product" [ref=f1e218]
+              - table [ref=f1e220]:
+                - rowgroup [ref=f1e221]:
+                  - row [ref=f1e222]:
+                    - columnheader [ref=f1e223]:
+                      - checkbox [ref=f1e227]
+                    - columnheader "Product" [ref=f1e231]
+                    - columnheader "Category" [ref=f1e232]
+                    - columnheader "Stock" [ref=f1e233]
+                    - columnheader "SKU" [ref=f1e234]
+                    - columnheader "Price" [ref=f1e235]
+                    - columnheader "Qty" [ref=f1e236]
+                    - columnheader "Status" [ref=f1e237]
+                    - columnheader "Actions" [ref=f1e238]
+                - rowgroup [ref=f1e239]:
+                  - row [ref=f1e240]:
+                    - cell [ref=f1e241]:
+                      - checkbox [ref=f1e245]
+                    - cell "iPhone 14 Pro Super Retina XDR display footnote Pro Motion technology" [ref=f1e249]:
+                      - generic [ref=f1e254]:
+                        - generic [ref=f1e255] [cursor=pointer]: iPhone 14 Pro
+                        - generic [ref=f1e256]: Super Retina XDR display footnote Pro Motion technology
+                    - cell "Electronics" [ref=f1e257]
+                    - cell [ref=f1e258]:
+                      - switch [checked] [ref=f1e259] [cursor=pointer]
+                    - cell "19472" [ref=f1e260]
+                    - cell "$999" [ref=f1e261]
+                    - cell "665" [ref=f1e263]
+                    - cell "Inactive" [ref=f1e264]
+                    - cell [ref=f1e266]:
+                      - button "Open menu" [ref=f1e267]
+                  - row [ref=f1e269]:
+                    - cell [ref=f1e270]:
+                      - checkbox [ref=f1e274]
+                    - cell "Echo Dot (4th Gen) Echo Dot Smart speaker with Alexa" [ref=f1e278]:
+                      - generic [ref=f1e287]:
+                        - generic [ref=f1e288] [cursor=pointer]: Echo Dot (4th Gen)
+                        - generic [ref=f1e289]: Echo Dot Smart speaker with Alexa
+                    - cell "Electronics" [ref=f1e290]
+                    - cell [ref=f1e291]:
+                      - switch [ref=f1e292] [cursor=pointer]
+                    - cell "72836" [ref=f1e293]
+                    - cell "$25.5" [ref=f1e294]
+                    - cell "827" [ref=f1e296]
+                    - cell "Publish" [ref=f1e297]
+                    - cell [ref=f1e299]:
+                      - button "Open menu" [ref=f1e300]
+                  - row [ref=f1e302]:
+                    - cell [ref=f1e303]:
+                      - checkbox [ref=f1e307]
+                    - cell "Dohioue Wall Clock Modern 10 Inch Battery Operated Wall Clocks" [ref=f1e311]:
+                      - generic [ref=f1e317]:
+                        - generic [ref=f1e318] [cursor=pointer]: Dohioue Wall Clock
+                        - generic [ref=f1e319]: Modern 10 Inch Battery Operated Wall Clocks
+                    - cell "Household" [ref=f1e320]
+                    - cell [ref=f1e321]:
+                      - switch [ref=f1e322] [cursor=pointer]
+                    - cell "29540" [ref=f1e323]
+                    - cell "$16.34" [ref=f1e324]
+                    - cell "804" [ref=f1e326]
+                    - cell "Publish" [ref=f1e327]
+                    - cell [ref=f1e329]:
+                      - button "Open menu" [ref=f1e330]
+                  - row [ref=f1e332]:
+                    - cell [ref=f1e333]:
+                      - checkbox [ref=f1e337]
+                    - cell "INZCOU Running Shoes Lightweight Tennis Shoes Non Slip Gym Workout Shoes" [ref=f1e341]:
+                      - generic [ref=f1e347]:
+                        - generic [ref=f1e348] [cursor=pointer]: INZCOU Running Shoes
+                        - generic [ref=f1e349]: Lightweight Tennis Shoes Non Slip Gym Workout Shoes
+                    - cell "Shoes" [ref=f1e350]
+                    - cell [ref=f1e351]:
+                      - switch [ref=f1e352] [cursor=pointer]
+                    - cell "49402" [ref=f1e353]
+                    - cell "$36.98" [ref=f1e354]
+                    - cell "528" [ref=f1e356]
+                    - cell "Scheduled" [ref=f1e357]
+                    - cell [ref=f1e359]:
+                      - button "Open menu" [ref=f1e360]
+                  - row [ref=f1e362]:
+                    - cell [ref=f1e363]:
+                      - checkbox [ref=f1e367]
+                    - cell "Apple Watch Series 7 Starlight Aluminum Case with Starlight Sport Band." [ref=f1e371]:
+                      - generic [ref=f1e379]:
+                        - generic [ref=f1e380] [cursor=pointer]: Apple Watch Series 7
+                        - generic [ref=f1e381]: Starlight Aluminum Case with Starlight Sport Band.
+                    - cell "Accessories" [ref=f1e382]
+                    - cell [ref=f1e383]:
+                      - switch [ref=f1e384] [cursor=pointer]
+                    - cell "46658" [ref=f1e385]
+                    - cell "$799" [ref=f1e386]
+                    - cell "851" [ref=f1e388]
+                    - cell "Scheduled" [ref=f1e389]
+                    - cell [ref=f1e391]:
+                      - button "Open menu" [ref=f1e392]
+                  - row [ref=f1e394]:
+                    - cell [ref=f1e395]:
+                      - checkbox [ref=f1e399]
+                    - cell "MacBook Air M2 13.6-inch Liquid Retina Display, 8GB RAM, 256GB SSD" [ref=f1e403]:
+                      - generic [ref=f1e408]:
+                        - generic [ref=f1e409] [cursor=pointer]: MacBook Air M2
+                        - generic [ref=f1e410]: 13.6-inch Liquid Retina Display, 8GB RAM, 256GB SSD
+                    - cell "Electronics" [ref=f1e411]
+                    - cell [ref=f1e412]:
+                      - switch [checked] [ref=f1e413] [cursor=pointer]
+                    - cell "88391" [ref=f1e414]
+                    - cell "$1199" [ref=f1e415]
+                    - cell "412" [ref=f1e417]
+                    - cell "Publish" [ref=f1e418]
+                    - cell [ref=f1e420]:
+                      - button "Open menu" [ref=f1e421]
+                  - row [ref=f1e423]:
+                    - cell [ref=f1e424]:
+                      - checkbox [ref=f1e428]
+                    - cell "Meta Quest 2 Advanced All-In-One Virtual Reality Headset" [ref=f1e432]:
+                      - generic [ref=f1e437]:
+                        - generic [ref=f1e438] [cursor=pointer]: Meta Quest 2
+                        - generic [ref=f1e439]: Advanced All-In-One Virtual Reality Headset
+                    - cell "Accessories" [ref=f1e440]
+                    - cell [ref=f1e441]:
+                      - switch [checked] [ref=f1e442] [cursor=pointer]
+                    - cell "57640" [ref=f1e443]
+                    - cell "$299" [ref=f1e444]
+                    - cell "962" [ref=f1e446]
+                    - cell "Scheduled" [ref=f1e447]
+                    - cell [ref=f1e449]:
+                      - button "Open menu" [ref=f1e450]
+                  - row [ref=f1e452]:
+                    - cell [ref=f1e453]:
+                      - checkbox [ref=f1e457]
+                    - cell "MacBook Pro 16 Laptop M2 Pro chip with 12-core CPU and 19-core GPU" [ref=f1e461]:
+                      - generic [ref=f1e466]:
+                        - generic [ref=f1e467] [cursor=pointer]: MacBook Pro 16
+                        - generic [ref=f1e468]: Laptop M2 Pro chip with 12-core CPU and 19-core GPU
+                    - cell "Electronics" [ref=f1e469]
+                    - cell [ref=f1e470]:
+                      - switch [checked] [ref=f1e471] [cursor=pointer]
+                    - cell "92885" [ref=f1e472]
+                    - cell "$2648.95" [ref=f1e473]
+                    - cell "965" [ref=f1e475]
+                    - cell "Publish" [ref=f1e476]
+                    - cell [ref=f1e478]:
+                      - button "Open menu" [ref=f1e479]
+                  - row [ref=f1e481]:
+                    - cell [ref=f1e482]:
+                      - checkbox [ref=f1e486]
+                    - cell "SAMSUNG Galaxy S22 Ultra Android Smartphone, 256GB, 8K Camera" [ref=f1e490]:
+                      - generic [ref=f1e495]:
+                        - generic [ref=f1e496] [cursor=pointer]: SAMSUNG Galaxy S22 Ultra
+                        - generic [ref=f1e497]: Android Smartphone, 256GB, 8K Camera
+                    - cell "Electronics" [ref=f1e498]
+                    - cell [ref=f1e499]:
+                      - switch [checked] [ref=f1e500] [cursor=pointer]
+                    - cell "75257" [ref=f1e501]
+                    - cell "$899" [ref=f1e502]
+                    - cell "447" [ref=f1e504]
+                    - cell "Publish" [ref=f1e505]
+                    - cell [ref=f1e507]:
+                      - button "Open menu" [ref=f1e508]
+                  - row [ref=f1e510]:
+                    - cell [ref=f1e511]:
+                      - checkbox [ref=f1e515]
+                    - cell "Air Jordan Air Jordan is a line of basketball shoes produced by Nike" [ref=f1e519]:
+                      - generic [ref=f1e525]:
+                        - generic [ref=f1e526] [cursor=pointer]: Air Jordan
+                        - generic [ref=f1e527]: Air Jordan is a line of basketball shoes produced by Nike
+                    - cell "Shoes" [ref=f1e528]
+                    - cell [ref=f1e529]:
+                      - switch [ref=f1e530] [cursor=pointer]
+                    - cell "31063" [ref=f1e531]
+                    - cell "$125" [ref=f1e532]
+                    - cell "942" [ref=f1e534]
+                    - cell "Inactive" [ref=f1e535]
+                    - cell [ref=f1e537]:
+                      - button "Open menu" [ref=f1e538]
+              - generic [ref=f1e540]:
+                - paragraph [ref=f1e541]: Showing 1 to 10 of 11 entries
+                - generic [ref=f1e542]:
+                  - button "Previous" [disabled]
+                  - button "1" [ref=f1e543]
+                  - button "2" [ref=f1e544]
+                  - button "Next" [ref=f1e545]
+  - region "Notifications alt+T"

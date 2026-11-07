@@ -1,0 +1,189 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e5]:
+          - link "AP Admin Panel" [ref=f1e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f1e7]: AP
+            - generic [ref=f1e9]: Admin Panel
+          - button "Collapse sidebar (Ctrl+B)" [ref=f1e10]
+        - generic [ref=f1e11]:
+          - link "Dashboard" [ref=f1e12] [cursor=pointer]:
+            - /url: /
+          - button "Products" [ref=f1e19] [cursor=pointer]
+          - button "Orders 12" [ref=f1e29] [cursor=pointer]:
+            - generic [ref=f1e30]: Orders
+            - generic [ref=f1e36]: "12"
+          - button "Customers" [ref=f1e41] [cursor=pointer]
+          - button "Vendors" [ref=f1e53] [cursor=pointer]
+          - button "Marketing" [ref=f1e64] [cursor=pointer]
+          - button "Analytics" [ref=f1e74] [cursor=pointer]
+          - button "Logs" [ref=f1e83] [cursor=pointer]
+          - button "Pages" [ref=f1e93] [cursor=pointer]
+        - generic [ref=f1e102]:
+          - button "Settings" [ref=f1e105] [cursor=pointer]
+          - button "A Admin @philOhme" [ref=f1e115]:
+            - generic [ref=f1e116]: A
+            - generic [ref=f1e117]:
+              - paragraph [ref=f1e118]: Admin
+              - paragraph [ref=f1e119]: "@philOhme"
+    - generic [ref=f1e120]:
+      - banner [ref=f1e121]:
+        - generic [ref=f1e122]:
+          - navigation [ref=f1e123]:
+            - generic [ref=f1e124]: Dashboard
+            - generic [ref=f1e127]: Dashboard
+          - generic [ref=f1e128]:
+            - button "Toggle theme" [ref=f1e129]
+            - generic [ref=f1e138]:
+              - heading "Dashboard" [level=1] [ref=f1e139]
+              - paragraph [ref=f1e140]: Overview of your store
+      - main [ref=f1e141]:
+        - generic [ref=f1e142]:
+          - navigation [ref=f1e143]:
+            - link "Home" [ref=f1e144] [cursor=pointer]:
+              - /url: /
+            - generic [ref=f1e148]: /
+            - link "Order" [ref=f1e149] [cursor=pointer]:
+              - /url: /orders
+            - generic [ref=f1e150]: /
+            - generic [ref=f1e151]: Order Details
+          - generic [ref=f1e152]:
+            - generic [ref=f1e153]:
+              - generic [ref=f1e154]:
+                - 'heading "Order #ORD-9421" [level=1] [ref=f1e155]'
+                - generic [ref=f1e156]: Paid
+                - generic [ref=f1e157]: DELIVERED
+              - paragraph [ref=f1e158]: Oct 10, 2026, 07:50 PM (ET)
+            - generic [ref=f1e159]:
+              - button "Update Status" [ref=f1e160]
+              - button "Delete Order" [ref=f1e161]
+          - generic [ref=f1e162]:
+            - generic [ref=f1e163]:
+              - generic [ref=f1e164]:
+                - generic [ref=f1e165]:
+                  - heading "Order details" [level=2] [ref=f1e166]
+                  - button "Edit" [ref=f1e167] [cursor=pointer]
+                - table [ref=f1e169]:
+                  - rowgroup [ref=f1e170]:
+                    - row [ref=f1e171]:
+                      - columnheader "Product" [ref=f1e172]
+                      - columnheader "Price" [ref=f1e173]
+                      - columnheader "Qty" [ref=f1e174]
+                      - columnheader "Total" [ref=f1e175]
+                  - rowgroup [ref=f1e176]:
+                    - row [ref=f1e177]:
+                      - cell [ref=f1e178]:
+                        - generic [ref=f1e179]:
+                          - img "Tailored Minimalist Trench Coat" [ref=f1e181]
+                          - generic [ref=f1e182]:
+                            - paragraph [ref=f1e183]: Tailored Minimalist Trench Coat
+                            - paragraph [ref=f1e184]: "Color: Onyx Black, Size: M"
+                      - cell "$219" [ref=f1e185]
+                      - cell "2" [ref=f1e186]
+                      - cell "$438" [ref=f1e187]
+                    - row [ref=f1e188]:
+                      - cell [ref=f1e189]:
+                        - generic [ref=f1e190]:
+                          - img "Smart Watch Ultra Titanium" [ref=f1e192]
+                          - generic [ref=f1e193]:
+                            - paragraph [ref=f1e194]: Smart Watch Ultra Titanium
+                            - paragraph [ref=f1e195]: "Case: 49mm, Band: Midnight Ocean"
+                      - cell "$399" [ref=f1e196]
+                      - cell "1" [ref=f1e197]
+                      - cell "$399" [ref=f1e198]
+                    - row [ref=f1e199]:
+                      - cell [ref=f1e200]:
+                        - generic [ref=f1e201]:
+                          - img "Ergonomic Sculpted Oak Chair" [ref=f1e203]
+                          - generic [ref=f1e204]:
+                            - paragraph [ref=f1e205]: Ergonomic Sculpted Oak Chair
+                            - paragraph [ref=f1e206]: "Material: Solid Natural Oak"
+                      - cell "$480" [ref=f1e207]
+                      - cell "1" [ref=f1e208]
+                      - cell "$480" [ref=f1e209]
+                - generic [ref=f1e211]:
+                  - generic [ref=f1e212]:
+                    - generic [ref=f1e213]: "Subtotal:"
+                    - generic [ref=f1e214]: $1,317
+                  - generic [ref=f1e215]:
+                    - generic [ref=f1e216]: "Discount:"
+                    - generic [ref=f1e217]: "-$15"
+                  - generic [ref=f1e218]:
+                    - generic [ref=f1e219]: "Tax:"
+                    - generic [ref=f1e220]: $105
+                  - generic [ref=f1e221]:
+                    - generic [ref=f1e222]: "Total:"
+                    - generic [ref=f1e223]: $1,407
+              - generic [ref=f1e224]:
+                - heading "Shipping activity" [level=2] [ref=f1e225]
+                - generic [ref=f1e226]:
+                  - generic [ref=f1e227]:
+                    - generic [ref=f1e229]:
+                      - paragraph [ref=f1e230]: "Order was placed (Order ID: #ORD-9421)"
+                      - paragraph [ref=f1e231]: Your order has been placed successfully
+                    - generic [ref=f1e232]: Tuesday 11:29 AM
+                  - generic [ref=f1e233]:
+                    - generic [ref=f1e235]:
+                      - paragraph [ref=f1e236]: Pick-up
+                      - paragraph [ref=f1e237]: Pick-up scheduled with courier
+                    - generic [ref=f1e238]: Wednesday 11:29 AM
+                  - generic [ref=f1e239]:
+                    - generic [ref=f1e241]:
+                      - paragraph [ref=f1e242]: Dispatched
+                      - paragraph [ref=f1e243]: Item has been picked up by courier
+                    - generic [ref=f1e244]: Thursday 11:29 AM
+                  - generic [ref=f1e245]:
+                    - generic [ref=f1e247]:
+                      - paragraph [ref=f1e248]: Package arrived
+                      - paragraph [ref=f1e249]: Package arrived at an Amazon facility, NY
+                    - generic [ref=f1e250]: Saturday 15:20 AM
+                  - generic [ref=f1e251]:
+                    - generic [ref=f1e253]:
+                      - paragraph [ref=f1e254]: Dispatched for delivery
+                      - paragraph [ref=f1e255]: Package has left an Amazon facility, NY
+                    - generic [ref=f1e256]: Today 14:12 PM
+                  - generic [ref=f1e257]:
+                    - generic [ref=f1e259]:
+                      - paragraph [ref=f1e260]: Delivery
+                      - paragraph [ref=f1e261]: Package was delivered directly to customer
+                    - generic [ref=f1e262]: Completed
+            - generic [ref=f1e263]:
+              - generic [ref=f1e264]:
+                - heading "Customer Details" [level=2] [ref=f1e265]
+                - generic [ref=f1e266]:
+                  - img "Sophia Carter" [ref=f1e268]
+                  - generic [ref=f1e269]:
+                    - paragraph [ref=f1e270]: Sophia Carter
+                    - paragraph [ref=f1e271]: "Customer ID: #u1"
+                - generic [ref=f1e272]: 12 orders
+                - generic [ref=f1e279]:
+                  - generic [ref=f1e280]:
+                    - generic [ref=f1e281]: Contact info
+                    - button "Edit" [ref=f1e282]
+                  - generic [ref=f1e283]:
+                    - paragraph [ref=f1e284]: "Email: sophia.carter@example.com"
+                    - paragraph [ref=f1e285]: "Mobile: +1 555-0149"
+              - generic [ref=f1e286]:
+                - generic [ref=f1e287]:
+                  - heading "Shipping Address" [level=2] [ref=f1e288]
+                  - button "Edit" [ref=f1e289]
+                - generic [ref=f1e290]:
+                  - paragraph [ref=f1e291]: 742 Evergreen Terrace
+                  - paragraph [ref=f1e292]: Springfield
+                  - paragraph [ref=f1e293]: 97477, OR
+                  - paragraph [ref=f1e294]: United States
+              - generic [ref=f1e295]:
+                - generic [ref=f1e296]:
+                  - heading "Billing address" [level=2] [ref=f1e297]
+                  - button "Edit" [ref=f1e298]
+                - generic [ref=f1e299]:
+                  - paragraph [ref=f1e300]: 742 Evergreen Terrace
+                  - paragraph [ref=f1e301]: Springfield
+                  - paragraph [ref=f1e302]: 97477, OR
+                  - paragraph [ref=f1e303]: United States
+                - generic [ref=f1e308]:
+                  - paragraph [ref=f1e309]: Mastercard
+                  - paragraph [ref=f1e310]: "Card Number: ******4291"
+  - region "Notifications alt+T"

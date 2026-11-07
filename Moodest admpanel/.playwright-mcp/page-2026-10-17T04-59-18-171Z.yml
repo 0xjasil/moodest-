@@ -1,0 +1,255 @@
+- generic [active] [ref=f9e1]:
+  - generic [ref=f9e2]:
+    - banner [ref=f9e3]:
+      - generic [ref=f9e4]:
+        - generic [ref=f9e5]:
+          - button "Menu" [ref=f9e6] [cursor=pointer]
+          - link "CommerceO" [ref=f9e8] [cursor=pointer]:
+            - /url: /
+        - generic [ref=f9e19]:
+          - button [ref=f9e20] [cursor=pointer]
+          - generic [ref=f9e21]:
+            - heading "Command Palette" [level=2] [ref=f9e22]
+            - paragraph [ref=f9e23]: Search for a command to run...
+          - button [ref=f9e24] [cursor=pointer]
+          - button [ref=f9e25] [cursor=pointer]
+          - button [ref=f9e26] [cursor=pointer]
+          - button [ref=f9e27] [cursor=pointer]
+          - button "JD" [ref=f9e28] [cursor=pointer]
+    - main [ref=f9e31]:
+      - generic [ref=f9e32]:
+        - navigation "breadcrumb" [ref=f9e34]:
+          - list [ref=f9e35]:
+            - listitem [ref=f9e36]:
+              - link [ref=f9e37] [cursor=pointer]:
+                - /url: /
+            - generic [ref=f9e40]:
+              - listitem [aria-hidden] [ref=f9e41]: /
+              - listitem [ref=f9e42]:
+                - link "Products" [ref=f9e43] [cursor=pointer]:
+                  - /url: /products/list
+            - generic [ref=f9e44]:
+              - listitem [aria-hidden] [ref=f9e45]: /
+              - listitem [ref=f9e46]:
+                - link "Category List" [disabled] [ref=f9e47]
+        - generic [ref=f9e48]:
+          - generic [ref=f9e54]:
+            - paragraph [ref=f9e55]: eCommerce Dashboard
+            - paragraph [ref=f9e56]: Earning reports
+          - generic [ref=f9e57]:
+            - generic [ref=f9e58]:
+              - paragraph [ref=f9e59]: $23k
+              - paragraph [ref=f9e60]: Sales
+            - generic [ref=f9e61]:
+              - paragraph [ref=f9e62]: 8.51k
+              - paragraph [ref=f9e63]: Customers
+            - generic [ref=f9e64]:
+              - paragraph [ref=f9e65]: 2.5k
+              - paragraph [ref=f9e66]: Products
+            - generic [ref=f9e67]:
+              - paragraph [ref=f9e68]: 1.2k
+              - paragraph [ref=f9e69]: Revenue
+        - generic [ref=f9e73]:
+          - generic [ref=f9e74]:
+            - generic [ref=f9e75]:
+              - generic [ref=f9e76]:
+                - generic [ref=f9e77] [cursor=pointer]: Search
+                - group [ref=f9e78]:
+                  - group [ref=f9e79]
+                  - textbox "Search" [ref=f9e82]:
+                    - /placeholder: Search category
+              - generic [ref=f9e83]:
+                - combobox [ref=f9e84] [cursor=pointer]:
+                  - generic [ref=f9e85]: "10"
+                - textbox [aria-hidden] [ref=f9e86]: "10"
+                - button "Add Category" [ref=f9e87] [cursor=pointer]
+            - table [ref=f9e90]:
+              - rowgroup [ref=f9e91]:
+                - row [ref=f9e92]:
+                  - columnheader [ref=f9e93]:
+                    - checkbox "Select all" [ref=f9e94] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=f9e95]
+                  - columnheader "Categories" [ref=f9e96]
+                  - columnheader "Total Products" [ref=f9e98]
+                  - columnheader "Total Earnings" [ref=f9e100]
+                  - columnheader "Actions" [ref=f9e102]
+              - rowgroup [ref=f9e103]:
+                - row [ref=f9e104]:
+                  - cell [ref=f9e105]:
+                    - checkbox "Select row" [ref=f9e106] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=f9e107]
+                  - cell "SM Smart Phone Choose from wide range of smartphones from popular brands" [ref=f9e108]:
+                    - generic [ref=f9e109]:
+                      - generic [ref=f9e110]: SM
+                      - generic [ref=f9e112]:
+                        - paragraph [ref=f9e113]: Smart Phone
+                        - paragraph [ref=f9e114]: Choose from wide range of smartphones from popular brands
+                  - cell "1,947" [ref=f9e115]
+                  - cell "$99,129" [ref=f9e116]
+                  - cell [ref=f9e117]:
+                    - button "Row actions" [ref=f9e118] [cursor=pointer]
+                - row [ref=f9e119]:
+                  - cell [ref=f9e120]:
+                    - checkbox "Select row" [ref=f9e121] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=f9e122]
+                  - cell "EL Electronics Choose from wide range of electronics from popular brands" [ref=f9e123]:
+                    - generic [ref=f9e124]:
+                      - generic [ref=f9e125]: EL
+                      - generic [ref=f9e127]:
+                        - paragraph [ref=f9e128]: Electronics
+                        - paragraph [ref=f9e129]: Choose from wide range of electronics from popular brands
+                  - cell "7,283" [ref=f9e130]
+                  - cell "$2,512.50" [ref=f9e131]
+                  - cell [ref=f9e132]:
+                    - button "Row actions" [ref=f9e133] [cursor=pointer]
+                - row [ref=f9e134]:
+                  - cell [ref=f9e135]:
+                    - checkbox "Select row" [ref=f9e136] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=f9e137]
+                  - cell "CL Clocks Choose from wide range of clocks from popular brands" [ref=f9e138]:
+                    - generic [ref=f9e139]:
+                      - generic [ref=f9e140]: CL
+                      - generic [ref=f9e142]:
+                        - paragraph [ref=f9e143]: Clocks
+                        - paragraph [ref=f9e144]: Choose from wide range of clocks from popular brands
+                  - cell "2,954" [ref=f9e145]
+                  - cell "$1,612.34" [ref=f9e146]
+                  - cell [ref=f9e147]:
+                    - button "Row actions" [ref=f9e148] [cursor=pointer]
+                - row [ref=f9e149]:
+                  - cell [ref=f9e150]:
+                    - checkbox "Select row" [ref=f9e151] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=f9e152]
+                  - cell "SH Shoes Explore the latest shoes from Top brands" [ref=f9e153]:
+                    - generic [ref=f9e154]:
+                      - generic [ref=f9e155]: SH
+                      - generic [ref=f9e157]:
+                        - paragraph [ref=f9e158]: Shoes
+                        - paragraph [ref=f9e159]: Explore the latest shoes from Top brands
+                  - cell "4,940" [ref=f9e160]
+                  - cell "$3,612.98" [ref=f9e161]
+                  - cell [ref=f9e162]:
+                    - button "Row actions" [ref=f9e163] [cursor=pointer]
+                - row [ref=f9e164]:
+                  - cell [ref=f9e165]:
+                    - checkbox "Select row" [ref=f9e166] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=f9e167]
+                  - cell "AC Accessories Explore best selling accessories from Top brands" [ref=f9e168]:
+                    - generic [ref=f9e169]:
+                      - generic [ref=f9e170]: AC
+                      - generic [ref=f9e172]:
+                        - paragraph [ref=f9e173]: Accessories
+                        - paragraph [ref=f9e174]: Explore best selling accessories from Top brands
+                  - cell "4,665" [ref=f9e175]
+                  - cell "$79,129" [ref=f9e176]
+                  - cell [ref=f9e177]:
+                    - button "Row actions" [ref=f9e178] [cursor=pointer]
+                - row [ref=f9e179]:
+                  - cell [ref=f9e180]:
+                    - checkbox "Select row" [ref=f9e181] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=f9e182]
+                  - cell "GA Games Dive into world of Virtual Reality with latest games" [ref=f9e183]:
+                    - generic [ref=f9e184]:
+                      - generic [ref=f9e185]: GA
+                      - generic [ref=f9e187]:
+                        - paragraph [ref=f9e188]: Games
+                        - paragraph [ref=f9e189]: Dive into world of Virtual Reality with latest games
+                  - cell "5,764" [ref=f9e190]
+                  - cell "$29,129" [ref=f9e191]
+                  - cell [ref=f9e192]:
+                    - button "Row actions" [ref=f9e193] [cursor=pointer]
+                - row [ref=f9e194]:
+                  - cell [ref=f9e195]:
+                    - checkbox "Select row" [ref=f9e196] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=f9e197]
+                  - cell "HO Home Decor Choose from wide range of home decor from popular brands" [ref=f9e198]:
+                    - generic [ref=f9e199]:
+                      - generic [ref=f9e200]: HO
+                      - generic [ref=f9e202]:
+                        - paragraph [ref=f9e203]: Home Decor
+                        - paragraph [ref=f9e204]: Choose from wide range of home decor from popular brands
+                  - cell "9,184" [ref=f9e205]
+                  - cell "$19,120.45" [ref=f9e206]
+                  - cell [ref=f9e207]:
+                    - button "Row actions" [ref=f9e208] [cursor=pointer]
+                - row [ref=f9e209]:
+                  - cell [ref=f9e210]:
+                    - checkbox "Select row" [ref=f9e211] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=f9e212]
+                  - cell "TR Travel Choose from wide range of travel accessories from popular brands" [ref=f9e213]:
+                    - generic [ref=f9e214]:
+                      - generic [ref=f9e215]: TR
+                      - generic [ref=f9e217]:
+                        - paragraph [ref=f9e218]: Travel
+                        - paragraph [ref=f9e219]: Choose from wide range of travel accessories from popular brands
+                  - cell "4,186" [ref=f9e220]
+                  - cell "$7,912.99" [ref=f9e221]
+                  - cell [ref=f9e222]:
+                    - button "Row actions" [ref=f9e223] [cursor=pointer]
+                - row [ref=f9e224]:
+                  - cell [ref=f9e225]:
+                    - checkbox "Select row" [ref=f9e226] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=f9e227]
+                  - cell "BA Baby Products Choose from wide range of Baby products from popular brands" [ref=f9e228]:
+                    - generic [ref=f9e229]:
+                      - generic [ref=f9e230]: BA
+                      - generic [ref=f9e232]:
+                        - paragraph [ref=f9e233]: Baby Products
+                        - paragraph [ref=f9e234]: Choose from wide range of Baby products from popular brands
+                  - cell "4,186" [ref=f9e235]
+                  - cell "$7,912.99" [ref=f9e236]
+                  - cell [ref=f9e237]:
+                    - button "Row actions" [ref=f9e238] [cursor=pointer]
+                - row [ref=f9e239]:
+                  - cell [ref=f9e240]:
+                    - checkbox "Select row" [ref=f9e241] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=f9e242]
+                  - cell "JE Jewellery Choose from wide range of Jewellery from popular brands" [ref=f9e243]:
+                    - generic [ref=f9e244]:
+                      - generic [ref=f9e245]: JE
+                      - generic [ref=f9e247]:
+                        - paragraph [ref=f9e248]: Jewellery
+                        - paragraph [ref=f9e249]: Choose from wide range of Jewellery from popular brands
+                  - cell "4,186" [ref=f9e250]
+                  - cell "$7,912.99" [ref=f9e251]
+                  - cell [ref=f9e252]:
+                    - button "Row actions" [ref=f9e253] [cursor=pointer]
+          - generic [ref=f9e254]:
+            - paragraph [ref=f9e255]: Showing 1 to 10 of 14 entries
+            - navigation "pagination" [ref=f9e256]:
+              - list [ref=f9e257]:
+                - listitem [ref=f9e258]:
+                  - button [disabled]
+                - listitem [ref=f9e259]:
+                  - button "1" [ref=f9e260] [cursor=pointer]
+                - listitem [ref=f9e261]:
+                  - button "2" [ref=f9e262] [cursor=pointer]
+                - listitem [ref=f9e263]:
+                  - button [ref=f9e264] [cursor=pointer]
+    - contentinfo [ref=f9e265]:
+      - generic [ref=f9e266]:
+        - paragraph [ref=f9e267]:
+          - text: ©2026
+          - link "shadcn/studio" [ref=f9e268] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=f9e269]:
+          - link "All Products" [ref=f9e270] [cursor=pointer]:
+            - /url: "#"
+          - link "Countries" [ref=f9e271] [cursor=pointer]:
+            - /url: "#"
+          - link "License" [ref=f9e272] [cursor=pointer]:
+            - /url: "#"
+          - link "FAQ" [ref=f9e273] [cursor=pointer]:
+            - /url: "#"
+          - link "Support" [ref=f9e274] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=f9e275]:
+          - link [ref=f9e276] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=f9e279] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=f9e283] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=f9e287] [cursor=pointer]:
+            - /url: "#"
+  - button "Buy Now" [ref=f9e290] [cursor=pointer]

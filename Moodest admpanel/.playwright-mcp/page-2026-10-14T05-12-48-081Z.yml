@@ -1,0 +1,179 @@
+- generic:
+  - generic [aria-hidden]:
+    - generic:
+      - button
+    - generic:
+      - banner:
+        - generic:
+          - navigation:
+            - generic: Dashboard
+            - generic: Inventory
+          - generic:
+            - button:
+              - generic: Toggle theme
+      - main:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - heading [level=1]: Inventory
+                  - paragraph: Manage Inventory
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: Filters
+                        - generic: Filter products by search, category, or brand
+                  - generic:
+                    - generic:
+                      - generic:
+                        - textbox:
+                          - /placeholder: Search by name or description
+                      - combobox:
+                        - generic: All Categories
+                      - combobox:
+                        - generic: All Brands
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: All Products
+                        - generic: Showing 4 variants of 4 products
+                      - generic: Page 1 of 1
+                  - generic:
+                    - generic:
+                      - generic:
+                        - table:
+                          - rowgroup:
+                            - row:
+                              - columnheader:
+                                - generic:
+                                  - generic:
+                                    - checkbox
+                              - columnheader: Product
+                              - columnheader: Category
+                              - columnheader: Brand
+                              - columnheader: Price
+                              - columnheader: Stock
+                              - columnheader: Status
+                          - rowgroup:
+                            - row:
+                              - cell:
+                                - generic:
+                                  - generic:
+                                    - checkbox
+                              - cell:
+                                - generic:
+                                  - generic: Tailored Minimalist Trench Coat
+                                  - generic: TRN-BLK-M
+                              - cell: Apparel
+                              - cell: Aura Studio
+                              - cell:
+                                - generic: $249.00
+                              - cell:
+                                - generic: "18"
+                              - cell:
+                                - generic: In Stock
+                            - row:
+                              - cell:
+                                - generic:
+                                  - generic:
+                                    - checkbox
+                              - cell:
+                                - generic:
+                                  - generic: Merino Wool Knit Overshirt
+                                  - generic: OVR-WHT-S
+                              - cell: Apparel
+                              - cell: Nordic Thread
+                              - cell:
+                                - generic: $139.00
+                              - cell:
+                                - generic:
+                                  - generic: "4"
+                                  - generic: Low
+                              - cell:
+                                - generic: Low Stock
+                            - row:
+                              - cell:
+                                - generic:
+                                  - generic:
+                                    - checkbox
+                              - cell:
+                                - generic:
+                                  - generic: Architectural Leather Messenger
+                                  - generic: MSG-BLK-ONE
+                              - cell: Accessories
+                              - cell: Luxe Atelier
+                              - cell:
+                                - generic: $299.00
+                              - cell:
+                                - generic: "9"
+                              - cell:
+                                - generic: In Stock
+                            - row:
+                              - cell:
+                                - generic:
+                                  - generic:
+                                    - checkbox
+                              - cell:
+                                - generic:
+                                  - generic: Vanguard Heritage Low-Top Sneakers
+                                  - generic: SNK-WHT-42
+                              - cell: Footwear
+                              - cell: Urban Essence
+                              - cell:
+                                - generic: $179.00
+                              - cell:
+                                - generic: "25"
+                              - cell:
+                                - generic: In Stock
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e298] [cursor=pointer]
+  - alert
+  - dialog [ref=e621]:
+    - heading "Admin Navigation" [level=2] [ref=e622]
+    - generic [ref=e623]:
+      - link "AP Admin Panel" [ref=e625] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e626]: AP
+        - generic [ref=e628]: Admin Panel
+      - generic [ref=e629]:
+        - link "Home" [ref=e630] [cursor=pointer]:
+          - /url: /
+        - link "Orders 12" [ref=e636] [cursor=pointer]:
+          - /url: /orders
+          - generic [ref=e637]: Orders
+          - generic [ref=e643]: "12"
+        - generic [ref=e644]:
+          - button "Products" [expanded] [active] [ref=e645] [cursor=pointer]
+          - generic [ref=e654]:
+            - link "Inventory Low" [ref=e655] [cursor=pointer]:
+              - /url: /inventory
+              - generic [ref=e656]: Inventory
+              - generic [ref=e657]: Low
+            - link "Categories" [ref=e658] [cursor=pointer]:
+              - /url: /category
+            - link "Subcategories" [ref=e660] [cursor=pointer]:
+              - /url: /subcategory
+            - link "Brands" [ref=e662] [cursor=pointer]:
+              - /url: /brand
+            - link "Variations" [ref=e664] [cursor=pointer]:
+              - /url: /variations
+        - link "Customers" [ref=e666] [cursor=pointer]:
+          - /url: /customers
+        - button "Marketing" [ref=e675] [cursor=pointer]
+        - button "Analytics" [ref=e685] [cursor=pointer]
+        - button "Logs" [ref=e694] [cursor=pointer]
+      - generic [ref=e703]:
+        - link "Settings" [ref=e705] [cursor=pointer]:
+          - /url: /settings
+        - generic [ref=e711]:
+          - generic [ref=e712]:
+            - generic [ref=e713]: A
+            - generic [ref=e714]:
+              - paragraph [ref=e715]: Alex Morgan
+              - paragraph [ref=e716]: admin@example.com
+          - button "Logout" [ref=e717]
+    - button "Close" [ref=e718]

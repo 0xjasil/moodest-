@@ -1,0 +1,247 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - banner [ref=f2e3]:
+      - generic [ref=f2e4]:
+        - generic [ref=f2e5]:
+          - button "Menu" [ref=f2e6] [cursor=pointer]
+          - link "CommerceO" [ref=f2e8] [cursor=pointer]:
+            - /url: /
+        - generic [ref=f2e19]:
+          - button [ref=f2e20] [cursor=pointer]
+          - generic [ref=f2e21]:
+            - heading "Command Palette" [level=2] [ref=f2e22]
+            - paragraph [ref=f2e23]: Search for a command to run...
+          - button [ref=f2e24] [cursor=pointer]
+          - button [ref=f2e25] [cursor=pointer]
+          - button [ref=f2e26] [cursor=pointer]
+          - button [ref=f2e27] [cursor=pointer]
+          - button "JD" [ref=f2e28] [cursor=pointer]
+    - main [ref=f2e31]:
+      - generic [ref=f2e32]:
+        - navigation "breadcrumb" [ref=f2e34]:
+          - list [ref=f2e35]:
+            - listitem [ref=f2e36]:
+              - link [ref=f2e37] [cursor=pointer]:
+                - /url: /
+            - generic [ref=f2e40]:
+              - listitem [aria-hidden] [ref=f2e41]: /
+              - listitem [ref=f2e42]:
+                - link "Vendor" [ref=f2e43] [cursor=pointer]:
+                  - /url: /vendor/list
+            - generic [ref=f2e44]:
+              - listitem [aria-hidden] [ref=f2e45]: /
+              - listitem [ref=f2e46]:
+                - link "Vendor Details" [disabled] [ref=f2e47]
+        - generic [ref=f2e48]:
+          - generic [ref=f2e54]:
+            - paragraph [ref=f2e55]: eCommerce Dashboard
+            - paragraph [ref=f2e56]: Earning reports
+          - generic [ref=f2e57]:
+            - generic [ref=f2e58]:
+              - paragraph [ref=f2e59]: $23k
+              - paragraph [ref=f2e60]: Sales
+            - generic [ref=f2e61]:
+              - paragraph [ref=f2e62]: 8.51k
+              - paragraph [ref=f2e63]: Customers
+            - generic [ref=f2e64]:
+              - paragraph [ref=f2e65]: 2.5k
+              - paragraph [ref=f2e66]: Products
+            - generic [ref=f2e67]:
+              - paragraph [ref=f2e68]: 1.2k
+              - paragraph [ref=f2e69]: Revenue
+        - generic [ref=f2e72]:
+          - generic [ref=f2e75]:
+            - generic [ref=f2e76]:
+              - img "Jewelry Boutique" [ref=f2e78]
+              - generic [ref=f2e79]:
+                - heading "Jewelry Boutique" [level=4] [ref=f2e80]
+                - paragraph [ref=f2e81]: contact@jewelryboutique.com
+                - generic [ref=f2e82]: 4.9 out of 5
+                - generic [ref=f2e94]: Active
+            - generic [ref=f2e95]:
+              - generic [ref=f2e96]:
+                - generic [ref=f2e97]: "56"
+                - generic [ref=f2e98]: Products
+              - generic [ref=f2e99]:
+                - generic [ref=f2e100]: 1,847
+                - generic [ref=f2e101]: Orders
+              - generic [ref=f2e102]:
+                - generic [ref=f2e103]: $24,567
+                - generic [ref=f2e104]: Revenue
+              - generic [ref=f2e105]:
+                - generic [ref=f2e106]: 98%
+                - generic [ref=f2e107]: Rating
+          - generic [ref=f2e108]:
+            - generic [ref=f2e109]:
+              - generic [ref=f2e110]:
+                - heading "About" [level=5] [ref=f2e112]
+                - paragraph [ref=f2e114]: The MacBook Pro is a high-performance laptop with Apple's M1 Pro/Max chips, offering excellent displays (Retina, ProMotion), long battery life, Magic Keyboard, large trackpad, and multiple ports (Thunderbolt, MagSafe). It's ideal for professionals needing power and portability, with sizes from 13" to 16".
+              - generic [ref=f2e115]:
+                - generic [ref=f2e116]:
+                  - heading "Recent Products" [level=5] [ref=f2e117]
+                  - link "View All" [ref=f2e118] [cursor=pointer]:
+                    - /url: "  /products/list"
+                - generic [ref=f2e120]:
+                  - generic [ref=f2e121]:
+                    - img "iPhone 14 Pro" [ref=f2e123]
+                    - generic [ref=f2e124]:
+                      - heading "iPhone 14 Pro" [level=6] [ref=f2e125]
+                      - paragraph [ref=f2e126]: Super Retina XDR display footnote Pro Motion technology
+                      - generic [ref=f2e127]:
+                        - generic [ref=f2e128]: $699
+                        - generic [ref=f2e129]: $999
+                  - generic [ref=f2e130]:
+                    - img "Echo Dot (4th Gen)" [ref=f2e132]
+                    - generic [ref=f2e133]:
+                      - heading "Echo Dot (4th Gen)" [level=6] [ref=f2e134]
+                      - paragraph [ref=f2e135]: Echo Dot Smart speaker with Alexa
+                      - generic [ref=f2e136]:
+                        - generic [ref=f2e137]: $25
+                        - generic [ref=f2e138]: $30
+                  - generic [ref=f2e139]:
+                    - img "Apple Watch Series 7" [ref=f2e141]
+                    - generic [ref=f2e142]:
+                      - heading "Apple Watch Series 7" [level=6] [ref=f2e143]
+                      - paragraph [ref=f2e144]: Starlight Aluminum Case with Starlight Sport Band.
+                      - generic [ref=f2e145]:
+                        - generic [ref=f2e146]: $120
+                        - generic [ref=f2e147]: $190
+                  - generic [ref=f2e148]:
+                    - img "Apple iPad" [ref=f2e150]
+                    - generic [ref=f2e151]:
+                      - heading "Apple iPad" [level=6] [ref=f2e152]
+                      - paragraph [ref=f2e153]: 10.2-inch Retina Display, 64GB.
+                      - generic [ref=f2e154]:
+                        - generic [ref=f2e155]: $299
+                        - generic [ref=f2e156]: $350
+              - generic [ref=f2e157]:
+                - generic [ref=f2e158]:
+                  - heading "Sales Analytics" [level=5] [ref=f2e159]
+                  - button "Last year" [ref=f2e160] [cursor=pointer]
+                - generic [ref=f2e161]:
+                  - generic [ref=f2e162]:
+                    - generic [ref=f2e163]:
+                      - generic [ref=f2e164]: $12,426
+                      - generic [ref=f2e165]: This Month
+                    - generic [ref=f2e166]:
+                      - generic [ref=f2e167]: $8,567
+                      - generic [ref=f2e168]: Last Month
+                    - generic [ref=f2e169]:
+                      - generic [ref=f2e170]: "234"
+                      - generic [ref=f2e171]: New Orders
+                    - generic [ref=f2e172]:
+                      - generic [ref=f2e173]: "12"
+                      - generic [ref=f2e174]: Cancelled
+                  - generic [ref=f2e176]:
+                    - list [ref=f2e178]:
+                      - listitem [ref=f2e179]:
+                        - img "2024 legend icon" [ref=f2e180]
+                        - text: "2024"
+                      - listitem [ref=f2e182]:
+                        - img "2025 legend icon" [ref=f2e183]
+                        - text: "2025"
+                    - application [ref=f2e185]:
+                      - generic [ref=f2e202]:
+                        - generic [ref=f2e203]:
+                          - generic [ref=f2e204]: Jan
+                          - generic [ref=f2e206]: Feb
+                          - generic [ref=f2e208]: Mar
+                          - generic [ref=f2e210]: Apr
+                          - generic [ref=f2e212]: May
+                          - generic [ref=f2e214]: Jun
+                          - generic [ref=f2e216]: Jul
+                          - generic [ref=f2e218]: Aug
+                          - generic [ref=f2e220]: Sep
+                          - generic [ref=f2e222]: Oct
+                          - generic [ref=f2e224]: Nov
+                          - generic [ref=f2e226]: Dec
+                        - generic [ref=f2e228]:
+                          - generic [ref=f2e229]: "0"
+                          - generic [ref=f2e231]: 35k
+                          - generic [ref=f2e233]: 70k
+                          - generic [ref=f2e235]: 105k
+                          - generic [ref=f2e237]: 140k
+            - generic [ref=f2e239]:
+              - generic [ref=f2e240]:
+                - heading "Contact Information" [level=5] [ref=f2e242]
+                - generic [ref=f2e243]:
+                  - generic [ref=f2e247]:
+                    - generic [ref=f2e248]: lorine.hischke
+                    - generic [ref=f2e249]: Contact Person
+                  - generic [ref=f2e253]:
+                    - generic [ref=f2e254]: (583) 8745 8745
+                    - generic [ref=f2e255]: Phone Number
+                  - generic [ref=f2e259]:
+                    - generic [ref=f2e260]: vendor@techproduct.com
+                    - generic [ref=f2e261]: Email Address
+                  - generic [ref=f2e265]:
+                    - generic [ref=f2e266]: Themeselection
+                    - generic [ref=f2e267]: Company Name
+                  - generic [ref=f2e271]:
+                    - generic [ref=f2e272]: 530 Post Ct El Dorado Hills California
+                    - generic [ref=f2e273]: Address
+              - generic [ref=f2e274]:
+                - heading "Store Information" [level=5] [ref=f2e276]
+                - generic [ref=f2e277]:
+                  - generic [ref=f2e278]:
+                    - generic [ref=f2e279]: Store Status
+                    - generic [ref=f2e280]: Open
+                  - generic [ref=f2e282]:
+                    - generic [ref=f2e283]: Member Since
+                    - generic [ref=f2e284]: Jan 2023
+                  - generic [ref=f2e285]:
+                    - generic [ref=f2e286]: Last Active
+                    - generic [ref=f2e287]: 2 hours ago
+                  - generic [ref=f2e288]:
+                    - generic [ref=f2e289]: Verification
+                    - generic [ref=f2e290]: Verified
+                  - generic [ref=f2e292]:
+                    - generic [ref=f2e293]: Featured
+                    - generic [ref=f2e294]: "Yes"
+              - generic [ref=f2e296]:
+                - heading "Categories" [level=5] [ref=f2e298]
+                - generic [ref=f2e300]:
+                  - generic [ref=f2e301]: Latest
+                  - generic [ref=f2e302]: Verified
+                  - generic [ref=f2e303]: Creative Tools
+                  - generic [ref=f2e304]: Computing Devices
+                  - generic [ref=f2e305]: Premium
+              - generic [ref=f2e306]:
+                - heading "Quick Actions" [level=5] [ref=f2e308]
+                - generic [ref=f2e309]:
+                  - generic [ref=f2e310]:
+                    - button "Send Message" [ref=f2e311] [cursor=pointer]
+                    - button "Call Vendor" [ref=f2e312] [cursor=pointer]
+                    - button "Send Email" [ref=f2e313] [cursor=pointer]
+                    - button "Generate Report" [ref=f2e314] [cursor=pointer]
+                  - separator [ref=f2e315]
+                  - button "Suspend Vendor" [ref=f2e316] [cursor=pointer]
+    - contentinfo [ref=f2e317]:
+      - generic [ref=f2e318]:
+        - paragraph [ref=f2e319]:
+          - text: ©2026
+          - link "shadcn/studio" [ref=f2e320] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=f2e321]:
+          - link "All Products" [ref=f2e322] [cursor=pointer]:
+            - /url: "#"
+          - link "Countries" [ref=f2e323] [cursor=pointer]:
+            - /url: "#"
+          - link "License" [ref=f2e324] [cursor=pointer]:
+            - /url: "#"
+          - link "FAQ" [ref=f2e325] [cursor=pointer]:
+            - /url: "#"
+          - link "Support" [ref=f2e326] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=f2e327]:
+          - link [ref=f2e328] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=f2e331] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=f2e335] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=f2e339] [cursor=pointer]:
+            - /url: "#"
+  - button "Buy Now" [ref=f2e342] [cursor=pointer]
+  - alert [ref=f2e343]
+  - generic [aria-hidden] [ref=f2e344]: "0"

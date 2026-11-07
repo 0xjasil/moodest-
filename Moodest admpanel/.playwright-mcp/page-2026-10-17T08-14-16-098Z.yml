@@ -1,0 +1,176 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - banner [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e5]:
+          - button "Menu" [ref=f1e6] [cursor=pointer]
+          - link "CommerceO" [ref=f1e8] [cursor=pointer]:
+            - /url: /
+        - generic [ref=f1e19]:
+          - button [ref=f1e20] [cursor=pointer]
+          - generic [ref=f1e21]:
+            - heading "Command Palette" [level=2] [ref=f1e22]
+            - paragraph [ref=f1e23]: Search for a command to run...
+          - button [ref=f1e24] [cursor=pointer]
+          - button [ref=f1e25] [cursor=pointer]
+          - button [ref=f1e26] [cursor=pointer]
+          - button [ref=f1e27] [cursor=pointer]
+          - button "JD" [ref=f1e28] [cursor=pointer]
+    - main [ref=f1e31]:
+      - generic [ref=f1e32]:
+        - navigation "breadcrumb" [ref=f1e34]:
+          - list [ref=f1e35]:
+            - listitem [ref=f1e36]:
+              - link [ref=f1e37] [cursor=pointer]:
+                - /url: /
+            - generic [ref=f1e40]:
+              - listitem [aria-hidden] [ref=f1e41]: /
+              - listitem [ref=f1e42]:
+                - link "Vendor" [ref=f1e43] [cursor=pointer]:
+                  - /url: /vendor/list
+            - generic [ref=f1e44]:
+              - listitem [aria-hidden] [ref=f1e45]: /
+              - listitem [ref=f1e46]:
+                - link "Create Vendor" [disabled] [ref=f1e47]
+        - generic [ref=f1e48]:
+          - generic [ref=f1e54]:
+            - paragraph [ref=f1e55]: eCommerce Dashboard
+            - paragraph [ref=f1e56]: Earning reports
+          - generic [ref=f1e57]:
+            - generic [ref=f1e58]:
+              - paragraph [ref=f1e59]: $23k
+              - paragraph [ref=f1e60]: Sales
+            - generic [ref=f1e61]:
+              - paragraph [ref=f1e62]: 8.51k
+              - paragraph [ref=f1e63]: Customers
+            - generic [ref=f1e64]:
+              - paragraph [ref=f1e65]: 2.5k
+              - paragraph [ref=f1e66]: Products
+            - generic [ref=f1e67]:
+              - paragraph [ref=f1e68]: 1.2k
+              - paragraph [ref=f1e69]: Revenue
+        - generic [ref=f1e73]:
+          - generic [ref=f1e74]:
+            - generic [ref=f1e75]:
+              - heading "Basic Information" [level=5] [ref=f1e77]
+              - generic [ref=f1e79]:
+                - generic [ref=f1e80]:
+                  - generic [ref=f1e81] [cursor=pointer]: Name
+                  - textbox "Name" [ref=f1e83]:
+                    - /placeholder: Esther Howard
+                - generic [ref=f1e84]:
+                  - generic [ref=f1e85] [cursor=pointer]: Phone Number
+                  - textbox "Phone Number" [ref=f1e87]:
+                    - /placeholder: (583) 8745 8745
+                - generic [ref=f1e88]:
+                  - generic [ref=f1e89] [cursor=pointer]: Email Address
+                  - textbox "Email Address" [ref=f1e91]
+                - generic [ref=f1e92]:
+                  - generic [ref=f1e93] [cursor=pointer]: Company
+                  - textbox "Company" [ref=f1e95]:
+                    - /placeholder: Company name
+                - generic [ref=f1e96]:
+                  - generic [ref=f1e97] [cursor=pointer]: Address
+                  - textbox "Address" [ref=f1e99]
+                - generic [ref=f1e100]:
+                  - generic [ref=f1e101] [cursor=pointer]: City
+                  - textbox "City" [ref=f1e103]
+                - generic [ref=f1e104]:
+                  - generic [ref=f1e105] [cursor=pointer]: Country
+                  - generic [ref=f1e106]:
+                    - combobox "Country" [ref=f1e107] [cursor=pointer]:
+                      - generic [ref=f1e108]: Select country
+                    - textbox [aria-hidden] [ref=f1e109]
+                - generic [ref=f1e110]:
+                  - generic [ref=f1e111] [cursor=pointer]: Postal Code
+                  - textbox "Postal Code" [ref=f1e113]:
+                    - /placeholder: "000000"
+                - generic [ref=f1e115]:
+                  - generic [ref=f1e116] [cursor=pointer]: About
+                  - textbox "About" [ref=f1e118]:
+                    - /placeholder: Add description of the vendor
+            - generic [ref=f1e119]:
+              - heading "Vendor Logo" [level=5] [ref=f1e121]
+              - button [ref=f1e123] [cursor=pointer]:
+                - generic [ref=f1e126]:
+                  - paragraph [ref=f1e127]: Drag & drop or click to upload
+                  - paragraph [ref=f1e128]: Max 2MB · Images only
+          - generic [ref=f1e129]:
+            - generic [ref=f1e130]:
+              - heading "Store Information" [level=5] [ref=f1e132]
+              - generic [ref=f1e133]:
+                - generic [ref=f1e134]:
+                  - generic [ref=f1e135] [cursor=pointer]: Store Status
+                  - generic [ref=f1e136]:
+                    - combobox "Store Status" [ref=f1e137] [cursor=pointer]:
+                      - generic [ref=f1e138]: Select status
+                    - textbox [aria-hidden] [ref=f1e139]
+                - generic [ref=f1e140]:
+                  - generic [ref=f1e141] [cursor=pointer]: Store Rating
+                  - generic [ref=f1e142]:
+                    - combobox "Store Rating" [ref=f1e143] [cursor=pointer]:
+                      - generic [ref=f1e144]: 4.5 Stars
+                    - textbox [aria-hidden] [ref=f1e145]: "4.5"
+                - generic [ref=f1e146]:
+                  - generic [ref=f1e147]:
+                    - checkbox [ref=f1e148] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=f1e149]
+                  - generic [ref=f1e150] [cursor=pointer]: Featured Vendor
+                - generic [ref=f1e151]:
+                  - generic [ref=f1e152]:
+                    - checkbox [checked] [ref=f1e153] [cursor=pointer]
+                    - checkbox [checked] [aria-hidden] [ref=f1e157]
+                  - generic [ref=f1e158] [cursor=pointer]: Verified Vendor
+            - generic [ref=f1e159]:
+              - heading "Categories" [level=5] [ref=f1e161]
+              - generic [ref=f1e162]:
+                - generic [ref=f1e163]:
+                  - generic [ref=f1e164]:
+                    - checkbox [checked] [ref=f1e165] [cursor=pointer]
+                    - checkbox [checked] [aria-hidden] [ref=f1e169]
+                  - generic [ref=f1e170] [cursor=pointer]: Food & Beverages
+                - generic [ref=f1e171]:
+                  - generic [ref=f1e172]:
+                    - checkbox [ref=f1e173] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=f1e174]
+                  - generic [ref=f1e175] [cursor=pointer]: Grocery
+                - generic [ref=f1e176]:
+                  - generic [ref=f1e177]:
+                    - checkbox [ref=f1e178] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=f1e179]
+                  - generic [ref=f1e180] [cursor=pointer]: Healthy Food
+                - generic [ref=f1e181]:
+                  - generic [ref=f1e182]:
+                    - checkbox [ref=f1e183] [cursor=pointer]
+                    - checkbox [aria-hidden] [ref=f1e184]
+                  - generic [ref=f1e185] [cursor=pointer]: Organic
+            - generic [ref=f1e186]:
+              - button "Cancel" [ref=f1e187] [cursor=pointer]
+              - button "✓ Create Vendor" [ref=f1e188] [cursor=pointer]
+    - contentinfo [ref=f1e189]:
+      - generic [ref=f1e190]:
+        - paragraph [ref=f1e191]:
+          - text: ©2026
+          - link "shadcn/studio" [ref=f1e192] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=f1e193]:
+          - link "All Products" [ref=f1e194] [cursor=pointer]:
+            - /url: "#"
+          - link "Countries" [ref=f1e195] [cursor=pointer]:
+            - /url: "#"
+          - link "License" [ref=f1e196] [cursor=pointer]:
+            - /url: "#"
+          - link "FAQ" [ref=f1e197] [cursor=pointer]:
+            - /url: "#"
+          - link "Support" [ref=f1e198] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=f1e199]:
+          - link [ref=f1e200] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=f1e203] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=f1e207] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=f1e211] [cursor=pointer]:
+            - /url: "#"
+  - button "Buy Now" [ref=f1e214] [cursor=pointer]

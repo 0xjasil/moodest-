@@ -1,0 +1,192 @@
+- generic [active] [ref=f9e1]:
+  - generic [ref=f9e2]:
+    - banner [ref=f9e3]:
+      - generic [ref=f9e4]:
+        - generic [ref=f9e5]:
+          - button "Menu" [ref=f9e6] [cursor=pointer]
+          - link "CommerceO" [ref=f9e8] [cursor=pointer]:
+            - /url: /
+        - generic [ref=f9e19]:
+          - button [ref=f9e20] [cursor=pointer]
+          - generic [ref=f9e21]:
+            - heading "Command Palette" [level=2] [ref=f9e22]
+            - paragraph [ref=f9e23]: Search for a command to run...
+          - button [ref=f9e24] [cursor=pointer]
+          - button [ref=f9e25] [cursor=pointer]
+          - button [ref=f9e26] [cursor=pointer]
+          - button [ref=f9e27] [cursor=pointer]
+          - button "JD" [ref=f9e28] [cursor=pointer]
+    - main [ref=f9e31]:
+      - generic [ref=f9e32]:
+        - navigation "breadcrumb" [ref=f9e34]:
+          - list [ref=f9e35]:
+            - listitem [ref=f9e36]:
+              - link [ref=f9e37] [cursor=pointer]:
+                - /url: /
+            - generic [ref=f9e40]:
+              - listitem [aria-hidden] [ref=f9e41]: /
+              - listitem [ref=f9e42]:
+                - link "Customer" [ref=f9e43] [cursor=pointer]:
+                  - /url: /customer/all
+            - generic [ref=f9e44]:
+              - listitem [aria-hidden] [ref=f9e45]: /
+              - listitem [ref=f9e46]:
+                - link "Security" [disabled] [ref=f9e47]
+        - generic [ref=f9e48]:
+          - generic [ref=f9e54]:
+            - paragraph [ref=f9e55]: eCommerce Dashboard
+            - paragraph [ref=f9e56]: Earning reports
+          - generic [ref=f9e57]:
+            - generic [ref=f9e58]:
+              - paragraph [ref=f9e59]: $23k
+              - paragraph [ref=f9e60]: Sales
+            - generic [ref=f9e61]:
+              - paragraph [ref=f9e62]: 8.51k
+              - paragraph [ref=f9e63]: Customers
+            - generic [ref=f9e64]:
+              - paragraph [ref=f9e65]: 2.5k
+              - paragraph [ref=f9e66]: Products
+            - generic [ref=f9e67]:
+              - paragraph [ref=f9e68]: 1.2k
+              - paragraph [ref=f9e69]: Revenue
+        - generic [ref=f9e72]:
+          - generic [ref=f9e73]:
+            - generic [ref=f9e74]:
+              - 'heading "Customer ID #634759" [level=5] [ref=f9e75]'
+              - paragraph [ref=f9e76]: Aug 17, 2020, 5:48 (ET)
+            - link "Delete Customer" [ref=f9e77] [cursor=pointer]:
+              - /url: "#"
+          - generic [ref=f9e78]:
+            - generic [ref=f9e79]:
+              - generic [ref=f9e81]:
+                - generic [ref=f9e82]:
+                  - generic [ref=f9e83]: LH
+                  - generic [ref=f9e85]:
+                    - heading "Lorine Hischke" [level=5] [ref=f9e86]
+                    - text: "Customer ID #634759"
+                - generic [ref=f9e87]:
+                  - generic [ref=f9e92]:
+                    - heading "184" [level=5] [ref=f9e93]
+                    - text: Orders
+                  - generic [ref=f9e94]:
+                    - generic [ref=f9e95]: $
+                    - generic [ref=f9e97]:
+                      - heading "$12,378" [level=5] [ref=f9e98]
+                      - text: Spent
+                - heading "Details" [level=5] [ref=f9e99]
+                - separator [ref=f9e100]
+                - list [ref=f9e101]:
+                  - listitem [ref=f9e102]: "Username: lorine.hischke"
+                  - listitem [ref=f9e103]: "Email: vafgot@vultukir.org"
+                  - listitem [ref=f9e104]:
+                    - generic [ref=f9e105]: "Status:"
+                    - generic [ref=f9e106]: Active
+                  - listitem [ref=f9e107]: "Contact: (123) 456-7890"
+                  - listitem [ref=f9e108]: "Country: USA"
+                - button "Edit Details" [ref=f9e109] [cursor=pointer]
+              - generic [ref=f9e111]:
+                - generic [ref=f9e112]:
+                  - generic [ref=f9e113]:
+                    - heading "Upgrade to premium" [level=5] [ref=f9e114]
+                    - paragraph [ref=f9e115]: Upgrade customer to premium membership to access pro features.
+                  - img "3dRocket" [ref=f9e116]
+                - button "Select Plan" [ref=f9e117] [cursor=pointer]
+            - generic [ref=f9e118]:
+              - generic [ref=f9e119]:
+                - link "Overview" [ref=f9e120] [cursor=pointer]:
+                  - /url: /customer/overview
+                - link "Security" [ref=f9e122] [cursor=pointer]:
+                  - /url: /customer/security
+                - link "Address & Billing" [ref=f9e124] [cursor=pointer]:
+                  - /url: /customer/billing
+                - link "Notifications" [ref=f9e126] [cursor=pointer]:
+                  - /url: /customer/notifications
+              - generic [ref=f9e128]:
+                - generic [ref=f9e129]:
+                  - heading "Change Password" [level=5] [ref=f9e131]
+                  - generic [ref=f9e132]:
+                    - generic [ref=f9e133]:
+                      - generic [ref=f9e134]:
+                        - paragraph [ref=f9e135]: Ensure that these requirements are met
+                        - paragraph [ref=f9e136]: Minimum 8 characters long, uppercase & symbol
+                      - button "✕" [ref=f9e137] [cursor=pointer]
+                    - generic [ref=f9e138]:
+                      - generic [ref=f9e139]:
+                        - generic [ref=f9e140]:
+                          - generic [ref=f9e141] [cursor=pointer]: New Password
+                          - textbox "New Password" [ref=f9e143]:
+                            - /placeholder: ············
+                        - generic [ref=f9e144]:
+                          - generic [ref=f9e145] [cursor=pointer]: Confirm New Password
+                          - textbox "Confirm New Password" [ref=f9e147]:
+                            - /placeholder: ············
+                      - button "Change Password" [ref=f9e148] [cursor=pointer]
+                - generic [ref=f9e149]:
+                  - generic [ref=f9e150]:
+                    - heading "Two-steps verification" [level=5] [ref=f9e151]
+                    - paragraph [ref=f9e152]: Keep your account secure with authentication step.
+                  - generic [ref=f9e153]:
+                    - heading "SMS" [level=6] [ref=f9e154]
+                    - generic [ref=f9e155]:
+                      - textbox [ref=f9e156]: +1 (609) 972-22-22
+                      - button [ref=f9e157] [cursor=pointer]
+                      - button [ref=f9e158] [cursor=pointer]
+                    - paragraph [ref=f9e159]: Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in. Learn more.
+                - generic [ref=f9e160]:
+                  - heading "Recent Devices" [level=5] [ref=f9e162]
+                  - table [ref=f9e164]:
+                    - rowgroup [ref=f9e165]:
+                      - row [ref=f9e166]:
+                        - columnheader "Browser" [ref=f9e167]
+                        - columnheader "Device" [ref=f9e168]
+                        - columnheader "Location" [ref=f9e169]
+                        - columnheader "Recent Activity" [ref=f9e170]
+                    - rowgroup [ref=f9e171]:
+                      - row [ref=f9e172]:
+                        - cell "Chrome on Windows" [ref=f9e173]
+                        - cell "HP Spectre 360" [ref=f9e177]
+                        - cell "Switzerland" [ref=f9e178]
+                        - cell "10, July 2021 20:07" [ref=f9e179]
+                      - row [ref=f9e180]:
+                        - cell "Chrome on iPhone" [ref=f9e181]
+                        - cell "iPhone 12x" [ref=f9e185]
+                        - cell "Australia" [ref=f9e186]
+                        - cell "13, July 2021 10:10" [ref=f9e187]
+                      - row [ref=f9e188]:
+                        - cell "Chrome on Android" [ref=f9e189]
+                        - cell "Oneplus 9 Pro" [ref=f9e193]
+                        - cell "Dubai" [ref=f9e194]
+                        - cell "14, July 2021 15:15" [ref=f9e195]
+                      - row [ref=f9e196]:
+                        - cell "Chrome on MacOS" [ref=f9e197]
+                        - cell "Apple iMac" [ref=f9e201]
+                        - cell "India" [ref=f9e202]
+                        - cell "16, July 2021 16:17" [ref=f9e203]
+    - contentinfo [ref=f9e204]:
+      - generic [ref=f9e205]:
+        - paragraph [ref=f9e206]:
+          - text: ©2026
+          - link "shadcn/studio" [ref=f9e207] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=f9e208]:
+          - link "All Products" [ref=f9e209] [cursor=pointer]:
+            - /url: "#"
+          - link "Countries" [ref=f9e210] [cursor=pointer]:
+            - /url: "#"
+          - link "License" [ref=f9e211] [cursor=pointer]:
+            - /url: "#"
+          - link "FAQ" [ref=f9e212] [cursor=pointer]:
+            - /url: "#"
+          - link "Support" [ref=f9e213] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=f9e214]:
+          - link [ref=f9e215] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=f9e218] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=f9e222] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=f9e226] [cursor=pointer]:
+            - /url: "#"
+  - button "Buy Now" [ref=f9e229] [cursor=pointer]
+  - alert [ref=f9e230]

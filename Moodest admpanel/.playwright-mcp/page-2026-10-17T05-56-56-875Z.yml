@@ -1,0 +1,222 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - button "Menu" [ref=e6] [cursor=pointer]
+          - link "CommerceO" [ref=e8] [cursor=pointer]:
+            - /url: /
+        - generic [ref=e19]:
+          - button [ref=e20] [cursor=pointer]
+          - generic [ref=e21]:
+            - heading "Command Palette" [level=2] [ref=e22]
+            - paragraph [ref=e23]: Search for a command to run...
+          - button [ref=e24] [cursor=pointer]
+          - button [ref=e25] [cursor=pointer]
+          - button [ref=e26] [cursor=pointer]
+          - button [ref=e27] [cursor=pointer]
+          - button "JD" [ref=e28] [cursor=pointer]
+    - main [ref=e31]:
+      - generic [ref=e32]:
+        - navigation "breadcrumb" [ref=e34]:
+          - list [ref=e35]:
+            - listitem [ref=e36]:
+              - link [ref=e37] [cursor=pointer]:
+                - /url: /
+            - generic [ref=e40]:
+              - listitem [aria-hidden] [ref=e41]: /
+              - listitem [ref=e42]:
+                - link "Order" [ref=e43] [cursor=pointer]:
+                  - /url: /order/list
+            - generic [ref=e44]:
+              - listitem [aria-hidden] [ref=e45]: /
+              - listitem [ref=e46]:
+                - link "Order Details" [disabled] [ref=e47]
+        - generic [ref=e48]:
+          - generic [ref=e54]:
+            - paragraph [ref=e55]: eCommerce Dashboard
+            - paragraph [ref=e56]: Earning reports
+          - generic [ref=e57]:
+            - generic [ref=e58]:
+              - paragraph [ref=e59]: $23k
+              - paragraph [ref=e60]: Sales
+            - generic [ref=e61]:
+              - paragraph [ref=e62]: 8.51k
+              - paragraph [ref=e63]: Customers
+            - generic [ref=e64]:
+              - paragraph [ref=e65]: 2.5k
+              - paragraph [ref=e66]: Products
+            - generic [ref=e67]:
+              - paragraph [ref=e68]: 1.2k
+              - paragraph [ref=e69]: Revenue
+        - generic [ref=e72]:
+          - generic [ref=e73]:
+            - generic [ref=e74]:
+              - generic [ref=e75]:
+                - 'heading "Order #32543" [level=5] [ref=e76]'
+                - generic [ref=e77]: Paid
+                - generic [ref=e78]: Ready to Pickup
+              - paragraph [ref=e79]: Aug 17, 2025, 5:48 (ET)
+            - button "Delete Order" [ref=e80] [cursor=pointer]
+          - generic [ref=e81]:
+            - generic [ref=e82]:
+              - generic [ref=e83]:
+                - generic [ref=e84]:
+                  - heading "Order details" [level=5] [ref=e85]
+                  - button "Edit" [ref=e86] [cursor=pointer]
+                - table [ref=e89]:
+                  - rowgroup [ref=e90]:
+                    - row [ref=e91]:
+                      - columnheader "Product" [ref=e92]
+                      - columnheader "Price" [ref=e93]
+                      - columnheader "Qty" [ref=e94]
+                      - columnheader "Total" [ref=e95]
+                  - rowgroup [ref=e96]:
+                    - row [ref=e97]:
+                      - 'cell "Oneplus 10 Oneplus 10 Storage: 128gb" [ref=e98]':
+                        - generic [ref=e99]:
+                          - img "Oneplus 10" [ref=e101]
+                          - generic [ref=e102]:
+                            - generic [ref=e103]: Oneplus 10
+                            - generic [ref=e104]: "Storage: 128gb"
+                      - cell "$896" [ref=e105]
+                      - cell "3" [ref=e106]
+                      - cell "2688" [ref=e107]
+                    - row [ref=e108]:
+                      - 'cell "Nike Air Jordan Nike Air Jordan Size: 8UK" [ref=e109]':
+                        - generic [ref=e110]:
+                          - img "Nike Air Jordan" [ref=e112]
+                          - generic [ref=e113]:
+                            - generic [ref=e114]: Nike Air Jordan
+                            - generic [ref=e115]: "Size: 8UK"
+                      - cell "$392" [ref=e116]
+                      - cell "1" [ref=e117]
+                      - cell "392" [ref=e118]
+                    - row [ref=e119]:
+                      - 'cell "Wooden Chair Wooden Chair Material: Wooden" [ref=e120]':
+                        - generic [ref=e121]:
+                          - img "Wooden Chair" [ref=e123]
+                          - generic [ref=e124]:
+                            - generic [ref=e125]: Wooden Chair
+                            - generic [ref=e126]: "Material: Wooden"
+                      - cell "$841" [ref=e127]
+                      - cell "2" [ref=e128]
+                      - cell "1682" [ref=e129]
+                    - row [ref=e130]:
+                      - 'cell "Face Cream Face Cream Gender: Women" [ref=e131]':
+                        - generic [ref=e132]:
+                          - img "Face Cream" [ref=e134]
+                          - generic [ref=e135]:
+                            - generic [ref=e136]: Face Cream
+                            - generic [ref=e137]: "Gender: Women"
+                      - cell "$813" [ref=e138]
+                      - cell "2" [ref=e139]
+                      - cell "1626" [ref=e140]
+                - list [ref=e142]:
+                  - listitem [ref=e143]: "Subtotal:"
+                  - listitem [ref=e144]: $2093
+                  - listitem [ref=e145]: "Discount:"
+                  - listitem [ref=e146]: $2
+                  - listitem [ref=e147]: "Tax:"
+                  - listitem [ref=e148]: $28
+                  - listitem [ref=e149]: "Total:"
+                  - listitem [ref=e150]: $2113
+              - generic [ref=e151]:
+                - heading "Shipping activity" [level=5] [ref=e153]
+                - list [ref=e155]:
+                  - listitem [ref=e156]:
+                    - status [ref=e157]
+                    - separator [ref=e159]
+                    - 'heading "Order was placed (Order ID: #32543) Tuesday 11:29 AM" [level=3] [ref=e160]':
+                      - generic [ref=e161]: "Order was placed (Order ID: #32543)"
+                      - generic [ref=e162]: Tuesday 11:29 AM
+                    - generic [ref=e163]: Your order has been placed successfully
+                  - listitem [ref=e165]:
+                    - status [ref=e166]
+                    - separator [ref=e168]
+                    - heading "Pick-up Wednesday 11:29 AM" [level=3] [ref=e169]:
+                      - generic [ref=e170]: Pick-up
+                      - generic [ref=e171]: Wednesday 11:29 AM
+                    - generic [ref=e172]: Pick-up scheduled with courier
+                  - listitem [ref=e174]:
+                    - status [ref=e175]
+                    - separator [ref=e177]
+                    - heading "Dispatched Thursday 11:29 AM" [level=3] [ref=e178]:
+                      - generic [ref=e179]: Dispatched
+                      - generic [ref=e180]: Thursday 11:29 AM
+                    - generic [ref=e181]: Item has been picked up by courier
+                  - listitem [ref=e183]:
+                    - status [ref=e184]
+                    - separator [ref=e186]
+                    - heading "Package arrived Saturday 15:20 AM" [level=3] [ref=e187]:
+                      - generic [ref=e188]: Package arrived
+                      - generic [ref=e189]: Saturday 15:20 AM
+                    - generic [ref=e190]: Package arrived at an Amazon facility, NY
+                  - listitem [ref=e192]:
+                    - status [ref=e193]
+                    - separator [ref=e195]
+                    - heading "Dispatched for delivery Today 14:12 PM" [level=3] [ref=e196]:
+                      - generic [ref=e197]: Dispatched for delivery
+                      - generic [ref=e198]: Today 14:12 PM
+                    - generic [ref=e199]: Package has left an Amazon facility, NY
+                  - listitem [ref=e201]:
+                    - status [ref=e202]
+                    - heading "Delivery" [level=3] [ref=e204]
+                    - generic [ref=e206]: Package will be delivered by tomorrow
+            - generic [ref=e208]:
+              - generic [ref=e209]:
+                - heading "Customer Details" [level=5] [ref=e211]
+                - generic [ref=e212]:
+                  - generic [ref=e213]:
+                    - generic [ref=e214]: ST
+                    - generic [ref=e216]:
+                      - heading "Shamus Tuttle" [level=6] [ref=e217]
+                      - paragraph [ref=e218]: "Customer ID: #58909"
+                  - heading "12 orders" [level=6] [ref=e223]
+                  - generic [ref=e224]:
+                    - generic [ref=e225]:
+                      - heading "Contact info" [level=6] [ref=e226]
+                      - button "Edit" [ref=e227] [cursor=pointer]
+                    - paragraph [ref=e228]: "Email: Shamus889@yahoo.com"
+                    - paragraph [ref=e229]: "Mobile: +1 (609) 972-22-22"
+              - generic [ref=e230]:
+                - generic [ref=e231]:
+                  - heading "Shipping Address" [level=5] [ref=e232]
+                  - button "Edit" [ref=e233] [cursor=pointer]
+                - paragraph [ref=e235]: 45 Roker Terrace Latheronwheel KW5 8NW, London UK
+              - generic [ref=e236]:
+                - generic [ref=e237]:
+                  - heading "Billing address" [level=5] [ref=e238]
+                  - button "Edit" [ref=e239] [cursor=pointer]
+                - generic [ref=e240]:
+                  - paragraph [ref=e241]: 45 Roker Terrace Latheronwheel KW5 8NW, London UK
+                  - generic [ref=e242]:
+                    - heading "Mastercard" [level=5] [ref=e243]
+                    - paragraph [ref=e244]: "Card Number: ******4291"
+    - contentinfo [ref=e245]:
+      - generic [ref=e246]:
+        - paragraph [ref=e247]:
+          - text: ©2026
+          - link "shadcn/studio" [ref=e248] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=e249]:
+          - link "All Products" [ref=e250] [cursor=pointer]:
+            - /url: "#"
+          - link "Countries" [ref=e251] [cursor=pointer]:
+            - /url: "#"
+          - link "License" [ref=e252] [cursor=pointer]:
+            - /url: "#"
+          - link "FAQ" [ref=e253] [cursor=pointer]:
+            - /url: "#"
+          - link "Support" [ref=e254] [cursor=pointer]:
+            - /url: "#"
+        - generic [ref=e255]:
+          - link [ref=e256] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=e259] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=e263] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=e267] [cursor=pointer]:
+            - /url: "#"
+  - button "Buy Now" [ref=e270] [cursor=pointer]

@@ -1,0 +1,49 @@
+# Node dependencies
+node_modules/
+*/node_modules/
+*/*/node_modules/
+*/*/*/node_modules/
+
+# Build artifacts
+dist/
+*/dist/
+.next/
+*/.next/
+*/*/.next/
+build/
+*/build/
+.turbo/
+*/.turbo/
+
+# Environment secrets and credentials - NEVER COMMIT
+.env
+.env*
+*.env
+*.env*
+*/.env
+*/.env*
+*/*/.env
+*/*/.env*
+!*.env.example
+!*/.env.example
+!*/*/.env.example
+
+# Backups and temporary files
+backups/
+*.zip
+*.tar.gz
+*.log
+*/logs/
+*.pem
+*.key
+*.cert
+
+# System and IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Git sub-backups
+.git_*
+*/.git_*

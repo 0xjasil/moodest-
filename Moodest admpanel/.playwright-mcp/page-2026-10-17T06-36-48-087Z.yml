@@ -1,0 +1,378 @@
+- generic [ref=e1]:
+  - generic [aria-hidden] [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - button [ref=e392] [cursor=pointer]:
+            - generic [ref=e7]: Menu
+          - link [ref=e393] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e9]: CommerceO
+        - generic [ref=e19]:
+          - button [ref=e20] [cursor=pointer]
+          - generic [ref=e21]:
+            - heading [level=2] [ref=e394]: Command Palette
+            - paragraph [ref=e23]: Search for a command to run...
+          - button [ref=e24] [cursor=pointer]
+          - button [ref=e25] [cursor=pointer]
+          - button [ref=e26] [cursor=pointer]
+          - button [ref=e27] [cursor=pointer]
+          - button [ref=e372] [cursor=pointer]
+    - main [ref=e31]:
+      - generic [ref=e32]:
+        - navigation [ref=e395]:
+          - list [ref=e35]:
+            - listitem [ref=e36]:
+              - link [ref=e37] [cursor=pointer]:
+                - /url: /
+            - generic [ref=e40]:
+              - listitem [aria-hidden] [ref=e41]: /
+              - listitem [ref=e42]:
+                - link [ref=e396] [cursor=pointer]:
+                  - /url: /customer/all
+                  - text: Customer
+            - generic [ref=e44]:
+              - listitem [aria-hidden] [ref=e45]: /
+              - listitem [ref=e46]:
+                - link [disabled] [ref=e397]: All Customers
+        - generic [ref=e48]:
+          - generic [ref=e54]:
+            - paragraph [ref=e55]: eCommerce Dashboard
+            - paragraph [ref=e56]: Earning reports
+          - generic [ref=e57]:
+            - generic [ref=e58]:
+              - paragraph [ref=e59]: $23k
+              - paragraph [ref=e60]: Sales
+            - generic [ref=e61]:
+              - paragraph [ref=e62]: 8.51k
+              - paragraph [ref=e63]: Customers
+            - generic [ref=e64]:
+              - paragraph [ref=e65]: 2.5k
+              - paragraph [ref=e66]: Products
+            - generic [ref=e67]:
+              - paragraph [ref=e68]: 1.2k
+              - paragraph [ref=e69]: Revenue
+        - generic [ref=e72]:
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - generic [ref=e78]:
+                - heading [level=4] [ref=e398]: 15,678
+                - paragraph [ref=e80]: Total Customers
+              - separator [ref=e84]
+              - generic [ref=e86]:
+                - heading [level=4] [ref=e399]: $75
+                - paragraph [ref=e88]: Average Order
+            - separator [ref=e92]
+            - generic [ref=e93]:
+              - generic [ref=e95]:
+                - heading [level=4] [ref=e400]: "560"
+                - paragraph [ref=e97]: New Customers
+              - separator [ref=e101]
+              - generic [ref=e103]:
+                - heading [level=4] [ref=e401]: 3,432
+                - paragraph [ref=e105]: Active Customers
+          - generic [ref=e109]:
+            - generic [ref=e110]:
+              - generic [ref=e111]:
+                - generic [ref=e112]:
+                  - generic [ref=e113] [cursor=pointer]: Search
+                  - group [ref=e114]:
+                    - group [ref=e115]
+                    - textbox [ref=e402]:
+                      - /placeholder: Search User
+                - generic [ref=e119]:
+                  - combobox [ref=e120] [cursor=pointer]:
+                    - generic [ref=e121]: "10"
+                  - textbox [aria-hidden] [ref=e122]: "10"
+                  - button [ref=e403] [cursor=pointer]:
+                    - generic [ref=e124]: Export
+                  - button [expanded] [active] [ref=e404] [cursor=pointer]:
+                    - generic [ref=e126]: Add Customer
+              - table [ref=e128]:
+                - rowgroup [ref=e129]:
+                  - row [ref=e405]:
+                    - columnheader [ref=e406]:
+                      - checkbox [ref=e407] [cursor=pointer]
+                      - checkbox [aria-hidden] [ref=e133]
+                    - columnheader [ref=e408]:
+                      - generic [ref=e135] [cursor=pointer]: Customer
+                    - columnheader [ref=e409]:
+                      - generic [ref=e137] [cursor=pointer]: Customer ID
+                    - columnheader [ref=e410]:
+                      - generic [ref=e139] [cursor=pointer]: Country
+                    - columnheader [ref=e411]:
+                      - generic [ref=e141] [cursor=pointer]: Order
+                    - columnheader [ref=e412]:
+                      - generic [ref=e143] [cursor=pointer]: Total Spent
+                    - columnheader [ref=e413]: Actions
+                - rowgroup [ref=e145]:
+                  - row [ref=e414]:
+                    - cell [ref=e415]:
+                      - checkbox [ref=e416] [cursor=pointer]
+                      - checkbox [aria-hidden] [ref=e149]
+                    - cell [ref=e417]:
+                      - generic [ref=e154]:
+                        - generic [ref=e155]: Stanfield Baser
+                        - generic [ref=e156]: sbaser0@boston.com
+                    - cell [ref=e419]:
+                      - generic [ref=e158]: "#879861"
+                    - cell [ref=e420]: Sri Lanka
+                    - cell [ref=e421]: "157"
+                    - cell [ref=e422]: $2,074.22
+                    - cell [ref=e423]:
+                      - button [ref=e424] [cursor=pointer]
+                  - row [ref=e425]:
+                    - cell [ref=e426]:
+                      - checkbox [ref=e427] [cursor=pointer]
+                      - checkbox [aria-hidden] [ref=e167]
+                    - cell [ref=e428]:
+                      - generic [ref=e169]:
+                        - generic [ref=e170]: LD
+                        - generic [ref=e172]:
+                          - generic [ref=e173]: Laurie Dax
+                          - generic [ref=e174]: ldax1@lycos.com
+                    - cell [ref=e429]:
+                      - generic [ref=e176]: "#178408"
+                    - cell [ref=e430]: Russia
+                    - cell [ref=e431]: "663"
+                    - cell [ref=e432]: $2,404.19
+                    - cell [ref=e433]:
+                      - button [ref=e434] [cursor=pointer]
+                  - row [ref=e435]:
+                    - cell [ref=e436]:
+                      - checkbox [ref=e437] [cursor=pointer]
+                      - checkbox [aria-hidden] [ref=e185]
+                    - cell [ref=e438]:
+                      - generic [ref=e190]:
+                        - generic [ref=e191]: Maxine Kenrick
+                        - generic [ref=e192]: mkenrick2@eepurl.com
+                    - cell [ref=e440]:
+                      - generic [ref=e194]: "#221092"
+                    - cell [ref=e441]: Guatemala
+                    - cell [ref=e442]: "64"
+                    - cell [ref=e443]: $8,821.40
+                    - cell [ref=e444]:
+                      - button [ref=e445] [cursor=pointer]
+                  - row [ref=e446]:
+                    - cell [ref=e447]:
+                      - checkbox [ref=e448] [cursor=pointer]
+                      - checkbox [aria-hidden] [ref=e203]
+                    - cell [ref=e449]:
+                      - generic [ref=e205]:
+                        - generic [ref=e206]: HB
+                        - generic [ref=e208]:
+                          - generic [ref=e209]: Harman Burkill
+                          - generic [ref=e210]: hburkill3@drupal.org
+                    - cell [ref=e450]:
+                      - generic [ref=e212]: "#645579"
+                    - cell [ref=e451]: Portugal
+                    - cell [ref=e452]: "640"
+                    - cell [ref=e453]: $5,294.35
+                    - cell [ref=e454]:
+                      - button [ref=e455] [cursor=pointer]
+                  - row [ref=e456]:
+                    - cell [ref=e457]:
+                      - checkbox [ref=e458] [cursor=pointer]
+                      - checkbox [aria-hidden] [ref=e221]
+                    - cell [ref=e459]:
+                      - generic [ref=e226]:
+                        - generic [ref=e227]: Aubrey Borrow
+                        - generic [ref=e228]: aborrow4@jiathis.com
+                    - cell [ref=e461]:
+                      - generic [ref=e230]: "#288765"
+                    - cell [ref=e462]: France
+                    - cell [ref=e463]: "184"
+                    - cell [ref=e464]: $1,003.30
+                    - cell [ref=e465]:
+                      - button [ref=e466] [cursor=pointer]
+                  - row [ref=e467]:
+                    - cell [ref=e468]:
+                      - checkbox [ref=e469] [cursor=pointer]
+                      - checkbox [aria-hidden] [ref=e239]
+                    - cell [ref=e470]:
+                      - generic [ref=e241]:
+                        - generic [ref=e242]: NF
+                        - generic [ref=e244]:
+                          - generic [ref=e245]: Nester Fridd
+                          - generic [ref=e246]: nfridd5@cdbaby.com
+                    - cell [ref=e471]:
+                      - generic [ref=e248]: "#321942"
+                    - cell [ref=e472]: China
+                    - cell [ref=e473]: "965"
+                    - cell [ref=e474]: $3,876.92
+                    - cell [ref=e475]:
+                      - button [ref=e476] [cursor=pointer]
+                  - row [ref=e477]:
+                    - cell [ref=e478]:
+                      - checkbox [ref=e479] [cursor=pointer]
+                      - checkbox [aria-hidden] [ref=e257]
+                    - cell [ref=e480]:
+                      - generic [ref=e262]:
+                        - generic [ref=e263]: Lizzie Nicholes
+                        - generic [ref=e264]: lnicholes6@rediff.com
+                    - cell [ref=e482]:
+                      - generic [ref=e266]: "#516109"
+                    - cell [ref=e483]: Brazil
+                    - cell [ref=e484]: "514"
+                    - cell [ref=e485]: $7,936.85
+                    - cell [ref=e486]:
+                      - button [ref=e487] [cursor=pointer]
+                  - row [ref=e488]:
+                    - cell [ref=e489]:
+                      - checkbox [ref=e490] [cursor=pointer]
+                      - checkbox [aria-hidden] [ref=e275]
+                    - cell [ref=e491]:
+                      - generic [ref=e280]:
+                        - generic [ref=e281]: Amabel Scullion
+                        - generic [ref=e282]: ascullion7@wiley.com
+                    - cell [ref=e493]:
+                      - generic [ref=e284]: "#403666"
+                    - cell [ref=e494]: Guatemala
+                    - cell [ref=e495]: "584"
+                    - cell [ref=e496]: $4,150.97
+                    - cell [ref=e497]:
+                      - button [ref=e498] [cursor=pointer]
+                  - row [ref=e499]:
+                    - cell [ref=e500]:
+                      - checkbox [ref=e501] [cursor=pointer]
+                      - checkbox [aria-hidden] [ref=e293]
+                    - cell [ref=e502]:
+                      - generic [ref=e298]:
+                        - generic [ref=e299]: Zeke Arton
+                        - generic [ref=e300]: zarton8@weibo.com
+                    - cell [ref=e504]:
+                      - generic [ref=e302]: "#895280"
+                    - cell [ref=e505]: Ukraine
+                    - cell [ref=e506]: "539"
+                    - cell [ref=e507]: $3,430.05
+                    - cell [ref=e508]:
+                      - button [ref=e509] [cursor=pointer]
+                  - row [ref=e510]:
+                    - cell [ref=e511]:
+                      - checkbox [ref=e512] [cursor=pointer]
+                      - checkbox [aria-hidden] [ref=e311]
+                    - cell [ref=e513]:
+                      - generic [ref=e313]:
+                        - generic [ref=e314]: RM
+                        - generic [ref=e316]:
+                          - generic [ref=e317]: Rosy Medlicott
+                          - generic [ref=e318]: rmedlicott9@amazon.com
+                    - cell [ref=e514]:
+                      - generic [ref=e320]: "#199195"
+                    - cell [ref=e515]: Russia
+                    - cell [ref=e516]: "4"
+                    - cell [ref=e517]: $8,646.75
+                    - cell [ref=e518]:
+                      - button [ref=e519] [cursor=pointer]
+            - generic [ref=e326]:
+              - paragraph [ref=e327]: Showing 1 to 10 of 50 entries
+              - navigation [ref=e520]:
+                - list [ref=e329]:
+                  - listitem [ref=e330]:
+                    - button [disabled]
+                  - listitem [ref=e331]:
+                    - button [ref=e521] [cursor=pointer]: "1"
+                  - listitem [ref=e333]:
+                    - button [ref=e522] [cursor=pointer]: "2"
+                  - listitem [ref=e335]:
+                    - button [ref=e523] [cursor=pointer]: "3"
+                  - listitem [ref=e337]:
+                    - generic [ref=e341]: More pages
+                  - listitem [ref=e342]:
+                    - button [ref=e524] [cursor=pointer]: "5"
+                  - listitem [ref=e344]:
+                    - button [ref=e525] [cursor=pointer]
+    - contentinfo [ref=e346]:
+      - generic [ref=e347]:
+        - paragraph [ref=e348]:
+          - text: ©2026
+          - link [ref=e526] [cursor=pointer]:
+            - /url: "#"
+            - text: shadcn/studio
+        - generic [ref=e350]:
+          - link [ref=e527] [cursor=pointer]:
+            - /url: "#"
+            - text: All Products
+          - link [ref=e528] [cursor=pointer]:
+            - /url: "#"
+            - text: Countries
+          - link [ref=e529] [cursor=pointer]:
+            - /url: "#"
+            - text: License
+          - link [ref=e530] [cursor=pointer]:
+            - /url: "#"
+            - text: FAQ
+          - link [ref=e531] [cursor=pointer]:
+            - /url: "#"
+            - text: Support
+        - generic [ref=e356]:
+          - link [ref=e357] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=e360] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=e364] [cursor=pointer]:
+            - /url: "#"
+          - link [ref=e368] [cursor=pointer]:
+            - /url: "#"
+  - button [aria-hidden] [ref=e532] [cursor=pointer]: Buy Now
+  - alert [ref=e391]
+  - menu:
+    - group:
+      - menuitem: View
+      - menuitem: Edit
+    - separator
+    - menuitem: Delete
+  - dialog [ref=e536]:
+    - heading "Add New Customer" [level=2] [ref=e538]
+    - generic [ref=e539]:
+      - heading "Basic Information" [level=6] [ref=e540]
+      - generic [ref=e541]:
+        - generic [ref=e542] [cursor=pointer]: Name
+        - textbox "Name" [ref=e544]:
+          - /placeholder: John Doe
+      - generic [ref=e545]:
+        - generic [ref=e546] [cursor=pointer]: Email
+        - textbox "Email" [ref=e548]:
+          - /placeholder: john.doe@example.com
+      - generic [ref=e549]:
+        - generic [ref=e550] [cursor=pointer]: Mobile
+        - textbox "Mobile" [ref=e552]:
+          - /placeholder: +(123) 456-7890
+      - heading "Shipping Information" [level=6] [ref=e553]
+      - generic [ref=e554]:
+        - generic [ref=e555] [cursor=pointer]: Address Line 1
+        - textbox "Address Line 1" [ref=e557]:
+          - /placeholder: 45 Roker Terrace
+      - generic [ref=e558]:
+        - generic [ref=e559] [cursor=pointer]: Address Line 2
+        - textbox "Address Line 2" [ref=e561]:
+          - /placeholder: ""
+      - generic [ref=e562]:
+        - generic [ref=e563] [cursor=pointer]: Town
+        - textbox "Town" [ref=e565]:
+          - /placeholder: New York
+      - generic [ref=e566]:
+        - generic [ref=e567] [cursor=pointer]: State / Province
+        - textbox "State / Province" [ref=e569]:
+          - /placeholder: Southern tip
+      - generic [ref=e570]:
+        - generic [ref=e571] [cursor=pointer]: Post Code
+        - textbox "Post Code" [ref=e573]:
+          - /placeholder: "734990"
+      - generic [ref=e574]:
+        - generic [ref=e575] [cursor=pointer]: Country
+        - generic [ref=e576]:
+          - combobox "Country" [ref=e577] [cursor=pointer]:
+            - generic [ref=e578]: Select Country
+          - textbox [aria-hidden] [ref=e579]
+      - generic [ref=e580]:
+        - generic [ref=e581]:
+          - generic [ref=e582] [cursor=pointer]: Use as a billing address?
+          - paragraph [ref=e583]: If you need more info, please check budget.
+        - generic [ref=e584]:
+          - switch "Use as a billing address?" [checked] [ref=e585] [cursor=pointer]
+          - checkbox [checked] [aria-hidden] [ref=e586]
+      - generic [ref=e587]:
+        - button "Add" [ref=e588] [cursor=pointer]
+        - button "Discard" [ref=e589] [cursor=pointer]
+    - button "Close" [ref=e590] [cursor=pointer]

@@ -1,0 +1,243 @@
+- generic [active] [ref=f5e1]:
+  - generic [ref=f5e2]:
+    - complementary [ref=f5e3]:
+      - generic [ref=f5e4]:
+        - generic [ref=f5e5]:
+          - link "AP Admin Panel" [ref=f5e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f5e7]: AP
+            - generic [ref=f5e9]: Admin Panel
+          - button "Collapse sidebar (Ctrl+B)" [ref=f5e10]
+        - generic [ref=f5e11]:
+          - link "Dashboard" [ref=f5e12] [cursor=pointer]:
+            - /url: /
+          - button "Products" [ref=f5e19] [cursor=pointer]
+          - button "Orders 12" [ref=f5e29] [cursor=pointer]:
+            - generic [ref=f5e30]: Orders
+            - generic [ref=f5e36]: "12"
+          - button "Customers" [ref=f5e41] [cursor=pointer]
+          - generic [ref=f5e52]:
+            - button "Vendors" [expanded] [ref=f5e53] [cursor=pointer]
+            - generic [ref=f5e63]:
+              - link "Vendor List" [ref=f5e64] [cursor=pointer]:
+                - /url: /vendors
+              - link "Add Vendor" [ref=f5e66] [cursor=pointer]:
+                - /url: /vendors/add-vendor
+              - link "Vendor Details" [ref=f5e68] [cursor=pointer]:
+                - /url: /vendors/details
+          - button "Marketing" [ref=f5e71] [cursor=pointer]
+          - button "Analytics" [ref=f5e81] [cursor=pointer]
+          - button "Logs" [ref=f5e90] [cursor=pointer]
+          - button "Pages" [ref=f5e100] [cursor=pointer]
+        - generic [ref=f5e109]:
+          - button "Settings" [ref=f5e112] [cursor=pointer]
+          - button "A Admin @philOhme" [ref=f5e122]:
+            - generic [ref=f5e123]: A
+            - generic [ref=f5e124]:
+              - paragraph [ref=f5e125]: Admin
+              - paragraph [ref=f5e126]: "@philOhme"
+    - generic [ref=f5e127]:
+      - banner [ref=f5e128]:
+        - generic [ref=f5e129]:
+          - navigation [ref=f5e130]:
+            - generic [ref=f5e131]: Dashboard
+            - generic [ref=f5e134]: Vendor Details
+          - generic [ref=f5e135]:
+            - button "Toggle theme" [ref=f5e136]
+            - generic [ref=f5e144]:
+              - heading "Vendor Details" [level=1] [ref=f5e145]
+              - paragraph [ref=f5e146]: View store performance, products, and contact info
+      - main [ref=f5e147]:
+        - generic [ref=f5e148]:
+          - navigation [ref=f5e149]:
+            - link "Home" [ref=f5e150] [cursor=pointer]:
+              - /url: /
+            - generic [ref=f5e154]: /
+            - link "Vendor" [ref=f5e155] [cursor=pointer]:
+              - /url: /vendors
+            - generic [ref=f5e156]: /
+            - generic [ref=f5e157]: Vendor Details
+          - generic [ref=f5e158]:
+            - button "Back to Vendor List" [ref=f5e159] [cursor=pointer]
+            - link "Edit Vendor" [ref=f5e161] [cursor=pointer]:
+              - /url: /vendors/add-vendor?edit=ven-6
+          - generic [ref=f5e162]:
+            - generic [ref=f5e163]:
+              - generic [ref=f5e164]:
+                - img "Jewelry Boutique" [ref=f5e166]
+                - generic [ref=f5e167]:
+                  - generic [ref=f5e168]:
+                    - heading "Jewelry Boutique" [level=1] [ref=f5e169]
+                    - generic [ref=f5e170]: Active
+                    - generic [ref=f5e171]: Featured
+                  - generic [ref=f5e175]:
+                    - generic [ref=f5e176]: contact@jewelryboutique.com
+                    - generic [ref=f5e177]: •
+                    - generic [ref=f5e178]: 4.9 out of 5
+              - button "Send Message" [ref=f5e183] [cursor=pointer]
+            - generic [ref=f5e184]:
+              - generic [ref=f5e191]:
+                - generic [ref=f5e192]: "56"
+                - text: Products
+              - generic [ref=f5e199]:
+                - generic [ref=f5e200]: 1,847
+                - text: Orders
+              - generic [ref=f5e205]:
+                - generic [ref=f5e206]: $24,567
+                - text: Revenue
+              - generic [ref=f5e212]:
+                - generic [ref=f5e213]: 98%
+                - text: Rating
+          - generic [ref=f5e214]:
+            - generic [ref=f5e215]:
+              - generic [ref=f5e216]:
+                - heading "About" [level=2] [ref=f5e217]
+                - paragraph [ref=f5e218]: Artisanal fine jewelry atelier creating responsibly sourced 18k gold pieces, conflict-free gemstone ornaments, and bespoke heirloom necklaces.
+              - generic [ref=f5e219]:
+                - generic [ref=f5e220]:
+                  - heading "Recent Products" [level=2] [ref=f5e221]
+                  - link "View All" [ref=f5e222] [cursor=pointer]:
+                    - /url: /products
+                - generic [ref=f5e223]:
+                  - generic [ref=f5e224]:
+                    - generic [ref=f5e231]:
+                      - heading "iPhone 14 Pro" [level=3] [ref=f5e232]
+                      - paragraph [ref=f5e233]: Super Retina XDR display footnote Pro Motion technology
+                    - generic [ref=f5e234]:
+                      - generic [ref=f5e235]: $699
+                      - generic [ref=f5e236]: $999
+                  - generic [ref=f5e237]:
+                    - generic [ref=f5e244]:
+                      - heading "Echo Dot (4th Gen)" [level=3] [ref=f5e245]
+                      - paragraph [ref=f5e246]: Echo Dot Smart speaker with Alexa
+                    - generic [ref=f5e247]:
+                      - generic [ref=f5e248]: $25
+                      - generic [ref=f5e249]: $30
+                  - generic [ref=f5e250]:
+                    - generic [ref=f5e257]:
+                      - heading "Apple Watch Series 7" [level=3] [ref=f5e258]
+                      - paragraph [ref=f5e259]: Starlight Aluminum Case with Starlight Sport Band.
+                    - generic [ref=f5e260]:
+                      - generic [ref=f5e261]: $120
+                      - generic [ref=f5e262]: $190
+                  - generic [ref=f5e263]:
+                    - generic [ref=f5e270]:
+                      - heading "Apple iPad" [level=3] [ref=f5e271]
+                      - paragraph [ref=f5e272]: 10.2-inch Retina Display, 64GB.
+                    - generic [ref=f5e273]:
+                      - generic [ref=f5e274]: $299
+                      - generic [ref=f5e275]: $350
+              - generic [ref=f5e276]:
+                - generic [ref=f5e277]:
+                  - generic [ref=f5e278]:
+                    - heading "Sales Analytics" [level=2] [ref=f5e279]
+                    - paragraph [ref=f5e280]: Revenue performance across the last 12 months.
+                  - generic [ref=f5e281]:
+                    - button "2024" [ref=f5e282] [cursor=pointer]
+                    - button "2025" [ref=f5e283] [cursor=pointer]
+                - generic [ref=f5e284]:
+                  - generic [ref=f5e285]:
+                    - generic [ref=f5e286]: Last year
+                    - generic [ref=f5e287]: $12,426
+                  - generic [ref=f5e288]:
+                    - generic [ref=f5e289]: This Month
+                    - generic [ref=f5e290]: $8,567
+                  - generic [ref=f5e291]:
+                    - generic [ref=f5e292]: Last Month
+                    - generic [ref=f5e293]: "234"
+                  - generic [ref=f5e294]:
+                    - generic [ref=f5e295]: New Orders
+                    - generic [ref=f5e296]: "12"
+                - generic [ref=f5e298]:
+                  - generic [ref=f5e299]:
+                    - 'generic "Jan: $45k" [ref=f5e300]'
+                    - generic [ref=f5e301]: Jan
+                  - generic [ref=f5e302]:
+                    - 'generic "Feb: $65k" [ref=f5e303]'
+                    - generic [ref=f5e304]: Feb
+                  - generic [ref=f5e305]:
+                    - 'generic "Mar: $52k" [ref=f5e306]'
+                    - generic [ref=f5e307]: Mar
+                  - generic [ref=f5e308]:
+                    - 'generic "Apr: $80k" [ref=f5e309]'
+                    - generic [ref=f5e310]: Apr
+                  - generic [ref=f5e311]:
+                    - 'generic "May: $95k" [ref=f5e312]'
+                    - generic [ref=f5e313]: May
+                  - generic [ref=f5e314]:
+                    - 'generic "Jun: $72k" [ref=f5e315]'
+                    - generic [ref=f5e316]: Jun
+                  - generic [ref=f5e317]:
+                    - 'generic "Jul: $110k" [ref=f5e318]'
+                    - generic [ref=f5e319]: Jul
+                  - generic [ref=f5e320]:
+                    - 'generic "Aug: $88k" [ref=f5e321]'
+                    - generic [ref=f5e322]: Aug
+                  - generic [ref=f5e323]:
+                    - 'generic "Sep: $98k" [ref=f5e324]'
+                    - generic [ref=f5e325]: Sep
+                  - generic [ref=f5e326]:
+                    - 'generic "Oct: $125k" [ref=f5e327]'
+                    - generic [ref=f5e328]: Oct
+                  - generic [ref=f5e329]:
+                    - 'generic "Nov: $105k" [ref=f5e330]'
+                    - generic [ref=f5e331]: Nov
+                  - generic [ref=f5e332]:
+                    - 'generic "Dec: $135k" [ref=f5e333]'
+                    - generic [ref=f5e334]: Dec
+            - generic [ref=f5e335]:
+              - generic [ref=f5e336]:
+                - heading "Contact Information" [level=2] [ref=f5e337]
+                - generic [ref=f5e338]:
+                  - generic [ref=f5e343]:
+                    - generic [ref=f5e344]: Lorine Hischke
+                    - text: Contact Person
+                  - generic [ref=f5e348]:
+                    - generic [ref=f5e349]: +1 (583) 8745 8745
+                    - text: Phone Number
+                  - generic [ref=f5e354]:
+                    - generic [ref=f5e355]: contact@jewelryboutique.com
+                    - text: Email Address
+                  - generic [ref=f5e360]:
+                    - generic [ref=f5e361]: Jewelry Boutique London Ltd.
+                    - text: Company Name
+                  - generic [ref=f5e366]:
+                    - generic [ref=f5e367]: 530 Post Ct, El Dorado Hills, London UK
+                    - text: Address
+              - generic [ref=f5e368]:
+                - heading "Store Information" [level=2] [ref=f5e369]
+                - generic [ref=f5e370]:
+                  - generic [ref=f5e371]:
+                    - generic [ref=f5e372]: Store Status
+                    - generic [ref=f5e373]: Open
+                  - generic [ref=f5e374]:
+                    - generic [ref=f5e375]: Member Since
+                    - generic [ref=f5e376]: Jan 2023
+                  - generic [ref=f5e377]:
+                    - generic [ref=f5e378]: Last Active
+                    - generic [ref=f5e379]: 2 hours ago
+                  - generic [ref=f5e380]:
+                    - generic [ref=f5e381]: Verification
+                    - generic [ref=f5e382]: Verified
+                  - generic [ref=f5e386]:
+                    - generic [ref=f5e387]: Featured
+                    - generic [ref=f5e388]: "Yes"
+              - generic [ref=f5e389]:
+                - heading "Categories" [level=2] [ref=f5e390]
+                - generic [ref=f5e391]:
+                  - generic [ref=f5e392]: Jewelry & Accessories
+                  - generic [ref=f5e393]: Luxury Goods
+                  - generic [ref=f5e394]: Handcrafted
+                  - generic [ref=f5e395]: Gold & Silver
+              - generic [ref=f5e396]:
+                - heading "Quick Actions" [level=2] [ref=f5e397]
+                - generic [ref=f5e398]:
+                  - button "Send Message" [ref=f5e399] [cursor=pointer]
+                  - link "Call Vendor" [ref=f5e400] [cursor=pointer]:
+                    - /url: tel:+1 (583) 8745 8745
+                  - link "Send Email" [ref=f5e401] [cursor=pointer]:
+                    - /url: mailto:contact@jewelryboutique.com
+                  - button "Generate Report" [ref=f5e402] [cursor=pointer]
+                  - button "Suspend Vendor" [ref=f5e403] [cursor=pointer]
+  - region "Notifications alt+T"
+  - alert [ref=f5e404]

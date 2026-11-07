@@ -1,0 +1,146 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - link "AP Admin Panel" [ref=e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e7]: AP
+            - generic [ref=e9]: Admin Panel
+          - button "Collapse sidebar (Ctrl+B)" [ref=e10]
+        - generic [ref=e11]:
+          - link "Home" [ref=e12] [cursor=pointer]:
+            - /url: /
+          - link "Orders 12" [ref=e18] [cursor=pointer]:
+            - /url: /orders
+            - generic [ref=e19]: Orders
+            - generic [ref=e25]: "12"
+          - generic [ref=e26]:
+            - button "Products" [expanded] [ref=e27] [cursor=pointer]
+            - generic [ref=e303]:
+              - link "Inventory Low" [active] [ref=e304] [cursor=pointer]:
+                - /url: /inventory
+                - generic [ref=e305]: Inventory
+                - generic [ref=e306]: Low
+              - link "Categories" [ref=e307] [cursor=pointer]:
+                - /url: /category
+              - link "Subcategories" [ref=e309] [cursor=pointer]:
+                - /url: /subcategory
+              - link "Brands" [ref=e311] [cursor=pointer]:
+                - /url: /brand
+              - link "Variations" [ref=e313] [cursor=pointer]:
+                - /url: /variations
+          - link "Customers" [ref=e36] [cursor=pointer]:
+            - /url: /customers
+          - button "Marketing" [ref=e45] [cursor=pointer]
+          - button "Analytics" [ref=e55] [cursor=pointer]
+          - button "Logs" [ref=e64] [cursor=pointer]
+        - generic [ref=e73]:
+          - link "Settings" [ref=e75] [cursor=pointer]:
+            - /url: /settings
+          - generic [ref=e81]:
+            - generic [ref=e82]:
+              - generic [ref=e83]: A
+              - generic [ref=e84]:
+                - paragraph [ref=e85]: Alex Morgan
+                - paragraph [ref=e86]: admin@example.com
+            - button "Logout" [ref=e87]
+    - generic [ref=e88]:
+      - banner [ref=e89]:
+        - generic [ref=e90]:
+          - navigation [ref=e91]:
+            - generic [ref=e92]: Dashboard
+            - generic [ref=e95]: Inventory
+          - generic [ref=e96]:
+            - button "Toggle theme" [ref=e97]
+            - generic [ref=e106]:
+              - heading "Inventory" [level=1] [ref=e430]
+              - paragraph [ref=e108]: View and manage product inventory
+      - main [ref=e109]:
+        - generic [ref=e433]:
+          - generic [ref=e435]:
+            - heading "Inventory" [level=1] [ref=e436]
+            - paragraph [ref=e437]: Manage Inventory
+          - generic [ref=e438]:
+            - generic [ref=e439]:
+              - generic [ref=e442]:
+                - generic [ref=e443]: Filters
+                - generic [ref=e444]: Filter products by search, category, or brand
+              - generic [ref=e446]:
+                - textbox "Search by name or description" [ref=e451]
+                - combobox [ref=e452]:
+                  - generic: All Categories
+                - combobox [ref=e453]:
+                  - generic: All Brands
+            - generic [ref=e454]:
+              - generic [ref=e456]:
+                - generic [ref=e457]:
+                  - generic [ref=e458]: All Products
+                  - generic [ref=e459]: Showing 4 variants of 4 products
+                - generic [ref=e460]: Page 1 of 1
+              - table [ref=e464]:
+                - rowgroup [ref=e465]:
+                  - row [ref=e466]:
+                    - columnheader [ref=e467]:
+                      - checkbox [ref=e470]
+                    - columnheader "Product" [ref=e474]
+                    - columnheader "Category" [ref=e475]
+                    - columnheader "Brand" [ref=e476]
+                    - columnheader "Price" [ref=e477]
+                    - columnheader "Stock" [ref=e478]
+                    - columnheader "Status" [ref=e479]
+                - rowgroup [ref=e480]:
+                  - row [ref=e481]:
+                    - cell [ref=e482]:
+                      - checkbox [ref=e485]
+                    - cell "Tailored Minimalist Trench Coat TRN-BLK-M" [ref=e489]:
+                      - generic [ref=e490]:
+                        - generic [ref=e491]: Tailored Minimalist Trench Coat
+                        - generic [ref=e492]: TRN-BLK-M
+                    - cell "Apparel" [ref=e493]
+                    - cell "Aura Studio" [ref=e494]
+                    - cell "$249.00" [ref=e495]
+                    - cell "18" [ref=e497]
+                    - cell "In Stock" [ref=e500]
+                  - row [ref=e502]:
+                    - cell [ref=e503]:
+                      - checkbox [ref=e506]
+                    - cell "Merino Wool Knit Overshirt OVR-WHT-S" [ref=e510]:
+                      - generic [ref=e511]:
+                        - generic [ref=e512]: Merino Wool Knit Overshirt
+                        - generic [ref=e513]: OVR-WHT-S
+                    - cell "Apparel" [ref=e514]
+                    - cell "Nordic Thread" [ref=e515]
+                    - cell "$139.00" [ref=e516]
+                    - cell "4 Low" [ref=e518]:
+                      - generic [ref=e519]:
+                        - generic [ref=e520]: "4"
+                        - generic [ref=e521]: Low
+                    - cell "Low Stock" [ref=e522]
+                  - row [ref=e524]:
+                    - cell [ref=e525]:
+                      - checkbox [ref=e528]
+                    - cell "Architectural Leather Messenger MSG-BLK-ONE" [ref=e532]:
+                      - generic [ref=e533]:
+                        - generic [ref=e534]: Architectural Leather Messenger
+                        - generic [ref=e535]: MSG-BLK-ONE
+                    - cell "Accessories" [ref=e536]
+                    - cell "Luxe Atelier" [ref=e537]
+                    - cell "$299.00" [ref=e538]
+                    - cell "9" [ref=e540]
+                    - cell "In Stock" [ref=e543]
+                  - row [ref=e545]:
+                    - cell [ref=e546]:
+                      - checkbox [ref=e549]
+                    - cell "Vanguard Heritage Low-Top Sneakers SNK-WHT-42" [ref=e553]:
+                      - generic [ref=e554]:
+                        - generic [ref=e555]: Vanguard Heritage Low-Top Sneakers
+                        - generic [ref=e556]: SNK-WHT-42
+                    - cell "Footwear" [ref=e557]
+                    - cell "Urban Essence" [ref=e558]
+                    - cell "$179.00" [ref=e559]
+                    - cell "25" [ref=e561]
+                    - cell "In Stock" [ref=e564]
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e298] [cursor=pointer]
+  - alert [ref=e302]

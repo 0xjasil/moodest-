@@ -1,0 +1,342 @@
+- generic:
+  - generic [aria-hidden]:
+    - complementary:
+      - generic:
+        - generic:
+          - link:
+            - /url: /
+            - generic: AP
+            - generic: Admin Panel
+          - button
+        - generic:
+          - link:
+            - /url: /
+            - generic: Dashboard
+          - generic:
+            - button:
+              - generic: Products
+          - generic:
+            - button:
+              - generic: Orders
+              - generic: "12"
+          - generic:
+            - button [expanded]:
+              - generic: Customers
+            - generic:
+              - link:
+                - /url: /customers
+                - generic: All Customers
+              - link:
+                - /url: /customers/overview
+                - generic: Customer Overview
+              - link:
+                - /url: /customers/security
+                - generic: Security
+              - link:
+                - /url: /customers/address-billing
+                - generic: Address & Billing
+              - link:
+                - /url: /customers/notifications
+                - generic: Notifications
+          - generic:
+            - button:
+              - generic: Vendors
+          - generic:
+            - button:
+              - generic: Marketing
+          - generic:
+            - button:
+              - generic: Analytics
+          - generic:
+            - button:
+              - generic: Logs
+          - generic:
+            - button:
+              - generic: Pages
+        - generic:
+          - generic:
+            - generic:
+              - button:
+                - generic: Settings
+          - button:
+            - generic: A
+            - generic:
+              - paragraph: Alex Morgan
+              - paragraph: admin@example.com
+    - generic:
+      - banner:
+        - generic:
+          - navigation:
+            - generic: Dashboard
+            - generic: Customers
+          - generic:
+            - button:
+              - generic: Toggle theme
+            - generic:
+              - generic:
+                - heading [level=1]: Customers
+                - paragraph: Manage customer information
+      - main:
+        - generic:
+          - generic:
+            - navigation:
+              - link:
+                - /url: /
+              - generic: /
+              - generic: Customer
+              - generic: /
+              - generic: All Customers
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - paragraph: 15,678
+                    - paragraph: Total Customers
+                - generic:
+                  - generic:
+                    - paragraph: $75
+                    - paragraph: Average Order
+                - generic:
+                  - generic:
+                    - paragraph: "560"
+                    - paragraph: New Customers
+                - generic:
+                  - generic:
+                    - paragraph: 3,432
+                    - paragraph: Active Customers
+            - generic:
+              - generic:
+                - generic:
+                  - textbox:
+                    - /placeholder: Search User...
+                - generic:
+                  - combobox:
+                    - generic: "10"
+                  - button:
+                    - generic: Export
+                  - button:
+                    - generic: Add Customer
+              - generic:
+                - table:
+                  - rowgroup:
+                    - row:
+                      - columnheader:
+                        - generic:
+                          - generic:
+                            - checkbox
+                      - columnheader: Customer
+                      - columnheader: Customer ID
+                      - columnheader: Country
+                      - columnheader: Order
+                      - columnheader: Total Spent
+                      - columnheader: Actions
+                  - rowgroup:
+                    - row:
+                      - cell:
+                        - generic:
+                          - generic:
+                            - checkbox
+                      - cell:
+                        - generic:
+                          - generic:
+                            - link:
+                              - /url: /customers/c-1
+                              - text: Stanfield Baser
+                            - paragraph: sbaser0@boston.com
+                      - cell: "#879861"
+                      - cell: Sri Lanka
+                      - cell: "157"
+                      - cell: $2,074.22
+                      - cell:
+                        - button [expanded]:
+                          - generic: Actions
+                    - row:
+                      - cell:
+                        - generic:
+                          - generic:
+                            - checkbox
+                      - cell:
+                        - generic:
+                          - generic: LD
+                          - generic:
+                            - link:
+                              - /url: /customers/c-2
+                              - text: Laurie Dax
+                            - paragraph: ldax1@lycos.com
+                      - cell: "#178408"
+                      - cell: Russia
+                      - cell: "663"
+                      - cell: $2,404.19
+                      - cell:
+                        - button:
+                          - generic: Actions
+                    - row:
+                      - cell:
+                        - generic:
+                          - generic:
+                            - checkbox
+                      - cell:
+                        - generic:
+                          - generic:
+                            - link:
+                              - /url: /customers/c-3
+                              - text: Maxine Kenrick
+                            - paragraph: mkenrick2@eepurl.com
+                      - cell: "#221092"
+                      - cell: Guatemala
+                      - cell: "64"
+                      - cell: $8,821.40
+                      - cell:
+                        - button:
+                          - generic: Actions
+                    - row:
+                      - cell:
+                        - generic:
+                          - generic:
+                            - checkbox
+                      - cell:
+                        - generic:
+                          - generic: HB
+                          - generic:
+                            - link:
+                              - /url: /customers/c-4
+                              - text: Harman Burkill
+                            - paragraph: hburkill3@drupal.org
+                      - cell: "#645579"
+                      - cell: Portugal
+                      - cell: "640"
+                      - cell: $5,294.35
+                      - cell:
+                        - button:
+                          - generic: Actions
+                    - row:
+                      - cell:
+                        - generic:
+                          - generic:
+                            - checkbox
+                      - cell:
+                        - generic:
+                          - generic:
+                            - link:
+                              - /url: /customers/c-5
+                              - text: Aubrey Borrow
+                            - paragraph: aborrow4@jiathis.com
+                      - cell: "#288765"
+                      - cell: France
+                      - cell: "184"
+                      - cell: $1,003.30
+                      - cell:
+                        - button:
+                          - generic: Actions
+                    - row:
+                      - cell:
+                        - generic:
+                          - generic:
+                            - checkbox
+                      - cell:
+                        - generic:
+                          - generic: NF
+                          - generic:
+                            - link:
+                              - /url: /customers/c-6
+                              - text: Nester Fridd
+                            - paragraph: nfridd5@cdbaby.com
+                      - cell: "#321942"
+                      - cell: China
+                      - cell: "965"
+                      - cell: $3,876.92
+                      - cell:
+                        - button:
+                          - generic: Actions
+                    - row:
+                      - cell:
+                        - generic:
+                          - generic:
+                            - checkbox
+                      - cell:
+                        - generic:
+                          - generic:
+                            - link:
+                              - /url: /customers/c-7
+                              - text: Lizzie Nicholes
+                            - paragraph: lnicholes6@rediff.com
+                      - cell: "#516109"
+                      - cell: Brazil
+                      - cell: "514"
+                      - cell: $7,936.85
+                      - cell:
+                        - button:
+                          - generic: Actions
+                    - row:
+                      - cell:
+                        - generic:
+                          - generic:
+                            - checkbox
+                      - cell:
+                        - generic:
+                          - generic:
+                            - link:
+                              - /url: /customers/c-8
+                              - text: Amabel Scullion
+                            - paragraph: ascullion7@wiley.com
+                      - cell: "#403666"
+                      - cell: Guatemala
+                      - cell: "584"
+                      - cell: $4,150.97
+                      - cell:
+                        - button:
+                          - generic: Actions
+                    - row:
+                      - cell:
+                        - generic:
+                          - generic:
+                            - checkbox
+                      - cell:
+                        - generic:
+                          - generic:
+                            - link:
+                              - /url: /customers/c-9
+                              - text: Zeke Arton
+                            - paragraph: zarton8@weibo.com
+                      - cell: "#895280"
+                      - cell: Ukraine
+                      - cell: "539"
+                      - cell: $3,430.05
+                      - cell:
+                        - button:
+                          - generic: Actions
+                    - row:
+                      - cell:
+                        - generic:
+                          - generic:
+                            - checkbox
+                      - cell:
+                        - generic:
+                          - generic: RM
+                          - generic:
+                            - link:
+                              - /url: /customers/c-10
+                              - text: Rosy Medlicott
+                            - paragraph: rmedlicott9@amazon.com
+                      - cell: "#199195"
+                      - cell: Russia
+                      - cell: "4"
+                      - cell: $8,646.75
+                      - cell:
+                        - button:
+                          - generic: Actions
+              - generic:
+                - paragraph: Showing 1 to 10 of 20 entries
+                - generic:
+                  - button [disabled]
+                  - button: "1"
+                  - button: "2"
+                  - button
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f2e450] [cursor=pointer]
+  - alert
+  - menu "Actions" [active] [ref=f2e641]:
+    - menuitem "View" [ref=f2e642] [cursor=pointer]
+    - menuitem "Edit" [ref=f2e644] [cursor=pointer]
+    - separator [ref=f2e646]
+    - menuitem "Delete" [ref=f2e647] [cursor=pointer]

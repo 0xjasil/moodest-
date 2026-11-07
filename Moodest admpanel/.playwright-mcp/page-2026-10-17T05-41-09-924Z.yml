@@ -1,0 +1,44 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e5]:
+          - link "AP Admin Panel" [ref=f1e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f1e7]: AP
+            - generic [ref=f1e9]: Admin Panel
+          - button "Collapse sidebar (Ctrl+B)" [ref=f1e10]
+        - generic [ref=f1e11]:
+          - link "Dashboard" [ref=f1e12] [cursor=pointer]:
+            - /url: /
+          - button "Products" [ref=f1e19] [cursor=pointer]
+          - button "Orders 12" [ref=f1e29] [cursor=pointer]:
+            - generic [ref=f1e30]: Orders
+            - generic [ref=f1e36]: "12"
+          - button "Customers" [ref=f1e41] [cursor=pointer]
+          - button "Vendors" [ref=f1e53] [cursor=pointer]
+          - button "Marketing" [ref=f1e64] [cursor=pointer]
+          - button "Analytics" [ref=f1e74] [cursor=pointer]
+          - button "Logs" [ref=f1e83] [cursor=pointer]
+          - button "Pages" [ref=f1e93] [cursor=pointer]
+        - generic [ref=f1e102]:
+          - button "Settings" [ref=f1e105] [cursor=pointer]
+          - button "A Admin @philOhme" [ref=f1e115]:
+            - generic [ref=f1e116]: A
+            - generic [ref=f1e117]:
+              - paragraph [ref=f1e118]: Admin
+              - paragraph [ref=f1e119]: "@philOhme"
+    - generic [ref=f1e120]:
+      - banner [ref=f1e121]:
+        - generic [ref=f1e122]:
+          - navigation [ref=f1e123]:
+            - generic [ref=f1e124]: Dashboard
+            - generic [ref=f1e127]: Orders
+          - generic [ref=f1e128]:
+            - button "Toggle theme" [ref=f1e129]
+            - generic [ref=f1e137]:
+              - heading "Orders" [level=1] [ref=f1e138]
+              - paragraph [ref=f1e139]: View and manage customer orders
+      - main [ref=f1e140]:
+        - generic [ref=f1e141]: Loading...
+  - region "Notifications alt+T"
