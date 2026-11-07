@@ -69,6 +69,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { API_URL } from "@/lib/api-client";
+import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
 
 export interface CustomerItem {
   id: string;
@@ -98,7 +99,6 @@ const DEFAULT_CUSTOMERS: CustomerItem[] = [
     name: "Fatima Al-Zahra",
     email: "fatima.alzahra@example.com",
     phone: "+971 50 123 4567",
-    avatar: "/images/avatars/1.webp",
     country: "United Arab Emirates",
     ordersCount: 6,
     totalSpent: 1420,
@@ -115,7 +115,6 @@ const DEFAULT_CUSTOMERS: CustomerItem[] = [
     name: "Mariam Noor",
     email: "mariam.noor@example.com",
     phone: "+966 55 987 6543",
-    avatar: "/images/avatars/2.webp",
     country: "Saudi Arabia",
     ordersCount: 4,
     totalSpent: 890,
@@ -132,7 +131,6 @@ const DEFAULT_CUSTOMERS: CustomerItem[] = [
     name: "Aisha Rahman",
     email: "aisha.rahman@example.com",
     phone: "+971 52 456 7890",
-    avatar: "/images/avatars/3.webp",
     country: "United Arab Emirates",
     ordersCount: 9,
     totalSpent: 2650,
@@ -149,7 +147,6 @@ const DEFAULT_CUSTOMERS: CustomerItem[] = [
     name: "Layla Mansoor",
     email: "layla.m@example.com",
     phone: "+965 99 112 233",
-    avatar: "/images/avatars/4.webp",
     country: "Kuwait",
     ordersCount: 2,
     totalSpent: 450,
@@ -166,7 +163,6 @@ const DEFAULT_CUSTOMERS: CustomerItem[] = [
     name: "Huda Al-Hashimi",
     email: "huda.hashimi@example.com",
     phone: "+968 91 234 567",
-    avatar: "/images/avatars/5.webp",
     country: "Oman",
     ordersCount: 3,
     totalSpent: 620,
@@ -178,6 +174,26 @@ const DEFAULT_CUSTOMERS: CustomerItem[] = [
     createdAt: "2026-05-18",
   },
 ];
+
+interface BackendRawUser {
+  id: number | string;
+  firstName?: string;
+  lastName?: string;
+  name?: string;
+  email: string;
+  phone?: string;
+  avatar?: string;
+  country?: string;
+  ordersCount?: number;
+  totalSpent?: number;
+  status?: string;
+  addressLine1?: string;
+  town?: string;
+  state?: string;
+  postcode?: string;
+  createdAt?: string;
+  _count?: { orders?: number };
+}
 
 export function CustomerListPage() {
   const router = useRouter();
@@ -196,9 +212,9 @@ export function CustomerListPage() {
         );
         if (res.ok) {
           const json = await res.json();
-          const list = Array.isArray(json) ? json : (json.data || []);
+          const list: BackendRawUser[] = Array.isArray(json) ? json : (json.data || []);
           if (list.length > 0) {
-            const mapped: CustomerItem[] = list.map((u: any, idx: number) => {
+            const mapped: CustomerItem[] = list.map((u: BackendRawUser, idx: number) => {
               const fullName = [u.firstName, u.lastName].filter(Boolean).join(" ") || u.name || u.email;
               return {
                 id: String(u.id),
@@ -206,7 +222,7 @@ export function CustomerListPage() {
                 name: fullName,
                 email: u.email,
                 phone: u.phone || "+971 50 123 4567",
-                avatar: `/images/avatars/${(idx % 16) + 1}.webp`,
+                avatar: u.avatar || undefined,
                 country: u.country || "United Arab Emirates",
                 ordersCount: u.ordersCount || u._count?.orders || 0,
                 totalSpent: u.totalSpent || 0,
@@ -667,22 +683,12 @@ export function CustomerListPage() {
                       {/* Customer: Avatar + Name + Email */}
                       <td className="px-3 sm:px-4 py-3.5">
                         <div className="flex items-center gap-3">
-                          {customer.avatar ? (
-                            <div className="size-9 rounded-full overflow-hidden shrink-0 border border-gray-200/80 dark:border-white/10 bg-gray-100 dark:bg-white/5">
-                              <Image
-                                src={customer.avatar}
-                                alt={customer.name}
-                                width={36}
-                                height={36}
-                                className="size-full object-cover aspect-square"
-                              />
-                            </div>
-                          ) : (
-                            <div className="size-9 rounded-full bg-gray-100 dark:bg-white/10 border border-gray-200/80 dark:border-white/10 flex items-center justify-center shrink-0 font-semibold text-xs text-gray-700 dark:text-gray-300">
-                              {customer.initials ||
-                                customer.name.slice(0, 2).toUpperCase()}
-                            </div>
-                          )}
+                          <AvatarWithFallback
+                            src={customer.avatar}
+                            name={customer.name}
+                            size={36}
+                            className="size-9 text-xs"
+                          />
 
                           <div className="min-w-0">
                             <Link

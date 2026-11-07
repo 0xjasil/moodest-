@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   Home,
@@ -13,11 +12,12 @@ import {
   Trash2,
   ShoppingCart,
   DollarSign,
-  Rocket,
+  Tag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
 import {
   Dialog,
   DialogContent,
@@ -51,19 +51,19 @@ export function CustomerLayoutFrame({
 }: CustomerLayoutFrameProps) {
   const router = useRouter();
 
-  // Shared Customer State
+  // Shared Customer State (Moodest Abaya Store Client)
   const [customer, setCustomer] = useState({
-    name: "Lorine Hischke",
-    customerId: "#634759",
-    dateJoined: "Aug 17, 2020, 5:48 (ET)",
-    avatar: "/images/avatars/1.webp",
-    ordersCount: 184,
-    totalSpent: 12378,
-    username: "lorine.hischke",
-    email: "vafgot@vultukir.org",
+    name: "Fatima Al-Zahra",
+    customerId: "#100001",
+    dateJoined: "Jan 15, 2026",
+    avatar: null as string | null,
+    ordersCount: 6,
+    totalSpent: 1420,
+    username: "fatima.alzahra",
+    email: "fatima.alzahra@example.com",
     status: "Active",
-    contact: "(123) 456-7890",
-    country: "USA",
+    contact: "+971 50 123 4567",
+    country: "United Arab Emirates",
   });
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -194,18 +194,14 @@ export function CustomerLayoutFrame({
         <div className="space-y-6 lg:col-span-1">
           {/* Customer Profile Card */}
           <div className="rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#141414] shadow-xs p-6 space-y-6">
-            {/* Avatar */}
+            {/* Avatar (with graceful initials fallback for any male or female customer) */}
             <div className="flex flex-col items-center text-center">
-              <div className="size-28 sm:size-32 rounded-2xl overflow-hidden border border-gray-200/80 dark:border-white/10 bg-gray-100 dark:bg-white/5 shadow-2xs">
-                <Image
-                  src={customer.avatar}
-                  alt={customer.name}
-                  width={128}
-                  height={128}
-                  priority
-                  className="size-full object-cover"
-                />
-              </div>
+              <AvatarWithFallback
+                src={customer.avatar}
+                name={customer.name}
+                size={128}
+                className="size-28 sm:size-32 text-3xl font-bold rounded-2xl shadow-2xs border-2 border-white dark:border-white/10"
+              />
 
               <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mt-4">
                 {customer.name}

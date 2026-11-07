@@ -17,6 +17,9 @@ import {
 } from "lucide-react";
 
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import { useAuth } from "@/context/AuthContext";
+import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
+import Link from "next/link";
 
 interface AdminHeaderProps {
   className?: string;
@@ -88,10 +91,16 @@ const pageMap: Record<string, PageInfo> = {
 
 export function AdminHeader({ className }: AdminHeaderProps) {
   const pathname = usePathname();
+  const { user } = useAuth();
   
   // Get current page info or default to dashboard
   const currentPage = pageMap[pathname] || pageMap["/"];
   const Icon = currentPage.icon;
+
+  const displayName = user
+    ? [user.firstName, user.lastName].filter(Boolean).join(" ") || user.email.split("@")[0]
+    : "Admin";
+  const userAvatar = user?.avatar || user?.image || null;
 
   return (
     <header className={cn(
@@ -107,21 +116,24 @@ export function AdminHeader({ className }: AdminHeaderProps) {
         </nav>
 
         {/* Actions */}
-        <div className="ml-auto flex items-center space-x-4">
+        <div className="ml-auto flex items-center space-x-3 sm:space-x-4">
           <ModeToggle />
-          <div className="flex items-center space-x-3 border-l pl-4 border-sidebar-border">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-              <Icon className="h-5 w-5 text-primary" />
-            </div>
-            <div className="hidden sm:block">
-              <h1 className="text-sm font-semibold text-foreground leading-none">
-                {currentPage.title}
-              </h1>
-              <p className="text-xs text-muted-foreground mt-1">
-                {currentPage.description}
-              </p>
-            </div>
-          </div>
+          
+          <Link
+            href="/profile"
+            className="flex items-center gap-2.5 p-1 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
+            title="Admin Profile"
+          >
+            <AvatarWithFallback
+              src={userAvatar}
+              name={displayName}
+              size={34}
+              className="size-8 text-[11px]"
+            />
+            <span className="hidden md:inline-block text-xs font-semibold text-gray-900 dark:text-white">
+              {displayName}
+            </span>
+          </Link>
         </div>
       </div>
     </header>

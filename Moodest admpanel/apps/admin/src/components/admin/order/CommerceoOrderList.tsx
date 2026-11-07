@@ -57,6 +57,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { API_URL } from "@/lib/api-client";
+import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
 
 export interface CommerceoOrderItem {
   id: string;
@@ -205,7 +206,6 @@ const DEFAULT_ORDERS: CommerceoOrderItem[] = [
       id: "1",
       name: "Fatima Al-Zahra",
       email: "fatima.alzahra@example.com",
-      avatar: "/images/avatars/1.webp",
     },
     totalAmount: 245.0,
     payment: "Paid",
@@ -221,7 +221,6 @@ const DEFAULT_ORDERS: CommerceoOrderItem[] = [
       id: "2",
       name: "Mariam Noor",
       email: "mariam.noor@example.com",
-      avatar: "/images/avatars/2.webp",
     },
     totalAmount: 180.0,
     payment: "Paid",
@@ -237,7 +236,6 @@ const DEFAULT_ORDERS: CommerceoOrderItem[] = [
       id: "3",
       name: "Aisha Rahman",
       email: "aisha.rahman@example.com",
-      avatar: "/images/avatars/3.webp",
     },
     totalAmount: 320.0,
     payment: "Pending",
@@ -740,19 +738,12 @@ export function CommerceoOrderList() {
                       {/* Customer info */}
                       <td className="px-4 py-3 align-middle">
                         <div className="flex items-center gap-3">
-                          <div className="size-9 rounded-full overflow-hidden shrink-0 border border-gray-200/80 dark:border-white/10 bg-gray-100 dark:bg-white/5 flex items-center justify-center text-xs font-semibold text-gray-700 dark:text-gray-300 shadow-2xs">
-                            {order.customer.avatar ? (
-                              <Image
-                                src={order.customer.avatar}
-                                alt={order.customer.name}
-                                width={36}
-                                height={36}
-                                className="size-full object-cover"
-                              />
-                            ) : (
-                              <span>{order.customer.name.slice(0, 2).toUpperCase()}</span>
-                            )}
-                          </div>
+                          <AvatarWithFallback
+                            src={order.customer.avatar}
+                            name={order.customer.name}
+                            size={36}
+                            className="size-9 text-xs"
+                          />
                           <div className="min-w-0">
                             <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm leading-tight truncate">
                               {order.customer.name}

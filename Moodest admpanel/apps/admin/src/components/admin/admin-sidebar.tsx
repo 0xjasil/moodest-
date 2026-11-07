@@ -19,9 +19,10 @@ import {
 } from "@/components/ui/tooltip";
 import { useSidebarContext } from "@/context/sidebar-context";
 import defaultMenuData from "@/config/sidebar-menu";
+import { useAuth } from "@/context/AuthContext";
+import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
 import {
   SidebarMenuData,
-  SidebarItem,
   getSidebarIcon,
 } from "@/types/sidebar";
 
@@ -46,6 +47,18 @@ export function AdminSidebar({
   menuData = defaultMenuData as SidebarMenuData,
 }: AdminSidebarProps) {
   const pathname = usePathname();
+  const { user } = useAuth();
+
+  const displayName = user
+    ? [user.firstName, user.lastName].filter(Boolean).join(" ") || user.email.split("@")[0]
+    : "Moodest Admin";
+
+  const displayRole = user?.role
+    ? user.role.replace("_", " ")
+    : "ADMINISTRATOR";
+
+  const userAvatar = user?.avatar || user?.image || null;
+
   const {
     isCollapsed,
     toggleCollapsed,
@@ -108,42 +121,28 @@ export function AdminSidebar({
         {isMini ? (
           /* Mini / Collapsed Profile Avatar */
           <div className="flex flex-col items-center mt-3">
-            <div
-              style={{ backgroundColor: menuData.user.avatarBg || "#FCA5A5" }}
-              className="size-10 rounded-full overflow-hidden p-0.5 border border-white dark:border-white/10 shadow-2xs shrink-0 flex items-center justify-center"
-            >
-              <Image
-                src={menuData.user.avatar}
-                alt={menuData.user.name}
-                width={40}
-                height={40}
-                priority
-                className="size-full object-cover rounded-full"
-              />
-            </div>
+            <AvatarWithFallback
+              src={userAvatar}
+              name={displayName}
+              size={40}
+              className="size-10 text-xs shadow-2xs"
+            />
           </div>
         ) : (
           /* Expanded User Profile Details */
           <div className="flex items-center gap-3 pr-7">
-            <div
-              style={{ backgroundColor: menuData.user.avatarBg || "#FCA5A5" }}
-              className="size-10 rounded-full overflow-hidden p-0.5 border border-white dark:border-white/10 shadow-2xs shrink-0 flex items-center justify-center"
-            >
-              <Image
-                src={menuData.user.avatar}
-                alt={menuData.user.name}
-                width={40}
-                height={40}
-                priority
-                className="size-full object-cover rounded-full"
-              />
-            </div>
+            <AvatarWithFallback
+              src={userAvatar}
+              name={displayName}
+              size={40}
+              className="size-10 text-xs shadow-2xs"
+            />
             <div className="min-w-0 flex-1">
               <span className="text-[10px] font-bold tracking-wider text-gray-400 dark:text-gray-400 uppercase block truncate">
-                {menuData.user.role}
+                {displayRole}
               </span>
               <span className="text-sm font-bold text-gray-900 dark:text-white block truncate leading-tight">
-                {menuData.user.name}
+                {displayName}
               </span>
             </div>
           </div>

@@ -18,14 +18,15 @@ import { useEditProduct } from '@/context/EcitProductContext';
 import { toast } from 'sonner';
 import { API_URL } from '@/lib/api-client';
 
-interface Category {
+interface SubCategory {
   id: string;
   name: string;
 }
 
-interface SubCategory {
+interface Category {
   id: string;
   name: string;
+  children?: SubCategory[];
 }
 
 interface Brand {
@@ -99,8 +100,8 @@ export default function EditProductImageAndCategories() {
       return;
     }
     const currentCat = categories.find((c) => c.id === baseProduct.categoryId);
-    if ((currentCat as any)?.children && (currentCat as any).children.length > 0) {
-      setSubCategories((currentCat as any).children);
+    if (currentCat?.children && currentCat.children.length > 0) {
+      setSubCategories(currentCat.children);
     } else {
       fetch(`/api/categories/${baseProduct.categoryId}/subcategories`)
         .then((res) => (res.ok ? res.json() : []))

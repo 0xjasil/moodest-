@@ -17,6 +17,8 @@ export interface AdminUser {
   lastName?: string;
   phone?: string;
   role: "ADMIN" | "CS_AGENT" | "OPS" | "FINANCE" | "MERCH" | "SUPER_ADMIN";
+  avatar?: string;
+  image?: string;
 }
 
 interface AuthState {

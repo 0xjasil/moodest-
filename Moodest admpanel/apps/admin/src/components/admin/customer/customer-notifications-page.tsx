@@ -1,63 +1,88 @@
 "use client";
 
 import React, { useState } from "react";
+import {
+  Bell,
+  Mail,
+  Smartphone,
+  PackageCheck,
+  Truck,
+  Sparkles,
+  Tag,
+  Save,
+  RotateCcw,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { CustomerLayoutFrame } from "./customer-layout-frame";
 
 interface NotificationRow {
   id: string;
-  type: string;
+  category: "order" | "marketing";
+  title: string;
   description: string;
   email: boolean;
-  browser: boolean;
-  app: boolean;
+  sms: boolean;
 }
 
-const defaultNotifications: NotificationRow[] = [
+const DEFAULT_NOTIFICATION_SETTINGS: NotificationRow[] = [
   {
     id: "notif-1",
-    type: "New for you",
-    description: "A new product is published, or a collection is added.",
+    category: "order",
+    title: "Order Confirmation & Receipt",
+    description: "Instant order receipt and digital invoice upon checkout completion.",
     email: true,
-    browser: true,
-    app: true,
+    sms: true,
   },
   {
     id: "notif-2",
-    type: "Account activity",
-    description: "Important security alerts and account status changes.",
+    category: "order",
+    title: "Dispatch & Tracking Number",
+    description: "Courier tracking link dispatched when the abaya package leaves the boutique.",
     email: true,
-    browser: true,
-    app: true,
+    sms: true,
   },
   {
     id: "notif-3",
-    type: "A new browser used to sign in",
-    description: "Notification whenever a new browser logs into your account.",
-    email: true,
-    browser: true,
-    app: false,
+    category: "order",
+    title: "Out for Delivery Alert",
+    description: "Driver dispatch notification sent on morning of expected arrival.",
+    email: false,
+    sms: true,
   },
   {
     id: "notif-4",
-    type: "A new device is linked",
-    description: "Notification when a new mobile or desktop device connects.",
+    category: "marketing",
+    title: "New Abaya Collection Drops",
+    description: "VIP early access to new seasonal modest collections (Ramadan & Eid drops).",
     email: true,
-    browser: false,
-    app: true,
+    sms: false,
+  },
+  {
+    id: "notif-5",
+    category: "marketing",
+    title: "Back in Stock Sizing Alerts",
+    description: "Automated alert when saved out-of-stock abaya size or color restocks.",
+    email: true,
+    sms: true,
+  },
+  {
+    id: "notif-6",
+    category: "marketing",
+    title: "Promotional Discounts & Flash Sales",
+    description: "Exclusive boutique promo codes and seasonal private sale invitations.",
+    email: true,
+    sms: false,
   },
 ];
 
 export function CustomerNotificationsPage() {
-  const [notifications, setNotifications] =
-    useState<NotificationRow[]>(defaultNotifications);
+  const [notifications, setNotifications] = useState<NotificationRow[]>(
+    DEFAULT_NOTIFICATION_SETTINGS
+  );
   const [isSaving, setIsSaving] = useState(false);
 
-  const handleToggle = (
-    id: string,
-    channel: "email" | "browser" | "app"
-  ) => {
+  const handleToggle = (id: string, channel: "email" | "sms") => {
     setNotifications((prev) =>
       prev.map((row) =>
         row.id === id ? { ...row, [channel]: !row[channel] } : row
@@ -69,128 +94,191 @@ export function CustomerNotificationsPage() {
     setIsSaving(true);
     setTimeout(() => {
       setIsSaving(false);
-      toast.success("Notification preferences saved successfully");
+      toast.success("Customer communication preferences updated successfully");
     }, 400);
   };
 
   const handleDiscard = () => {
-    setNotifications(defaultNotifications);
-    toast.info("Notification changes discarded");
+    setNotifications(DEFAULT_NOTIFICATION_SETTINGS);
+    toast.info("Communication preferences reset to defaults");
   };
 
+  const orderNotifs = notifications.filter((n) => n.category === "order");
+  const marketingNotifs = notifications.filter((n) => n.category === "marketing");
+
   return (
-    <CustomerLayoutFrame
-      currentTab="notifications"
-      pageTitle="Notifications"
-    >
+    <CustomerLayoutFrame currentTab="notifications" pageTitle="Communications">
       <div className="space-y-6">
+        {/* Main Card */}
         <div className="rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#141414] shadow-xs overflow-hidden">
           {/* Header */}
-          <div className="p-6 border-b border-gray-200/80 dark:border-white/10">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-              Notifications
-            </h2>
-            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
-              You will receive notification for the below selected items.
-            </p>
+          <div className="p-6 border-b border-gray-200/80 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <Bell className="size-5 text-indigo-600 dark:text-indigo-400" />
+                <span>Customer Notifications &amp; Messaging</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Configure channels (Email &amp; SMS) through which customer receives boutique updates.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2.5">
+              <Button
+                variant="outline"
+                onClick={handleDiscard}
+                className="h-9 px-3.5 rounded-xl text-xs font-semibold border-gray-200/80 dark:border-white/10 cursor-pointer"
+              >
+                <RotateCcw className="size-3.5 mr-1.5" />
+                Reset Defaults
+              </Button>
+              <Button
+                disabled={isSaving}
+                onClick={handleSaveChanges}
+                className="h-9 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs cursor-pointer"
+              >
+                <Save className="size-3.5 mr-1.5" />
+                {isSaving ? "Saving..." : "Save Preferences"}
+              </Button>
+            </div>
           </div>
 
-          {/* Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-gray-50/80 dark:bg-white/[0.02] border-b border-gray-200/80 dark:border-white/10 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-3.5 min-w-[220px]">
-                    Type
-                  </th>
-                  <th scope="col" className="px-6 py-3.5 text-center w-28">
-                    Email
-                  </th>
-                  <th scope="col" className="px-6 py-3.5 text-center w-28">
-                    Browser
-                  </th>
-                  <th scope="col" className="px-6 py-3.5 text-center w-28">
-                    App
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200/80 dark:divide-white/10">
-                {notifications.map((row) => (
-                  <tr
-                    key={row.id}
-                    className="hover:bg-gray-50/50 dark:hover:bg-white/[0.02] transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <div>
+          {/* Section 1: Order & Delivery Fulfillment */}
+          <div className="p-6 border-b border-gray-200/80 dark:border-white/10 space-y-4">
+            <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider text-xs flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
+              <Truck className="size-4" />
+              <span>Order &amp; Shipping Fulfillment Alerts</span>
+            </h3>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-gray-50/60 dark:bg-white/[0.02] border-y border-gray-200/80 dark:border-white/10 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  <tr>
+                    <th scope="col" className="px-4 py-3 min-w-[240px]">
+                      Notification Trigger
+                    </th>
+                    <th scope="col" className="px-4 py-3 text-center w-28">
+                      <div className="flex items-center justify-center gap-1.5">
+                        <Mail className="size-3.5" />
+                        <span>Email</span>
+                      </div>
+                    </th>
+                    <th scope="col" className="px-4 py-3 text-center w-28">
+                      <div className="flex items-center justify-center gap-1.5">
+                        <Smartphone className="size-3.5" />
+                        <span>SMS / WA</span>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200/80 dark:divide-white/10">
+                  {orderNotifs.map((row) => (
+                    <tr
+                      key={row.id}
+                      className="hover:bg-gray-50/50 dark:hover:bg-white/[0.02] transition-colors"
+                    >
+                      <td className="px-4 py-3.5">
                         <span className="font-semibold text-gray-900 dark:text-white text-sm block">
-                          {row.type}
+                          {row.title}
                         </span>
                         <span className="text-xs text-gray-500 dark:text-gray-400">
                           {row.description}
                         </span>
-                      </div>
-                    </td>
+                      </td>
 
-                    {/* Email Checkbox */}
-                    <td className="px-6 py-4 text-center">
-                      <div className="flex items-center justify-center">
+                      <td className="px-4 py-3.5 text-center">
                         <input
                           type="checkbox"
-                          aria-label={`${row.type} email notification`}
+                          aria-label={`${row.title} email`}
                           checked={row.email}
                           onChange={() => handleToggle(row.id, "email")}
-                          className="size-4.5 rounded-md border-gray-300 dark:border-white/20 accent-indigo-600 focus:ring-indigo-500 cursor-pointer transition-colors"
+                          className="size-4.5 rounded-md border-gray-300 dark:border-white/20 accent-indigo-600 cursor-pointer"
                         />
-                      </div>
-                    </td>
+                      </td>
 
-                    {/* Browser Checkbox */}
-                    <td className="px-6 py-4 text-center">
-                      <div className="flex items-center justify-center">
+                      <td className="px-4 py-3.5 text-center">
                         <input
                           type="checkbox"
-                          aria-label={`${row.type} browser notification`}
-                          checked={row.browser}
-                          onChange={() => handleToggle(row.id, "browser")}
-                          className="size-4.5 rounded-md border-gray-300 dark:border-white/20 accent-indigo-600 focus:ring-indigo-500 cursor-pointer transition-colors"
+                          aria-label={`${row.title} SMS`}
+                          checked={row.sms}
+                          onChange={() => handleToggle(row.id, "sms")}
+                          className="size-4.5 rounded-md border-gray-300 dark:border-white/20 accent-indigo-600 cursor-pointer"
                         />
-                      </div>
-                    </td>
-
-                    {/* App Checkbox */}
-                    <td className="px-6 py-4 text-center">
-                      <div className="flex items-center justify-center">
-                        <input
-                          type="checkbox"
-                          aria-label={`${row.type} app notification`}
-                          checked={row.app}
-                          onChange={() => handleToggle(row.id, "app")}
-                          className="size-4.5 rounded-md border-gray-300 dark:border-white/20 accent-indigo-600 focus:ring-indigo-500 cursor-pointer transition-colors"
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          {/* Action Buttons Footer */}
-          <div className="p-6 border-t border-gray-200/80 dark:border-white/10 flex flex-wrap items-center gap-3">
-            <Button
-              onClick={handleSaveChanges}
-              disabled={isSaving}
-              className="h-10 px-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer"
-            >
-              {isSaving ? "Saving..." : "Save Changes"}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleDiscard}
-              className="h-10 px-5 bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-white/10 dark:hover:bg-white/15 dark:text-gray-200 border-transparent rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
-            >
-              Discard
-            </Button>
+          {/* Section 2: Marketing & Collection Drops */}
+          <div className="p-6 space-y-4">
+            <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider text-xs flex items-center gap-2 text-rose-600 dark:text-rose-400">
+              <Sparkles className="size-4" />
+              <span>Marketing, Sizing &amp; Collection Launches</span>
+            </h3>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-gray-50/60 dark:bg-white/[0.02] border-y border-gray-200/80 dark:border-white/10 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  <tr>
+                    <th scope="col" className="px-4 py-3 min-w-[240px]">
+                      Campaign Type
+                    </th>
+                    <th scope="col" className="px-4 py-3 text-center w-28">
+                      <div className="flex items-center justify-center gap-1.5">
+                        <Mail className="size-3.5" />
+                        <span>Email</span>
+                      </div>
+                    </th>
+                    <th scope="col" className="px-4 py-3 text-center w-28">
+                      <div className="flex items-center justify-center gap-1.5">
+                        <Smartphone className="size-3.5" />
+                        <span>SMS / WA</span>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200/80 dark:divide-white/10">
+                  {marketingNotifs.map((row) => (
+                    <tr
+                      key={row.id}
+                      className="hover:bg-gray-50/50 dark:hover:bg-white/[0.02] transition-colors"
+                    >
+                      <td className="px-4 py-3.5">
+                        <span className="font-semibold text-gray-900 dark:text-white text-sm block">
+                          {row.title}
+                        </span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                          {row.description}
+                        </span>
+                      </td>
+
+                      <td className="px-4 py-3.5 text-center">
+                        <input
+                          type="checkbox"
+                          aria-label={`${row.title} email`}
+                          checked={row.email}
+                          onChange={() => handleToggle(row.id, "email")}
+                          className="size-4.5 rounded-md border-gray-300 dark:border-white/20 accent-indigo-600 cursor-pointer"
+                        />
+                      </td>
+
+                      <td className="px-4 py-3.5 text-center">
+                        <input
+                          type="checkbox"
+                          aria-label={`${row.title} SMS`}
+                          checked={row.sms}
+                          onChange={() => handleToggle(row.id, "sms")}
+                          className="size-4.5 rounded-md border-gray-300 dark:border-white/20 accent-indigo-600 cursor-pointer"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

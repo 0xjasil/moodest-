@@ -60,74 +60,46 @@ interface CustomerOrder {
 
 const INITIAL_ORDERS: CustomerOrder[] = [
   {
-    id: "#5434",
-    rawId: "ORD-9421",
-    date: "May 16, 2022",
-    status: "Dispatched",
-    spent: 73.98,
-  },
-  {
-    id: "#6745",
-    rawId: "ORD-8932",
-    date: "May 3, 2023",
-    status: "Dispatched",
-    spent: 100.39,
-  },
-  {
-    id: "#6087",
-    rawId: "ORD-7811",
-    date: "Dec 15, 2022",
-    status: "Out for Delivery",
-    spent: 809.26,
-  },
-  {
-    id: "#7825",
-    rawId: "ORD-6520",
-    date: "Aug 5, 2022",
-    status: "Out for Delivery",
-    spent: 617.64,
-  },
-  {
-    id: "#5604",
-    rawId: "ORD-5491",
-    date: "Jun 18, 2022",
-    status: "Dispatched",
-    spent: 384.41,
-  },
-  {
-    id: "#9120",
-    rawId: "ORD-4102",
-    date: "Jan 12, 2024",
+    id: "#1024",
+    rawId: "ORD-1024",
+    date: "May 10, 2026",
     status: "Delivered",
-    spent: 450.0,
+    spent: 245.0,
   },
   {
-    id: "#8341",
-    rawId: "ORD-3918",
-    date: "Feb 28, 2024",
+    id: "#1018",
+    rawId: "ORD-1018",
+    date: "Apr 18, 2026",
     status: "Delivered",
-    spent: 125.5,
+    spent: 310.0,
   },
   {
-    id: "#7109",
-    rawId: "ORD-2810",
-    date: "Mar 15, 2024",
+    id: "#1011",
+    rawId: "ORD-1011",
+    date: "Mar 22, 2026",
     status: "Delivered",
-    spent: 890.0,
+    spent: 195.0,
   },
   {
-    id: "#6201",
-    rawId: "ORD-1902",
-    date: "Apr 22, 2024",
-    status: "Cancelled",
-    spent: 45.0,
-  },
-  {
-    id: "#5190",
-    rawId: "ORD-1109",
-    date: "Jul 10, 2024",
+    id: "#1005",
+    rawId: "ORD-1005",
+    date: "Feb 14, 2026",
     status: "Delivered",
-    spent: 1240.0,
+    spent: 180.0,
+  },
+  {
+    id: "#1002",
+    rawId: "ORD-1002",
+    date: "Jan 28, 2026",
+    status: "Delivered",
+    spent: 270.0,
+  },
+  {
+    id: "#1001",
+    rawId: "ORD-1001",
+    date: "Jan 15, 2026",
+    status: "Delivered",
+    spent: 220.0,
   },
 ];
 
@@ -248,14 +220,14 @@ export function CustomerOverviewPage() {
               </h4>
               <div className="flex items-baseline gap-1.5 mt-1">
                 <span className="text-xl font-bold text-stone-900 dark:text-stone-100">
-                  $12,378.00
+                  $1,420.00
                 </span>
                 <span className="text-xs text-gray-500 dark:text-gray-400">
                   Total
                 </span>
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                All-time revenue from this customer
+                All-time boutique revenue from customer
               </p>
             </div>
           </div>
@@ -272,7 +244,7 @@ export function CustomerOverviewPage() {
               </h4>
               <div className="flex items-baseline gap-1.5 mt-1">
                 <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
-                  184
+                  6
                 </span>
                 <span className="text-xs text-gray-500 dark:text-gray-400">
                   Orders
@@ -296,14 +268,14 @@ export function CustomerOverviewPage() {
               </h4>
               <div className="flex items-baseline gap-1.5 mt-1">
                 <span className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                  $67.27
+                  $236.67
                 </span>
                 <span className="text-xs text-gray-500 dark:text-gray-400">
                   / order
                 </span>
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Average basket value per checkout
+                Average abaya purchase per checkout
               </p>
             </div>
           </div>
@@ -320,14 +292,14 @@ export function CustomerOverviewPage() {
               </h4>
               <div className="flex items-baseline gap-1.5 mt-1">
                 <span className="text-xl font-bold text-rose-600 dark:text-rose-400">
-                  15
+                  4
                 </span>
                 <span className="text-xs text-gray-500 dark:text-gray-400">
                   Items
                 </span>
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Active wishlist items saved for later
+                Saved styles from new collections
               </p>
             </div>
           </div>

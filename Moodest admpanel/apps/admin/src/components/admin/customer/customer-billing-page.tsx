@@ -2,16 +2,18 @@
 
 import React, { useState } from "react";
 import {
-  ChevronDown,
-  Plus,
-  Edit2,
-  Trash2,
-  CheckCircle2,
-  CreditCard,
   MapPin,
   Building,
   Home,
-  Users,
+  Plus,
+  Edit2,
+  Trash2,
+  CreditCard,
+  CheckCircle2,
+  Phone,
+  FileText,
+  Smartphone,
+  Banknote,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,779 +38,491 @@ import { CustomerLayoutFrame } from "./customer-layout-frame";
 
 interface AddressItem {
   id: string;
-  type: "Home" | "Office" | "Family" | "Other";
+  type: "Home" | "Office" | "Other";
   recipient: string;
+  phone: string;
   street: string;
   city: string;
   state: string;
-  zip: string;
   country: string;
+  deliveryNotes?: string;
   isDefault: boolean;
 }
 
 interface PaymentMethodItem {
   id: string;
-  brand: "Mastercard" | "Visa" | "American Express";
-  holder: string;
-  last4: string;
-  expires: string;
-  cardType: string;
-  issuer: string;
+  type: "card" | "apple_pay" | "cod";
+  brand?: string;
+  last4?: string;
+  expires?: string;
+  label: string;
   isPrimary: boolean;
 }
 
-const initialAddresses: AddressItem[] = [
+const INITIAL_ADDRESSES: AddressItem[] = [
   {
     id: "addr-1",
     type: "Home",
-    recipient: "Violet Mendoza",
-    street: "23 Shatinon Mekalan",
-    city: "Melbourne",
-    state: "VIC",
-    zip: "3000",
-    country: "London UK",
+    recipient: "Fatima Al-Zahra",
+    phone: "+971 50 123 4567",
+    street: "Villa 14, Street 22B, Al Safa 2",
+    city: "Dubai",
+    state: "Dubai",
+    country: "United Arab Emirates",
+    deliveryNotes: "Private villa gate, please call upon arrival.",
     isDefault: true,
   },
   {
     id: "addr-2",
     type: "Office",
-    recipient: "Violet Mendoza",
-    street: "45 Roker Terrace",
-    city: "Westminster",
-    state: "London",
-    zip: "SW1P 4RG",
-    country: "UK",
-    isDefault: false,
-  },
-  {
-    id: "addr-3",
-    type: "Family",
-    recipient: "Robert Hischke",
-    street: "512 Water Plant Ave",
-    city: "Springfield",
-    state: "OR",
-    zip: "97477",
-    country: "USA",
+    recipient: "Fatima Al-Zahra",
+    phone: "+971 50 123 4567",
+    street: "Floor 18, Al Saada Tower, DIFC Gate Precinct 4",
+    city: "Dubai",
+    state: "Dubai",
+    country: "United Arab Emirates",
+    deliveryNotes: "Deliver to reception between 9 AM - 5 PM.",
     isDefault: false,
   },
 ];
 
-const initialPaymentMethods: PaymentMethodItem[] = [
+const INITIAL_PAYMENT_METHODS: PaymentMethodItem[] = [
   {
     id: "pm-1",
-    brand: "Mastercard",
-    holder: "Violet Mendoza",
-    last4: "4487",
-    expires: "04/2028",
-    cardType: "Mastercard credit card",
-    issuer: "VICBANK",
+    type: "card",
+    brand: "Visa",
+    last4: "4242",
+    expires: "08/2028",
+    label: "Visa ending in 4242",
     isPrimary: true,
   },
   {
     id: "pm-2",
-    brand: "Visa",
-    holder: "Violet Mendoza",
-    last4: "8821",
-    expires: "11/2027",
-    cardType: "Visa debit card",
-    issuer: "BARCLAYS",
+    type: "apple_pay",
+    label: "Apple Pay (Storefront One-Click)",
+    isPrimary: false,
+  },
+  {
+    id: "pm-3",
+    type: "cod",
+    label: "Cash on Delivery (Courier)",
     isPrimary: false,
   },
 ];
 
 export function CustomerBillingPage() {
-  const [addresses, setAddresses] = useState<AddressItem[]>(initialAddresses);
-  const [openAddressIds, setOpenAddressIds] = useState<Record<string, boolean>>({
-    "addr-1": true,
-  });
+  const [addresses, setAddresses] = useState<AddressItem[]>(INITIAL_ADDRESSES);
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethodItem[]>(INITIAL_PAYMENT_METHODS);
 
-  const [paymentMethods, setPaymentMethods] =
-    useState<PaymentMethodItem[]>(initialPaymentMethods);
-  const [openPaymentIds, setOpenPaymentIds] = useState<Record<string, boolean>>({
-    "pm-1": true,
-  });
-
-  // Add Address Modal State
+  // Add / Edit Address Dialog State
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
   const [addressForm, setAddressForm] = useState({
     type: "Home" as AddressItem["type"],
-    recipient: "Violet Mendoza",
+    recipient: "Fatima Al-Zahra",
+    phone: "+971 50 123 4567",
     street: "",
-    city: "",
-    state: "",
-    zip: "",
-    country: "USA",
+    city: "Dubai",
+    state: "Dubai",
+    country: "United Arab Emirates",
+    deliveryNotes: "",
     isDefault: false,
   });
 
-  // Add Payment Modal State
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [paymentForm, setPaymentForm] = useState({
-    brand: "Mastercard" as PaymentMethodItem["brand"],
-    holder: "Violet Mendoza",
-    cardNumber: "",
-    expires: "",
-    issuer: "CHASE",
-    isPrimary: false,
-  });
-
-  const toggleAddress = (id: string) => {
-    setOpenAddressIds((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+  const handleOpenAdd = () => {
+    setEditingAddressId(null);
+    setAddressForm({
+      type: "Home",
+      recipient: "Fatima Al-Zahra",
+      phone: "+971 50 123 4567",
+      street: "",
+      city: "Dubai",
+      state: "Dubai",
+      country: "United Arab Emirates",
+      deliveryNotes: "",
+      isDefault: addresses.length === 0,
+    });
+    setIsAddressModalOpen(true);
   };
 
-  const togglePayment = (id: string) => {
-    setOpenPaymentIds((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+  const handleOpenEdit = (addr: AddressItem) => {
+    setEditingAddressId(addr.id);
+    setAddressForm({
+      type: addr.type,
+      recipient: addr.recipient,
+      phone: addr.phone,
+      street: addr.street,
+      city: addr.city,
+      state: addr.state,
+      country: addr.country,
+      deliveryNotes: addr.deliveryNotes || "",
+      isDefault: addr.isDefault,
+    });
+    setIsAddressModalOpen(true);
   };
 
-  const handleSetDefaultAddress = (id: string) => {
+  const handleSaveAddress = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!addressForm.street.trim() || !addressForm.city.trim()) {
+      toast.error("Please enter street and city");
+      return;
+    }
+
+    if (editingAddressId) {
+      setAddresses((prev) =>
+        prev.map((a) =>
+          a.id === editingAddressId
+            ? { ...a, ...addressForm }
+            : addressForm.isDefault
+            ? { ...a, isDefault: false }
+            : a
+        )
+      );
+      toast.success("Delivery address updated");
+    } else {
+      const newAddr: AddressItem = {
+        id: `addr-${Date.now()}`,
+        ...addressForm,
+      };
+      setAddresses((prev) =>
+        addressForm.isDefault
+          ? [...prev.map((a) => ({ ...a, isDefault: false })), newAddr]
+          : [...prev, newAddr]
+      );
+      toast.success("New delivery address added");
+    }
+    setIsAddressModalOpen(false);
+  };
+
+  const handleSetDefault = (id: string) => {
     setAddresses((prev) =>
       prev.map((a) => ({
         ...a,
         isDefault: a.id === id,
       }))
     );
-    toast.success("Default address updated");
+    toast.success("Default shipping address set");
   };
 
   const handleDeleteAddress = (id: string) => {
+    if (addresses.length <= 1) {
+      toast.error("At least one address must be kept on file");
+      return;
+    }
     setAddresses((prev) => prev.filter((a) => a.id !== id));
-    toast.success("Address removed from address book");
-  };
-
-  const handleSaveNewAddress = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!addressForm.street.trim()) {
-      toast.error("Please enter a street address");
-      return;
-    }
-
-    const newId = `addr-${Date.now()}`;
-    const newAddress: AddressItem = {
-      id: newId,
-      ...addressForm,
-    };
-
-    setAddresses((prev) => {
-      if (newAddress.isDefault) {
-        return [newAddress, ...prev.map((a) => ({ ...a, isDefault: false }))];
-      }
-      return [...prev, newAddress];
-    });
-
-    setOpenAddressIds((prev) => ({ ...prev, [newId]: true }));
-    setIsAddressModalOpen(false);
-    toast.success("New address added successfully");
-    setAddressForm({
-      type: "Home",
-      recipient: "Violet Mendoza",
-      street: "",
-      city: "",
-      state: "",
-      zip: "",
-      country: "USA",
-      isDefault: false,
-    });
-  };
-
-  const handleSetPrimaryPayment = (id: string) => {
-    setPaymentMethods((prev) =>
-      prev.map((p) => ({
-        ...p,
-        isPrimary: p.id === id,
-      }))
-    );
-    toast.success("Primary payment method updated");
-  };
-
-  const handleDeletePayment = (id: string) => {
-    setPaymentMethods((prev) => prev.filter((p) => p.id !== id));
-    toast.success("Payment method removed");
-  };
-
-  const handleSaveNewPayment = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cleanNumber = paymentForm.cardNumber.replace(/\s+/g, "");
-    if (cleanNumber.length < 4) {
-      toast.error("Please enter a valid card number");
-      return;
-    }
-
-    const last4 = cleanNumber.slice(-4);
-    const newId = `pm-${Date.now()}`;
-    const newPm: PaymentMethodItem = {
-      id: newId,
-      brand: paymentForm.brand,
-      holder: paymentForm.holder,
-      last4,
-      expires: paymentForm.expires || "12/28",
-      cardType: `${paymentForm.brand} card`,
-      issuer: paymentForm.issuer || "BANK",
-      isPrimary: paymentForm.isPrimary,
-    };
-
-    setPaymentMethods((prev) => {
-      if (newPm.isPrimary) {
-        return [newPm, ...prev.map((p) => ({ ...p, isPrimary: false }))];
-      }
-      return [...prev, newPm];
-    });
-
-    setOpenPaymentIds((prev) => ({ ...prev, [newId]: true }));
-    setIsPaymentModalOpen(false);
-    toast.success("New payment method added");
-    setPaymentForm({
-      brand: "Mastercard",
-      holder: "Violet Mendoza",
-      cardNumber: "",
-      expires: "",
-      issuer: "CHASE",
-      isPrimary: false,
-    });
-  };
-
-  const renderBrandIcon = (brand: PaymentMethodItem["brand"]) => {
-    if (brand === "Mastercard") {
-      return (
-        <div className="relative flex size-8 shrink-0 items-center">
-          <div className="size-5 rounded-full bg-red-500 opacity-90"></div>
-          <div className="-ml-2.5 size-5 rounded-full bg-amber-400 opacity-90"></div>
-        </div>
-      );
-    }
-    if (brand === "Visa") {
-      return (
-        <div className="size-8 rounded-lg bg-blue-600/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs tracking-wider">
-          VISA
-        </div>
-      );
-    }
-    return (
-      <div className="size-8 rounded-lg bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center font-bold text-[10px]">
-        AMEX
-      </div>
-    );
+    toast.success("Address removed");
   };
 
   return (
-    <CustomerLayoutFrame
-      currentTab="address-billing"
-      pageTitle="Address & Billing"
-    >
+    <CustomerLayoutFrame currentTab="address-billing" pageTitle="Address &amp; Delivery">
       <div className="space-y-6">
-        {/* 1. Address Book Card */}
-        <div className="rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#141414] shadow-xs p-6 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+        {/* 1. Saved Delivery Addresses */}
+        <div className="rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#141414] shadow-xs p-6 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                Address Book
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <MapPin className="size-5 text-indigo-600 dark:text-indigo-400" />
+                <span>Delivery &amp; Shipping Addresses</span>
               </h2>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Saved shipping destinations used for abaya deliveries and courier fulfillment.
+              </p>
             </div>
+
             <Button
-              onClick={() => setIsAddressModalOpen(true)}
-              className="h-9 px-3.5 bg-gray-100 hover:bg-gray-200 text-gray-800 dark:bg-white/10 dark:hover:bg-white/15 dark:text-gray-100 rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer self-start sm:self-auto"
+              onClick={handleOpenAdd}
+              className="h-9 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs transition-colors cursor-pointer"
             >
-              <Plus className="size-4 mr-1.5" />
-              Add new address
+              <Plus className="size-3.5 mr-1.5" />
+              Add New Address
             </Button>
           </div>
 
-          {/* Collapsible Accordion List */}
-          <div className="divide-y divide-gray-200/80 dark:divide-white/10 border-t border-gray-200/80 dark:border-white/10">
-            {addresses.map((addr) => {
-              const isOpen = !!openAddressIds[addr.id];
-              return (
-                <div key={addr.id} className="py-2">
-                  <button
-                    type="button"
-                    onClick={() => toggleAddress(addr.id)}
-                    className="flex w-full items-center justify-between py-2.5 text-left group cursor-pointer"
-                  >
-                    <div className="flex items-center gap-3">
-                      <ChevronDown
-                        className={`size-4.5 text-gray-400 transition-transform duration-200 ${
-                          isOpen ? "rotate-180 text-gray-700 dark:text-gray-200" : ""
-                        }`}
-                      />
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-semibold text-sm text-gray-900 dark:text-white">
-                          {addr.type}
-                        </span>
-                        {addr.isDefault && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                            Default Address
-                          </span>
-                        )}
-                        <span className="w-full text-xs text-gray-500 dark:text-gray-400">
-                          {addr.street}
-                        </span>
-                      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {addresses.map((addr) => (
+              <div
+                key={addr.id}
+                className={`rounded-xl border p-5 transition-all flex flex-col justify-between space-y-4 ${
+                  addr.isDefault
+                    ? "border-indigo-600/60 bg-indigo-50/20 dark:bg-indigo-950/10 dark:border-indigo-500/30"
+                    : "border-gray-200/80 dark:border-white/10 bg-gray-50/40 dark:bg-white/[0.02]"
+                }`}
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {addr.type === "Home" ? (
+                        <Home className="size-4 text-indigo-600 dark:text-indigo-400" />
+                      ) : (
+                        <Building className="size-4 text-sky-600 dark:text-sky-400" />
+                      )}
+                      <span className="text-xs font-bold uppercase tracking-wider text-gray-900 dark:text-white">
+                        {addr.type} Address
+                      </span>
                     </div>
-                  </button>
 
-                  {/* Collapsible Content */}
-                  {isOpen && (
-                    <div className="pb-4 pl-8 sm:pl-9 pr-2 space-y-3">
-                      <div className="rounded-xl bg-gray-50/70 dark:bg-white/[0.02] border border-gray-200/60 dark:border-white/5 p-4">
-                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 whitespace-pre-line leading-relaxed">
-                          <span className="font-semibold text-gray-900 dark:text-white block mb-0.5">
-                            {addr.recipient}
-                          </span>
-                          {addr.street},<br />
-                          {addr.city}, {addr.state} {addr.zip},<br />
-                          {addr.country}
-                        </p>
-                      </div>
+                    {addr.isDefault && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-600 text-white shadow-2xs">
+                        <CheckCircle2 className="size-3" />
+                        Default
+                      </span>
+                    )}
+                  </div>
 
-                      <div className="flex items-center gap-2 pt-1">
-                        {!addr.isDefault && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleSetDefaultAddress(addr.id)}
-                            className="h-8 px-3 rounded-lg text-xs font-medium cursor-pointer"
-                          >
-                            Set as Default
-                          </Button>
-                        )}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteAddress(addr.id)}
-                          className="h-8 px-3 rounded-lg text-xs font-medium text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer"
-                        >
-                          <Trash2 className="size-3.5 mr-1" />
-                          Delete
-                        </Button>
-                      </div>
+                  <p className="text-sm font-bold text-gray-900 dark:text-white">
+                    {addr.recipient}
+                  </p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {addr.street}
+                    <br />
+                    {addr.city}, {addr.state}, {addr.country}
+                  </p>
+
+                  <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 pt-1">
+                    <Phone className="size-3 text-gray-400" />
+                    <span>{addr.phone}</span>
+                  </div>
+
+                  {addr.deliveryNotes && (
+                    <div className="flex items-start gap-1.5 text-[11px] text-amber-700 dark:text-amber-400/90 bg-amber-500/10 dark:bg-amber-500/5 p-2 rounded-lg mt-2">
+                      <FileText className="size-3.5 shrink-0 mt-0.5" />
+                      <span>{addr.deliveryNotes}</span>
                     </div>
                   )}
                 </div>
-              );
-            })}
+
+                <div className="flex items-center justify-between pt-3 border-t border-gray-200/60 dark:border-white/10 text-xs">
+                  {!addr.isDefault ? (
+                    <button
+                      type="button"
+                      onClick={() => handleSetDefault(addr.id)}
+                      className="font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 cursor-pointer"
+                    >
+                      Set as Default
+                    </button>
+                  ) : (
+                    <span className="text-gray-400 dark:text-gray-500 text-[11px]">
+                      Primary delivery address
+                    </span>
+                  )}
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenEdit(addr)}
+                      className="p-1 text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+                      title="Edit address"
+                    >
+                      <Edit2 className="size-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteAddress(addr.id)}
+                      className="p-1 text-gray-400 hover:text-rose-600 transition-colors cursor-pointer"
+                      title="Delete address"
+                    >
+                      <Trash2 className="size-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* 2. Payment Methods Card */}
-        <div className="rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#141414] shadow-xs p-6 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                Payment Methods
-              </h2>
-            </div>
-            <Button
-              onClick={() => setIsPaymentModalOpen(true)}
-              className="h-9 px-3.5 bg-gray-100 hover:bg-gray-200 text-gray-800 dark:bg-white/10 dark:hover:bg-white/15 dark:text-gray-100 rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer self-start sm:self-auto"
-            >
-              <Plus className="size-4 mr-1.5" />
-              Add payment methods
-            </Button>
+        {/* 2. Saved Payment Methods On File */}
+        <div className="rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#141414] shadow-xs p-6 space-y-6">
+          <div>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <CreditCard className="size-5 text-indigo-600 dark:text-indigo-400" />
+              <span>Checkout Payment Methods</span>
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
+              Payment channels customer has linked for boutique checkouts.
+            </p>
           </div>
 
-          {/* Collapsible Accordion List */}
-          <div className="divide-y divide-gray-200/80 dark:divide-white/10 border-t border-gray-200/80 dark:border-white/10">
-            {paymentMethods.map((pm) => {
-              const isOpen = !!openPaymentIds[pm.id];
-              return (
-                <div key={pm.id} className="py-2">
-                  <button
-                    type="button"
-                    onClick={() => togglePayment(pm.id)}
-                    className="flex w-full items-center justify-between py-2.5 text-left group cursor-pointer"
-                  >
-                    <div className="flex items-center gap-3">
-                      <ChevronDown
-                        className={`size-4.5 text-gray-400 transition-transform duration-200 ${
-                          isOpen ? "rotate-180 text-gray-700 dark:text-gray-200" : ""
-                        }`}
-                      />
-                      {renderBrandIcon(pm.brand)}
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-semibold text-sm text-gray-900 dark:text-white">
-                          {pm.brand}
-                        </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
-                          Expires {pm.expires}
-                        </span>
-                        {pm.isPrimary && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
-                            Primary
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </button>
-
-                  {/* Collapsible Content */}
-                  {isOpen && (
-                    <div className="pb-4 pl-8 sm:pl-9 pr-2 space-y-3">
-                      <div className="rounded-xl bg-gray-50/70 dark:bg-white/[0.02] border border-gray-200/60 dark:border-white/5 p-4">
-                        <div className="grid gap-2 text-xs sm:text-sm md:grid-cols-2">
-                          <ul className="grid grid-cols-3 gap-2">
-                            <li className="text-gray-500 dark:text-gray-400">
-                              Name:
-                            </li>
-                            <li className="col-span-2 font-semibold text-gray-900 dark:text-white">
-                              {pm.holder}
-                            </li>
-                            <li className="text-gray-500 dark:text-gray-400">
-                              Number:
-                            </li>
-                            <li className="col-span-2 font-mono text-gray-900 dark:text-white">
-                              **** {pm.last4}
-                            </li>
-                            <li className="text-gray-500 dark:text-gray-400">
-                              Expires:
-                            </li>
-                            <li className="col-span-2 text-gray-900 dark:text-white">
-                              {pm.expires}
-                            </li>
-                            <li className="text-gray-500 dark:text-gray-400">
-                              Type:
-                            </li>
-                            <li className="col-span-2 text-gray-900 dark:text-white">
-                              {pm.cardType}
-                            </li>
-                            <li className="text-gray-500 dark:text-gray-400">
-                              Issuer:
-                            </li>
-                            <li className="col-span-2 text-gray-900 dark:text-white">
-                              {pm.issuer}
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 pt-1">
-                        {!pm.isPrimary && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleSetPrimaryPayment(pm.id)}
-                            className="h-8 px-3 rounded-lg text-xs font-medium cursor-pointer"
-                          >
-                            Set as Primary
-                          </Button>
-                        )}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeletePayment(pm.id)}
-                          className="h-8 px-3 rounded-lg text-xs font-medium text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer"
-                        >
-                          <Trash2 className="size-3.5 mr-1" />
-                          Delete
-                        </Button>
-                      </div>
-                    </div>
-                  )}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {paymentMethods.map((pm) => (
+              <div
+                key={pm.id}
+                className="rounded-xl border border-gray-200/80 dark:border-white/10 bg-gray-50/40 dark:bg-white/[0.02] p-4 flex items-start gap-3.5"
+              >
+                <div className="size-10 rounded-xl bg-white dark:bg-white/10 border border-gray-200/80 dark:border-white/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0 shadow-2xs">
+                  {pm.type === "card" && <CreditCard className="size-5" />}
+                  {pm.type === "apple_pay" && <Smartphone className="size-5" />}
+                  {pm.type === "cod" && <Banknote className="size-5" />}
                 </div>
-              );
-            })}
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-bold text-gray-900 dark:text-white truncate">
+                      {pm.label}
+                    </p>
+                  </div>
+
+                  {pm.expires && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                      Expires {pm.expires}
+                    </p>
+                  )}
+
+                  <div className="flex items-center gap-1.5 mt-2">
+                    {pm.isPrimary ? (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400 border border-indigo-200/80 dark:border-indigo-900/30">
+                        Default Card
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-white/5">
+                        Available at checkout
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Add Address Modal */}
+      {/* Add / Edit Address Dialog */}
       <Dialog open={isAddressModalOpen} onOpenChange={setIsAddressModalOpen}>
-        <DialogContent className="sm:max-w-lg rounded-2xl">
+        <DialogContent className="sm:max-w-lg rounded-2xl border-gray-200 dark:border-white/10">
           <DialogHeader>
-            <DialogTitle>Add New Address</DialogTitle>
-            <DialogDescription>
-              Add a new shipping or billing address for this customer.
+            <DialogTitle className="text-base font-bold">
+              {editingAddressId ? "Edit Delivery Address" : "Add Delivery Address"}
+            </DialogTitle>
+            <DialogDescription className="text-xs text-gray-500 dark:text-gray-400">
+              Provide recipient shipping coordinates for abaya orders.
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSaveNewAddress} className="space-y-4 py-2">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
+
+          <form onSubmit={handleSaveAddress} className="space-y-4 py-2">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold">Recipient Name</Label>
+                <Input
+                  value={addressForm.recipient}
+                  onChange={(e) =>
+                    setAddressForm({ ...addressForm, recipient: e.target.value })
+                  }
+                  className="h-9 rounded-xl text-xs"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold">Contact Phone</Label>
+                <Input
+                  value={addressForm.phone}
+                  onChange={(e) =>
+                    setAddressForm({ ...addressForm, phone: e.target.value })
+                  }
+                  className="h-9 rounded-xl text-xs"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <Label className="text-xs font-semibold">Street Address / Villa Number</Label>
+              <Input
+                value={addressForm.street}
+                onChange={(e) =>
+                  setAddressForm({ ...addressForm, street: e.target.value })
+                }
+                placeholder="e.g. Villa 14, Street 22B, Al Safa 2"
+                className="h-9 rounded-xl text-xs"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-3 gap-3">
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold">City / Emirate</Label>
+                <Input
+                  value={addressForm.city}
+                  onChange={(e) =>
+                    setAddressForm({ ...addressForm, city: e.target.value })
+                  }
+                  className="h-9 rounded-xl text-xs"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold">Country</Label>
+                <Input
+                  value={addressForm.country}
+                  onChange={(e) =>
+                    setAddressForm({ ...addressForm, country: e.target.value })
+                  }
+                  className="h-9 rounded-xl text-xs"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1">
                 <Label className="text-xs font-semibold">Address Type</Label>
                 <Select
                   value={addressForm.type}
-                  onValueChange={(v) =>
-                    setAddressForm((prev) => ({
-                      ...prev,
-                      type: v as AddressItem["type"],
-                    }))
+                  onValueChange={(val: AddressItem["type"]) =>
+                    setAddressForm({ ...addressForm, type: val })
                   }
                 >
-                  <SelectTrigger className="rounded-xl">
+                  <SelectTrigger className="h-9 rounded-xl text-xs">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Home">Home</SelectItem>
                     <SelectItem value="Office">Office</SelectItem>
-                    <SelectItem value="Family">Family</SelectItem>
                     <SelectItem value="Other">Other</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-
-              <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Recipient Name</Label>
-                <Input
-                  value={addressForm.recipient}
-                  onChange={(e) =>
-                    setAddressForm((prev) => ({
-                      ...prev,
-                      recipient: e.target.value,
-                    }))
-                  }
-                  placeholder="e.g. Violet Mendoza"
-                  className="rounded-xl text-sm"
-                />
-              </div>
             </div>
 
-            <div className="space-y-1.5">
-              <Label className="text-xs font-semibold">Street Address</Label>
+            <div className="space-y-1">
+              <Label className="text-xs font-semibold">Courier Delivery Notes (Optional)</Label>
               <Input
-                value={addressForm.street}
+                value={addressForm.deliveryNotes}
                 onChange={(e) =>
-                  setAddressForm((prev) => ({
-                    ...prev,
-                    street: e.target.value,
-                  }))
+                  setAddressForm({ ...addressForm, deliveryNotes: e.target.value })
                 }
-                placeholder="e.g. 23 Shatinon Mekalan"
-                className="rounded-xl text-sm"
-              />
-            </div>
-
-            <div className="grid grid-cols-3 gap-3">
-              <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">City</Label>
-                <Input
-                  value={addressForm.city}
-                  onChange={(e) =>
-                    setAddressForm((prev) => ({
-                      ...prev,
-                      city: e.target.value,
-                    }))
-                  }
-                  placeholder="Melbourne"
-                  className="rounded-xl text-sm"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">State / Region</Label>
-                <Input
-                  value={addressForm.state}
-                  onChange={(e) =>
-                    setAddressForm((prev) => ({
-                      ...prev,
-                      state: e.target.value,
-                    }))
-                  }
-                  placeholder="VIC"
-                  className="rounded-xl text-sm"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Postal Code</Label>
-                <Input
-                  value={addressForm.zip}
-                  onChange={(e) =>
-                    setAddressForm((prev) => ({
-                      ...prev,
-                      zip: e.target.value,
-                    }))
-                  }
-                  placeholder="3000"
-                  className="rounded-xl text-sm"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label className="text-xs font-semibold">Country</Label>
-              <Input
-                value={addressForm.country}
-                onChange={(e) =>
-                  setAddressForm((prev) => ({
-                    ...prev,
-                    country: e.target.value,
-                  }))
-                }
-                placeholder="UK / USA"
-                className="rounded-xl text-sm"
+                placeholder="e.g. Ring front gate, deliver between 10 AM - 2 PM"
+                className="h-9 rounded-xl text-xs"
               />
             </div>
 
             <div className="flex items-center gap-2 pt-1">
               <input
                 type="checkbox"
-                id="default-address-check"
+                id="is-default-address"
                 checked={addressForm.isDefault}
                 onChange={(e) =>
-                  setAddressForm((prev) => ({
-                    ...prev,
-                    isDefault: e.target.checked,
-                  }))
+                  setAddressForm({ ...addressForm, isDefault: e.target.checked })
                 }
-                className="size-4 rounded accent-indigo-600"
+                className="size-4 rounded border-gray-300 accent-indigo-600"
               />
-              <Label
-                htmlFor="default-address-check"
-                className="text-xs text-gray-700 dark:text-gray-300 font-normal cursor-pointer"
-              >
-                Set as default address
+              <Label htmlFor="is-default-address" className="text-xs font-medium cursor-pointer">
+                Set as default shipping address for checkout
               </Label>
             </div>
 
-            <DialogFooter className="gap-2 sm:gap-0 pt-2">
+            <DialogFooter className="pt-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setIsAddressModalOpen(false)}
-                className="rounded-xl"
+                className="h-9 rounded-xl text-xs"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl"
+                className="h-9 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold"
               >
-                Add Address
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      {/* Add Payment Method Modal */}
-      <Dialog open={isPaymentModalOpen} onOpenChange={setIsPaymentModalOpen}>
-        <DialogContent className="sm:max-w-md rounded-2xl">
-          <DialogHeader>
-            <DialogTitle>Add Payment Method</DialogTitle>
-            <DialogDescription>
-              Add a card for automated billing and faster checkout.
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleSaveNewPayment} className="space-y-4 py-2">
-            <div className="space-y-1.5">
-              <Label className="text-xs font-semibold">Card Brand</Label>
-              <Select
-                value={paymentForm.brand}
-                onValueChange={(v) =>
-                  setPaymentForm((prev) => ({
-                    ...prev,
-                    brand: v as PaymentMethodItem["brand"],
-                  }))
-                }
-              >
-                <SelectTrigger className="rounded-xl">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Mastercard">Mastercard</SelectItem>
-                  <SelectItem value="Visa">Visa</SelectItem>
-                  <SelectItem value="American Express">American Express</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label className="text-xs font-semibold">Cardholder Name</Label>
-              <Input
-                value={paymentForm.holder}
-                onChange={(e) =>
-                  setPaymentForm((prev) => ({
-                    ...prev,
-                    holder: e.target.value,
-                  }))
-                }
-                placeholder="Violet Mendoza"
-                className="rounded-xl text-sm"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <Label className="text-xs font-semibold">Card Number</Label>
-              <Input
-                value={paymentForm.cardNumber}
-                onChange={(e) =>
-                  setPaymentForm((prev) => ({
-                    ...prev,
-                    cardNumber: e.target.value,
-                  }))
-                }
-                placeholder="4487 1234 5678 9012"
-                className="rounded-xl text-sm font-mono"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Expires (MM/YY)</Label>
-                <Input
-                  value={paymentForm.expires}
-                  onChange={(e) =>
-                    setPaymentForm((prev) => ({
-                      ...prev,
-                      expires: e.target.value,
-                    }))
-                  }
-                  placeholder="04/2028"
-                  className="rounded-xl text-sm"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Issuer / Bank</Label>
-                <Input
-                  value={paymentForm.issuer}
-                  onChange={(e) =>
-                    setPaymentForm((prev) => ({
-                      ...prev,
-                      issuer: e.target.value,
-                    }))
-                  }
-                  placeholder="VICBANK"
-                  className="rounded-xl text-sm"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 pt-1">
-              <input
-                type="checkbox"
-                id="primary-card-check"
-                checked={paymentForm.isPrimary}
-                onChange={(e) =>
-                  setPaymentForm((prev) => ({
-                    ...prev,
-                    isPrimary: e.target.checked,
-                  }))
-                }
-                className="size-4 rounded accent-indigo-600"
-              />
-              <Label
-                htmlFor="primary-card-check"
-                className="text-xs text-gray-700 dark:text-gray-300 font-normal cursor-pointer"
-              >
-                Set as primary payment method
-              </Label>
-            </div>
-
-            <DialogFooter className="gap-2 sm:gap-0 pt-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsPaymentModalOpen(false)}
-                className="rounded-xl"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl"
-              >
-                Save Card
+                Save Address
               </Button>
             </DialogFooter>
           </form>
