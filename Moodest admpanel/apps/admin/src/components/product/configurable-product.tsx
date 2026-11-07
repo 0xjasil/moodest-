@@ -21,6 +21,7 @@ import { API_URL } from '@/lib/api-client';
 interface Category {
   id: string;
   name: string;
+  children?: SubCategory[];
 }
 
 interface SubCategory {
@@ -33,15 +34,52 @@ interface Brand {
   name: string;
 }
 
+const DEFAULT_BRANDS: Brand[] = [
+  { id: "brand-1", name: "Moodest Studio" },
+  { id: "brand-2", name: "Noor Dubai" },
+  { id: "brand-3", name: "Al-Jawhara" },
+  { id: "brand-4", name: "Zahra Couture" },
+  { id: "brand-5", name: "Amani Kaftans" },
+];
+
+const DEFAULT_CATEGORIES: Category[] = [
+  {
+    id: "cat-1",
+    name: "Casual Abayas",
+    children: [
+      { id: "sub-1", name: "Linen Daily Wear" },
+      { id: "sub-2", name: "Front Open Abayas" },
+      { id: "sub-3", name: "Kimono Style" },
+    ],
+  },
+  {
+    id: "cat-2",
+    name: "Occasion & Luxury",
+    children: [
+      { id: "sub-4", name: "Silk & Satin" },
+      { id: "sub-5", name: "Embroidered Luxury" },
+      { id: "sub-6", name: "Bridal Collection" },
+    ],
+  },
+  {
+    id: "cat-3",
+    name: "Kaftans & Modest Wear",
+    children: [
+      { id: "sub-7", name: "Moroccan Kaftans" },
+      { id: "sub-8", name: "Travel Kaftans" },
+    ],
+  },
+];
+
 const MAX_THUMBNAILS = 3;
 
 function ProductImageAndCategories() {
   const { baseProduct, updateBaseProduct } = useConfigurableProduct();
   const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
   const [thumbnailPreviews, setThumbnailPreviews] = useState<string[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>(DEFAULT_CATEGORIES);
   const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
-  const [brands, setBrands] = useState<Brand[]>([]);
+  const [brands, setBrands] = useState<Brand[]>(DEFAULT_BRANDS);
   const [errors, setErrors] = useState({
     mainImage: false,
     thumbnails: false,
@@ -54,36 +92,41 @@ function ProductImageAndCategories() {
     const fetchDropdownData = async () => {
       try {
         const [categoriesResponse, brandsResponse] = await Promise.all([
-          fetch(`${API_URL}/categories`).then(res => res.json()),
-          fetch(`${API_URL}/brands`).then(res => res.json()),
+          fetch(`/api/categories`).then((res) => (res.ok ? res.json() : [])).catch(() => []),
+          fetch(`/api/brands`).then((res) => (res.ok ? res.json() : [])).catch(() => []),
         ]);
-        setCategories(categoriesResponse);
-        setBrands(brandsResponse);
+        if (Array.isArray(categoriesResponse) && categoriesResponse.length > 0) {
+          setCategories(categoriesResponse);
+        }
+        if (Array.isArray(brandsResponse) && brandsResponse.length > 0) {
+          setBrands(brandsResponse);
+        }
       } catch (error) {
-        console.error('Error fetching dropdown data:', error);
+        console.warn("[configurable-product] Using default categories and brands:", error);
       }
     };
     fetchDropdownData();
   }, []);
 
   useEffect(() => {
-    const fetchSubCategories = async () => {
-      if (!baseProduct.categoryId) {
-        setSubCategories([]);
-        return;
-      }
-      try {
-        const response = await fetch(`${API_URL}/categories/${baseProduct.categoryId}/subcategories`).then(res => res.json());
-        // Note: I might need to update the backend to support this specific endpoint or just filter categories.
-        // Actually, I'll just use the general categories fetch and find the subcategories if they are included.
-        // For now, I'll assume the backend has this endpoint or I'll implement it.
-        setSubCategories(response);
-      } catch (error) {
-        console.error('Error fetching subcategories:', error);
-      }
-    };
-    fetchSubCategories();
-  }, [baseProduct.categoryId]);
+    if (!baseProduct.categoryId) {
+      setSubCategories([]);
+      return;
+    }
+    const currentCat = categories.find((c) => c.id === baseProduct.categoryId);
+    if (currentCat?.children && currentCat.children.length > 0) {
+      setSubCategories(currentCat.children);
+    } else {
+      fetch(`/api/categories/${baseProduct.categoryId}/subcategories`)
+        .then((res) => (res.ok ? res.json() : []))
+        .then((data) => {
+          if (Array.isArray(data) && data.length > 0) {
+            setSubCategories(data);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [baseProduct.categoryId, categories]);
 
   const handleBrowseMain = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

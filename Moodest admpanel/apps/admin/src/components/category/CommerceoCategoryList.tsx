@@ -91,7 +91,7 @@ export function CommerceoCategoryList() {
   React.useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(`${API_URL}/categories`);
+        const res = await fetch(`/api/categories`).catch(() => fetch(`${API_URL}/categories`));
         if (res.ok) {
           const list = await res.json();
           if (Array.isArray(list) && list.length > 0) {
@@ -110,7 +110,7 @@ export function CommerceoCategoryList() {
           }
         }
       } catch (err) {
-        console.error("Failed to load categories from API:", err);
+        console.warn("[CommerceoCategoryList] Could not load categories from API, using fallback:", err);
       }
     };
     fetchCategories();
@@ -198,7 +198,7 @@ export function CommerceoCategoryList() {
 
     try {
       if (editingCategory) {
-        const res = await fetch(`${API_URL}/categories/${editingCategory.id}`, {
+        const res = await fetch(`/api/categories/${editingCategory.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -207,7 +207,7 @@ export function CommerceoCategoryList() {
           toast.success(`Category "${formTitle}" updated successfully`);
         }
       } else {
-        const res = await fetch(`${API_URL}/categories`, {
+        const res = await fetch(`/api/categories`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -265,7 +265,9 @@ export function CommerceoCategoryList() {
   const handleDeleteConfirm = async () => {
     if (!deletingCategory) return;
     try {
-      await fetch(`${API_URL}/categories/${deletingCategory.id}`, { method: "DELETE" });
+      await fetch(`/api/categories/${deletingCategory.id}`, { method: "DELETE" }).catch(() =>
+        fetch(`${API_URL}/categories/${deletingCategory.id}`, { method: "DELETE" })
+      );
     } catch {
       // ignore
     }

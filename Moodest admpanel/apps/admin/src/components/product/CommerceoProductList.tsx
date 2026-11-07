@@ -191,7 +191,7 @@ export default function CommerceoProductList() {
   const fetchProductsFromApi = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${API_URL}/products?limit=50`);
+      const res = await fetch(`/api/products?limit=50`).catch(() => fetch(`${API_URL}/products?limit=50`));
       if (res.ok) {
         const json = await res.json();
         const apiData: ProductDetail[] = Array.isArray(json) ? json : json.data || [];

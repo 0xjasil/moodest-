@@ -8,6 +8,10 @@ import {
   Gift,
   Star,
   Award,
+  ShoppingBag,
+  PackageCheck,
+  TrendingUp,
+  Heart,
   Search,
   MoreVertical,
   Eye,
@@ -230,97 +234,100 @@ export function CustomerOverviewPage() {
   return (
     <CustomerLayoutFrame currentTab="overview" pageTitle="Customer Overview">
       <div className="space-y-6">
-        {/* The 4 Stat Cards in a 2x2 Grid */}
+        {/* The 4 Stat Cards in a 2x2 Grid (Shopify-style D2C Customer Metrics) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* 1. Account Balance */}
+          {/* 1. Lifetime Spent */}
           <div className="rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#141414] shadow-xs p-5 space-y-3">
-            <div className="size-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-2xs">
-              <CreditCard className="size-5" />
+            <div className="size-10 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 flex items-center justify-center text-stone-800 dark:text-stone-200 shadow-2xs">
+              <ShoppingBag className="size-5" />
             </div>
 
             <div>
               <h4 className="text-sm font-bold text-gray-900 dark:text-white">
-                Account Balance
+                Lifetime Spent
               </h4>
               <div className="flex items-baseline gap-1.5 mt-1">
-                <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">
-                  $2345
+                <span className="text-xl font-bold text-stone-900 dark:text-stone-100">
+                  $12,378.00
                 </span>
                 <span className="text-xs text-gray-500 dark:text-gray-400">
-                  Credit Left
+                  Total
                 </span>
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Account balance for next purchase
+                All-time revenue from this customer
               </p>
             </div>
           </div>
 
-          {/* 2. Loyalty Program */}
+          {/* 2. Total Orders */}
           <div className="rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#141414] shadow-xs p-5 space-y-3">
             <div className="size-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-2xs">
-              <Gift className="size-5" />
+              <PackageCheck className="size-5" />
             </div>
 
             <div>
               <h4 className="text-sm font-bold text-gray-900 dark:text-white">
-                Loyalty Program
+                Orders Completed
               </h4>
-              <div className="mt-1.5">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
-                  Platinum member
+              <div className="flex items-baseline gap-1.5 mt-1">
+                <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
+                  184
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  Orders
                 </span>
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                3000 points to next tier
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Fulfilled and delivered to customer
               </p>
             </div>
           </div>
 
-          {/* 3. Wishlist */}
+          {/* 3. Average Order Value */}
           <div className="rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#141414] shadow-xs p-5 space-y-3">
-            <div className="size-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400 shadow-2xs">
-              <Star className="size-5" />
+            <div className="size-10 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-2xs">
+              <TrendingUp className="size-5" />
             </div>
 
             <div>
               <h4 className="text-sm font-bold text-gray-900 dark:text-white">
-                Wishlist
+                Average Order Value (AOV)
               </h4>
               <div className="flex items-baseline gap-1.5 mt-1">
-                <span className="text-xl font-bold text-amber-600 dark:text-amber-400">
+                <span className="text-xl font-bold text-blue-600 dark:text-blue-400">
+                  $67.27
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  / order
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Average basket value per checkout
+              </p>
+            </div>
+          </div>
+
+          {/* 4. Wishlist Saved */}
+          <div className="rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#141414] shadow-xs p-5 space-y-3">
+            <div className="size-10 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-900/30 flex items-center justify-center text-rose-600 dark:text-rose-400 shadow-2xs">
+              <Heart className="size-5" />
+            </div>
+
+            <div>
+              <h4 className="text-sm font-bold text-gray-900 dark:text-white">
+                Saved to Wishlist
+              </h4>
+              <div className="flex items-baseline gap-1.5 mt-1">
+                <span className="text-xl font-bold text-rose-600 dark:text-rose-400">
                   15
                 </span>
                 <span className="text-xs text-gray-500 dark:text-gray-400">
-                  Items in Wishlist
+                  Items
                 </span>
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Receive notification when items go on sale
-              </p>
-            </div>
-          </div>
-
-          {/* 4. Coupons */}
-          <div className="rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#141414] shadow-xs p-5 space-y-3">
-            <div className="size-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-2xs">
-              <Award className="size-5" />
-            </div>
-
-            <div>
-              <h4 className="text-sm font-bold text-gray-900 dark:text-white">
-                Coupons
-              </h4>
-              <div className="flex items-baseline gap-1.5 mt-1">
-                <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">
-                  21
-                </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  Coupons you win
-                </span>
-              </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Use coupon on next purchase
+                Active wishlist items saved for later
               </p>
             </div>
           </div>

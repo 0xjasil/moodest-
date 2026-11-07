@@ -74,16 +74,19 @@ export default function EditProductImageAndCategories() {
     const fetchDropdownData = async () => {
       try {
         const [categoriesRes, brandsRes] = await Promise.all([
-          fetch(`${API_URL}/categories`),
-          fetch(`${API_URL}/brands`),
+          fetch(`/api/categories`).then((res) => (res.ok ? res.json() : [])).catch(() => []),
+          fetch(`/api/brands`).then((res) => (res.ok ? res.json() : [])).catch(() => []),
         ]);
-        const categoriesData = await categoriesRes.json();
-        const brandsData = await brandsRes.json();
-        setCategories(Array.isArray(categoriesData) ? categoriesData : categoriesData.data || []);
-        setBrands(Array.isArray(brandsData) ? brandsData : brandsData.data || []);
+        const categoriesData = categoriesRes;
+        const brandsData = brandsRes;
+        if (Array.isArray(categoriesData) && categoriesData.length > 0) {
+          setCategories(categoriesData);
+        }
+        if (Array.isArray(brandsData) && brandsData.length > 0) {
+          setBrands(brandsData);
+        }
       } catch (error) {
-        console.error('Error fetching dropdown data:', error);
-        toast.error('Failed to load categories and brands');
+        console.warn('[EditProductImageAndCategories] Using defaults for dropdown data:', error);
       }
     };
     fetchDropdownData();
@@ -91,20 +94,23 @@ export default function EditProductImageAndCategories() {
 
   // Fetch subcategories when category changes
   useEffect(() => {
-    const fetchSubCategories = async () => {
-      if (!baseProduct.categoryId) {
-        setSubCategories([]);
-        return;
-      }
-      try {
-        const response = await fetch(`${API_URL}/categories/${baseProduct.categoryId}/subcategories`);
-        const subData = await response.json();
-        setSubCategories(Array.isArray(subData) ? subData : subData.data || []);
-      } catch (error) {
-        console.error('Error fetching subcategories:', error);
-        toast.error('Failed to load subcategories');
-      }
-    };
+    if (!baseProduct.categoryId) {
+      setSubCategories([]);
+      return;
+    }
+    const currentCat = categories.find((c) => c.id === baseProduct.categoryId);
+    if ((currentCat as any)?.children && (currentCat as any).children.length > 0) {
+      setSubCategories((currentCat as any).children);
+    } else {
+      fetch(`/api/categories/${baseProduct.categoryId}/subcategories`)
+        .then((res) => (res.ok ? res.json() : []))
+        .then((subData) => {
+          if (Array.isArray(subData) && subData.length > 0) {
+            setSubCategories(subData);
+          }
+        })
+        .catch(() => {});
+    }
     fetchSubCategories();
   }, [baseProduct.categoryId]);
 

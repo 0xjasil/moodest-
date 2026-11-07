@@ -78,8 +78,13 @@ async function getDashboardData(): Promise<{
 
     return { metrics, recentOrders, lowStockItems };
   } catch (error) {
-    // Backend unreachable — return empty dashboard rather than fake numbers
-    console.error("[Dashboard] Failed to fetch stats:", error);
+    // Backend unreachable or unauthorized — return empty dashboard gracefully
+    const msg = error instanceof Error ? error.message : String(error);
+    if (msg.includes("Unauthorized") || msg.includes("401")) {
+      console.warn("[Dashboard] Unauthenticated session — displaying default dashboard metrics");
+    } else {
+      console.warn("[Dashboard] Failed to fetch stats:", msg);
+    }
     const metrics: DashboardMetrics = {
       totalRevenue: 0,
       totalOrders: 0,

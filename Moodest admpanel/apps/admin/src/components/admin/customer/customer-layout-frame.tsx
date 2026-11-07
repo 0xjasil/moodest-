@@ -68,7 +68,6 @@ export function CustomerLayoutFrame({
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isPlanDialogOpen, setIsPlanDialogOpen] = useState(false);
 
   const [editForm, setEditForm] = useState({
     name: customer.name,
@@ -319,35 +318,6 @@ export function CustomerLayoutFrame({
               Edit Details
             </Button>
           </div>
-
-          {/* Upgrade to Premium Banner Card */}
-          <div className="rounded-2xl bg-gradient-to-br from-indigo-900 via-indigo-950 to-neutral-900 text-white p-6 shadow-sm relative overflow-hidden border border-indigo-800/40">
-            <div className="absolute -right-8 -bottom-8 size-40 bg-indigo-500/20 rounded-full blur-2xl pointer-events-none" />
-
-            <div className="relative z-10 flex flex-col justify-between space-y-6">
-              <div className="flex items-start justify-between gap-4">
-                <div className="space-y-1.5">
-                  <h3 className="text-lg font-bold tracking-tight text-white">
-                    Upgrade to premium
-                  </h3>
-                  <p className="text-xs text-indigo-200/80 leading-relaxed max-w-[190px]">
-                    Upgrade customer to premium membership to access pro features.
-                  </p>
-                </div>
-
-                <div className="size-14 rounded-2xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center shrink-0 shadow-lg text-indigo-300">
-                  <Rocket className="size-7" />
-                </div>
-              </div>
-
-              <Button
-                onClick={() => setIsPlanDialogOpen(true)}
-                className="w-full h-10 rounded-xl bg-white text-indigo-950 hover:bg-gray-100 font-bold text-xs sm:text-sm shadow-md transition-colors cursor-pointer"
-              >
-                Select Plan
-              </Button>
-            </div>
-          </div>
         </div>
 
         {/* RIGHT COLUMN: Tab specific contents */}
@@ -478,8 +448,8 @@ export function CustomerLayoutFrame({
               <span className="font-semibold text-gray-900 dark:text-white">
                 {customer.name}
               </span>{" "}
-              ({customer.customerId})? All purchase records, rewards points, and
-              account balances will be archived.
+              ({customer.customerId})? All purchase history and customer records
+              will be permanently removed.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -495,69 +465,6 @@ export function CustomerLayoutFrame({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      {/* Upgrade Plan Dialog */}
-      <Dialog open={isPlanDialogOpen} onOpenChange={setIsPlanDialogOpen}>
-        <DialogContent className="sm:max-w-md rounded-2xl border-gray-200 dark:border-white/10">
-          <DialogHeader>
-            <DialogTitle className="text-base font-bold">
-              Upgrade Membership Plan
-            </DialogTitle>
-            <DialogDescription className="text-xs text-gray-500 dark:text-gray-400">
-              Select a premium tier for {customer.name}.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-3 py-3">
-            <div className="p-3.5 rounded-xl border-2 border-indigo-600 bg-indigo-50/40 dark:bg-indigo-950/20 flex items-center justify-between cursor-pointer">
-              <div>
-                <p className="text-sm font-bold text-gray-900 dark:text-white">
-                  Gold VIP
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  5% cashback, free expedited shipping
-                </p>
-              </div>
-              <span className="text-sm font-bold text-indigo-600 dark:text-indigo-400">
-                $19/mo
-              </span>
-            </div>
-
-            <div className="p-3.5 rounded-xl border border-gray-200 dark:border-white/10 hover:border-indigo-400 transition-colors flex items-center justify-between cursor-pointer">
-              <div>
-                <p className="text-sm font-bold text-gray-900 dark:text-white">
-                  Platinum Elite
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  10% cashback, personal concierge, priority fulfillment
-                </p>
-              </div>
-              <span className="text-sm font-bold text-gray-900 dark:text-white">
-                $49/mo
-              </span>
-            </div>
-          </div>
-
-          <DialogFooter className="flex sm:flex-row items-center justify-end gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setIsPlanDialogOpen(false)}
-              className="rounded-xl text-xs h-9 px-4"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={() => {
-                toast.success("Membership upgraded to Gold VIP");
-                setIsPlanDialogOpen(false);
-              }}
-              className="rounded-xl text-xs h-9 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
-            >
-              Confirm Upgrade
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

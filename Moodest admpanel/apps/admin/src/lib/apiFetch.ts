@@ -72,6 +72,10 @@ function normalizePath(endpoint: string): string {
   if (!clean.startsWith("/")) {
     clean = `/${clean}`;
   }
+  // In browser, route via local Next.js /api proxy to prevent CORS issues with backend
+  if (typeof window !== "undefined") {
+    return `/api${clean}`;
+  }
   return `${API_URL}${clean}`;
 }
 
