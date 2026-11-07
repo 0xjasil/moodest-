@@ -16,7 +16,7 @@ import Checkbox from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useConfigurableProduct } from '@/context/ConfigurableProductContext';
 import { toast } from 'sonner';
-import { API_URL } from '@/lib/api-client';
+import { apiFetch } from '@/lib/apiFetch';
 
 interface Category {
   id: string;
@@ -92,14 +92,26 @@ function ProductImageAndCategories() {
     const fetchDropdownData = async () => {
       try {
         const [categoriesResponse, brandsResponse] = await Promise.all([
-          fetch(`/api/categories`).then((res) => (res.ok ? res.json() : [])).catch(() => []),
-          fetch(`/api/brands`).then((res) => (res.ok ? res.json() : [])).catch(() => []),
+          apiFetch<any>(`/categories`).catch(() => null),
+          apiFetch<any>(`/brands`).catch(() => null),
         ]);
-        if (Array.isArray(categoriesResponse) && categoriesResponse.length > 0) {
-          setCategories(categoriesResponse);
+        const catList: Category[] = Array.isArray(categoriesResponse)
+          ? categoriesResponse
+          : Array.isArray(categoriesResponse?.data)
+          ? categoriesResponse.data
+          : [];
+        if (catList.length > 0) {
+          setCategories(catList);
         }
-        if (Array.isArray(brandsResponse) && brandsResponse.length > 0) {
-          setBrands(brandsResponse);
+        const brandList: Brand[] = Array.isArray(brandsResponse)
+          ? brandsResponse
+          : Array.isArray(brandsResponse?.data)
+          ? brandsResponse.data
+          : brandsResponse?.id
+          ? [brandsResponse]
+          : [];
+        if (brandList.length > 0) {
+          setBrands(brandList);
         }
       } catch (error) {
         console.warn("[configurable-product] Using default categories and brands:", error);
@@ -117,11 +129,11 @@ function ProductImageAndCategories() {
     if (currentCat?.children && currentCat.children.length > 0) {
       setSubCategories(currentCat.children);
     } else {
-      fetch(`/api/categories/${baseProduct.categoryId}/subcategories`)
-        .then((res) => (res.ok ? res.json() : []))
-        .then((data) => {
-          if (Array.isArray(data) && data.length > 0) {
-            setSubCategories(data);
+      apiFetch<any>(`/categories/${baseProduct.categoryId}/subcategories`)
+        .then((res) => {
+          const subList = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [];
+          if (subList.length > 0) {
+            setSubCategories(subList);
           }
         })
         .catch(() => {});

@@ -16,7 +16,7 @@ import Checkbox from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEditProduct } from '@/context/EcitProductContext';
 import { toast } from 'sonner';
-import { API_URL } from '@/lib/api-client';
+import { apiFetch } from '@/lib/apiFetch';
 
 interface SubCategory {
   id: string;
@@ -75,15 +75,25 @@ export default function EditProductImageAndCategories() {
     const fetchDropdownData = async () => {
       try {
         const [categoriesRes, brandsRes] = await Promise.all([
-          fetch(`/api/categories`).then((res) => (res.ok ? res.json() : [])).catch(() => []),
-          fetch(`/api/brands`).then((res) => (res.ok ? res.json() : [])).catch(() => []),
+          apiFetch<any>(`/categories`).catch(() => null),
+          apiFetch<any>(`/brands`).catch(() => null),
         ]);
-        const categoriesData = categoriesRes;
-        const brandsData = brandsRes;
-        if (Array.isArray(categoriesData) && categoriesData.length > 0) {
+        const categoriesData: Category[] = Array.isArray(categoriesRes)
+          ? categoriesRes
+          : Array.isArray(categoriesRes?.data)
+          ? categoriesRes.data
+          : [];
+        const brandsData: Brand[] = Array.isArray(brandsRes)
+          ? brandsRes
+          : Array.isArray(brandsRes?.data)
+          ? brandsRes.data
+          : brandsRes?.id
+          ? [brandsRes]
+          : [];
+        if (categoriesData.length > 0) {
           setCategories(categoriesData);
         }
-        if (Array.isArray(brandsData) && brandsData.length > 0) {
+        if (brandsData.length > 0) {
           setBrands(brandsData);
         }
       } catch (error) {
@@ -103,11 +113,11 @@ export default function EditProductImageAndCategories() {
     if (currentCat?.children && currentCat.children.length > 0) {
       setSubCategories(currentCat.children);
     } else {
-      fetch(`/api/categories/${baseProduct.categoryId}/subcategories`)
-        .then((res) => (res.ok ? res.json() : []))
-        .then((subData) => {
-          if (Array.isArray(subData) && subData.length > 0) {
-            setSubCategories(subData);
+      apiFetch<any>(`/categories/${baseProduct.categoryId}/subcategories`)
+        .then((res) => {
+          const subList = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [];
+          if (subList.length > 0) {
+            setSubCategories(subList);
           }
         })
         .catch(() => {});

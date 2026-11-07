@@ -12,6 +12,7 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { products } from "@/components/ProductGrid";
 import BrandLogo from "@/components/BrandLogo";
+import { categoryAPI } from "@/lib/api";
 
 /* ── SVG icons ────────────────────────────────────────────────── */
 const MobileIcon = () => (
@@ -51,28 +52,50 @@ const TOP_LINKS = [
   { label: "Help",            href: "#", icon: HelpIcon },
 ];
 
-const PRIMARY_NAV = [
-  { label: "Categories",    href: "/category/all" },
-  { label: "Front Open",    href: "/category/front-open" },
-  { label: "Double Shrug",  href: "/category/double-shrug" },
-  { label: "Bridal & Occasion", href: "/category/bridal-wear" },
-  { label: "Kaftans",       href: "/category/basic-kaftan" },
-];
+export interface NavCategoryItem {
+  id?: string | number;
+  label: string;
+  href: string;
+  children?: { id?: string | number; label: string; href: string }[];
+  accent?: boolean;
+}
 
-// Exact order from Modest Studio Secondary nav snapshot
-const CATEGORY_NAV = [
-  { label: "Front Open",        href: "/category/front-open" },
-  { label: "Double Shrug",      href: "/category/double-shrug" },
-  { label: "Basic Kaftans",     href: "/category/basic-kaftan" },
-  { label: "Daily Wear",        href: "/category/daily-wear" },
-  { label: "Kimono Abayas",     href: "/category/kimono-abaya" },
-  { label: "Embroidery",        href: "/category/embroidery-abaya" },
-  { label: "Handwork",          href: "/category/handwork-abaya" },
-  { label: "Bridal Wear",       href: "/category/bridal-wear" },
-  { label: "Jilbabs",           href: "/category/jilbabs" },
-  { label: "Chiffon Stoles",    href: "/category/hijabs-stoles" },
-  { label: "Accessories",       href: "/category/caps-accessories" },
-  { label: "Special Offers",    href: "/category/offers", accent: true },
+const DEFAULT_CATEGORY_NAV: NavCategoryItem[] = [
+  {
+    label: "Everyday Abayas",
+    href: "/category/everyday-abayas",
+    children: [
+      { label: "Front Open Abayas", href: "/category/front-open-abayas" },
+      { label: "Pull-over Closed Abayas", href: "/category/pull-over-closed-abayas" },
+    ],
+  },
+  {
+    label: "Occasion & Luxury",
+    href: "/category/occasion-luxury-abayas",
+    children: [
+      { label: "Hand-Embroidered Luxury", href: "/category/hand-embroidered-luxury" },
+      { label: "Bridal Velvet Abayas", href: "/category/bridal-velvet-abayas" },
+    ],
+  },
+  {
+    label: "Jilbabs & Khimars",
+    href: "/category/jilbabs-khimars",
+    children: [
+      { label: "French Khimars", href: "/category/french-khimars" },
+    ],
+  },
+  {
+    label: "Hijabs & Stoles",
+    href: "/category/hijabs-stoles",
+    children: [
+      { label: "Malaysian Instant Stoles", href: "/category/malaysian-instant-stoles" },
+    ],
+  },
+  {
+    label: "All Collections",
+    href: "/category/all",
+    accent: true,
+  },
 ];
 const SearchIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -121,6 +144,38 @@ export default function Header() {
   const navContainerRef = useRef<HTMLElement>(null);
   const { itemCount } = useCart();
   const { wishlistCount } = useWishlist();
+
+  // Dynamic categories from backend CMS / database
+  const [navCategories, setNavCategories] = useState<NavCategoryItem[]>(DEFAULT_CATEGORY_NAV);
+
+  useEffect(() => {
+    let isSubscribed = true;
+    categoryAPI
+      .getAll()
+      .then((data: any) => {
+        if (!isSubscribed || !data) return;
+        const list = Array.isArray(data) ? data : Array.isArray(data?.data) ? data.data : [];
+        if (list.length === 0) return;
+        const formatted: NavCategoryItem[] = list.map((cat: any) => ({
+          id: cat.id,
+          label: cat.name,
+          href: `/category/${cat.slug || cat.id}`,
+          children: Array.isArray(cat.children)
+            ? cat.children.map((sub: any) => ({
+                id: sub.id,
+                label: sub.name,
+                href: `/category/${sub.slug || sub.id}`,
+              }))
+            : undefined,
+        }));
+        formatted.push({ label: "All Collections", href: "/category/all", accent: true });
+        setNavCategories(formatted);
+      })
+      .catch(() => {});
+    return () => {
+      isSubscribed = false;
+    };
+  }, []);
 
   // Search results
   const searchResults = React.useMemo(() => {
@@ -220,31 +275,30 @@ export default function Header() {
               <BrandLogo variant="secondary" className="h-10 md:h-12 w-auto min-w-[140px] max-w-[220px] md:max-w-[260px]" />
             </Link>
 
-            {/* Primary nav — [Categories, Brands, Luxe, Fashion, Beauty Advice] */}
+            {/* Primary nav — Categories + Top Dynamic Categories */}
             <nav ref={navContainerRef} className="hidden lg:flex items-center relative" aria-label="Primary navigation">
               <ul className="flex items-center" role="list">
-                {PRIMARY_NAV.map(item => (
-                  <li key={item.label} role="listitem" className="relative">
-                    {item.href.startsWith("/") ? (
-                      <Link
-                        href={item.href}
-                        className="flex items-center gap-1 px-3 py-1 text-[13px] font-medium text-mb-primary hover:text-mb-accent-deep transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded"
-                      >
-                        {item.label}
-                      </Link>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setActiveMenu(activeMenu === item.label ? null : item.label)}
-                        onMouseEnter={() => setActiveMenu(item.label)}
-                        className={`flex items-center gap-1 px-3 py-1 text-[13px] font-medium transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded ${
-                          activeMenu === item.label ? "text-mb-primary border-b-2 border-mb-accent" : "text-mb-primary hover:text-mb-accent-deep"
-                        }`}
-                      >
-                        {item.label}
-                        <ChevronDown />
-                      </button>
-                    )}
+                <li role="listitem" className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setActiveMenu(activeMenu === "Categories" ? null : "Categories")}
+                    onMouseEnter={() => setActiveMenu("Categories")}
+                    className={`flex items-center gap-1 px-3 py-1 text-[13px] font-medium transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded ${
+                      activeMenu === "Categories" ? "text-mb-primary border-b-2 border-mb-accent font-semibold" : "text-mb-primary hover:text-mb-accent-deep"
+                    }`}
+                  >
+                    <span>Categories</span>
+                    <ChevronDown />
+                  </button>
+                </li>
+                {navCategories.filter(c => !c.accent).slice(0, 4).map(item => (
+                  <li key={item.label} role="listitem">
+                    <Link
+                      href={item.href}
+                      className="flex items-center gap-1 px-3 py-1 text-[13px] font-medium text-mb-primary hover:text-mb-accent-deep transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded"
+                    >
+                      {item.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -253,28 +307,43 @@ export default function Header() {
               {activeMenu === "Categories" && (
                 <div
                   onMouseLeave={() => setActiveMenu(null)}
-                  className="absolute top-full left-0 mt-2 w-[460px] bg-mb-bg rounded-md shadow-lg border border-mb-border p-4 z-50 grid grid-cols-2 gap-4"
+                  className="absolute top-full left-0 mt-2 w-[480px] bg-mb-surface rounded-[6px] shadow-dropdown border border-mb-border p-4 z-50 grid grid-cols-2 gap-4"
                 >
-                  <div>
-                    <h3 className="text-xs font-bold text-mb-accent-deep uppercase tracking-wider mb-2">Popular Categories</h3>
-                    <ul className="flex flex-col gap-1.5 text-xs text-mb-text">
-                      <li><Link href="/category/makeup" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Makeup (Lips, Eyes, Face)</Link></li>
-                      <li><Link href="/category/skincare" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Skincare (Moisturizers, Serums)</Link></li>
-                      <li><Link href="/category/hair" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Hair Care (Shampoos, Oils)</Link></li>
-                      <li><Link href="/category/fragrance" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Fragrance &amp; Perfumes</Link></li>
-                      <li><Link href="/category/bath-body" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Bath &amp; Body Wash</Link></li>
-                      <li><Link href="/category/appliances" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Beauty Appliances</Link></li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="text-xs font-bold text-mb-body uppercase tracking-wider mb-2">Featured Highlights</h3>
-                    <ul className="flex flex-col gap-1.5 text-xs text-mb-text">
-                      <li><Link href="/category/luxe" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">MORYELLE Luxe</Link></li>
-                      <li><Link href="/category/gifting" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Gifting Studio</Link></li>
-                      <li><Link href="/category/natural" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Natural &amp; Clean Beauty</Link></li>
-                      <li><Link href="/category/health-wellness" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Health &amp; Wellness</Link></li>
-                      <li><Link href="/category/offers" onClick={() => setActiveMenu(null)} className="text-mb-accent-deep font-semibold hover:underline">Special Offers &amp; Combos</Link></li>
-                    </ul>
+                  {navCategories.filter(c => !c.accent).map(cat => (
+                    <div key={cat.label} className="space-y-1.5">
+                      <Link
+                        href={cat.href}
+                        onClick={() => setActiveMenu(null)}
+                        className="font-semibold text-xs text-mb-primary hover:text-mb-accent-deep block"
+                      >
+                        {cat.label}
+                      </Link>
+                      {cat.children && cat.children.length > 0 && (
+                        <ul className="space-y-1 pl-2 border-l border-mb-border text-xs text-mb-muted">
+                          {cat.children.map(sub => (
+                            <li key={sub.label}>
+                              <Link
+                                href={sub.href}
+                                onClick={() => setActiveMenu(null)}
+                                className="hover:text-mb-primary block transition-colors"
+                              >
+                                {sub.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                  <div className="col-span-2 pt-3 border-t border-mb-border flex items-center justify-between text-xs">
+                    <span className="text-mb-muted">Modest Studio Boutique</span>
+                    <Link
+                      href="/category/all"
+                      onClick={() => setActiveMenu(null)}
+                      className="font-semibold text-mb-primary hover:underline"
+                    >
+                      View All Collections →
+                    </Link>
                   </div>
                 </div>
               )}
@@ -509,8 +578,8 @@ export default function Header() {
         <nav aria-label="Main navigation menu"
           className="hidden lg:block bg-mb-surface border-b border-mb-border">
           <div className="mx-auto max-w-content px-4 md:px-6">
-            <ul className="flex items-center overflow-x-auto no-scrollbar" role="list">
-              {CATEGORY_NAV.map(cat => (
+            <ul className="flex items-center overflow-x-auto no-scrollbar gap-1" role="list">
+              {navCategories.map(cat => (
                 <li key={cat.label} role="listitem">
                   <Link href={cat.href}
                     className={`block px-3 py-2.5 text-[13px] font-medium whitespace-nowrap border-b-2 border-transparent hover:border-mb-accent hover:text-mb-accent-deep transition-colors capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent ${
@@ -552,11 +621,11 @@ export default function Header() {
             </form>
 
             <ul role="list">
-              {CATEGORY_NAV.map(cat => (
+              {navCategories.map(cat => (
                 <li key={cat.label} role="listitem">
                   <Link href={cat.href} onClick={() => setMenuOpen(false)}
                     className={`flex items-center px-4 py-3 text-[13px] font-medium border-b border-mb-border-lite hover:bg-mb-surface capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-mb-accent ${
-                      cat.accent ? "text-mb-accent-deep" : "text-mb-text"
+                      cat.accent ? "text-mb-accent-deep font-semibold" : "text-mb-text"
                     }`}>
                     {cat.label}
                   </Link>

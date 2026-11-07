@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useSearch, type SearchFilters } from '@/context/SearchContext';
+import { useSearch } from '@/context/SearchContext';
 
 interface SearchFiltersProps {
   onFiltersChange?: () => void;
@@ -52,13 +52,13 @@ export default function SearchFiltersPanel({ onFiltersChange }: SearchFiltersPro
     filters.minPrice || filters.maxPrice || filters.minRating || filters.brand;
 
   return (
-    <div className="bg-white rounded-lg p-6 border border-[#CDD3D8]">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-lg font-semibold text-[#000000]">Filters</h3>
+    <div className="bg-mb-surface rounded-[8px] p-5 border border-mb-border shadow-card">
+      <div className="flex justify-between items-center mb-5">
+        <h3 className="text-base font-semibold text-mb-text">Filters</h3>
         {hasActiveFilters && (
           <button
             onClick={handleReset}
-            className="text-sm text-[#E80071] hover:underline font-medium"
+            className="text-xs text-[#5C1A24] hover:underline font-semibold"
           >
             Clear All
           </button>
@@ -66,33 +66,32 @@ export default function SearchFiltersPanel({ onFiltersChange }: SearchFiltersPro
       </div>
 
       {/* Price Filter */}
-      <div className="mb-6 pb-6 border-b border-[#CDD3D8]">
+      <div className="mb-5 pb-5 border-b border-mb-border">
         <button
           onClick={() => toggleSection('price')}
-          className="flex justify-between items-center w-full mb-3"
+          className="flex justify-between items-center w-full mb-3 text-xs font-semibold text-mb-text"
         >
-          <h4 className="font-semibold text-[#000000]">Price</h4>
-          <span className="text-[#595E63]">{expandedSections.price ? '−' : '+'}</span>
+          <span>Price</span>
+          <span className="text-mb-muted">{expandedSections.price ? '−' : '+'}</span>
         </button>
 
         {expandedSections.price && (
           <div className="space-y-2">
             {[
-              { label: 'Under ₹500', min: 0, max: 500 },
-              { label: '₹500 - ₹1,000', min: 500, max: 1000 },
-              { label: '₹1,000 - ₹2,500', min: 1000, max: 2500 },
-              { label: '₹2,500 - ₹5,000', min: 2500, max: 5000 },
-              { label: 'Above ₹5,000', min: 5000, max: 999999 },
+              { label: 'Under ₹2,000', min: 0, max: 2000 },
+              { label: '₹2,000 - ₹5,000', min: 2000, max: 5000 },
+              { label: '₹5,000 - ₹10,000', min: 5000, max: 10000 },
+              { label: 'Above ₹10,000', min: 10000, max: 999999 },
             ].map((range) => (
-              <label key={range.label} className="flex items-center gap-2 cursor-pointer">
+              <label key={range.label} className="flex items-center gap-2 cursor-pointer text-xs text-mb-body hover:text-mb-text">
                 <input
                   type="radio"
                   name="price"
                   checked={filters.minPrice === range.min && filters.maxPrice === range.max}
                   onChange={() => handlePriceChange(range.min, range.max)}
-                  className="w-4 h-4 rounded border-[#CDD3D8]"
+                  className="w-3.5 h-3.5 accent-[#5C1A24] rounded border-mb-border"
                 />
-                <span className="text-sm text-[#595E63]">{range.label}</span>
+                <span>{range.label}</span>
               </label>
             ))}
           </div>
@@ -100,21 +99,24 @@ export default function SearchFiltersPanel({ onFiltersChange }: SearchFiltersPro
       </div>
 
       {/* Rating Filter */}
-      <div className="mb-6 pb-6 border-b border-[#CDD3D8]">
+      <div className="mb-5 pb-5 border-b border-mb-border">
         <button
           onClick={() => toggleSection('rating')}
-          className="flex justify-between items-center w-full mb-3"
+          className="flex justify-between items-center w-full mb-3 text-xs font-semibold text-mb-text"
         >
-          <h4 className="font-semibold text-[#000000]">Rating</h4>
-          <span className="text-[#595E63]">{expandedSections.rating ? '−' : '+'}</span>
+          <span>Customer Rating</span>
+          <span className="text-mb-muted">{expandedSections.rating ? '−' : '+'}</span>
         </button>
 
         {expandedSections.rating && (
           <div className="space-y-2">
-            {facets.ratings.map((item) => (
+            {(facets.ratings.length > 0 ? facets.ratings : [
+              { rating: 4, count: 12 },
+              { rating: 3, count: 5 }
+            ]).map((item) => (
               <label
                 key={item.rating}
-                className="flex items-center justify-between cursor-pointer"
+                className="flex items-center justify-between cursor-pointer text-xs text-mb-body hover:text-mb-text"
               >
                 <div className="flex items-center gap-2">
                   <input
@@ -122,23 +124,23 @@ export default function SearchFiltersPanel({ onFiltersChange }: SearchFiltersPro
                     name="rating"
                     checked={filters.minRating === item.rating}
                     onChange={() => handleRatingChange(item.rating)}
-                    className="w-4 h-4 rounded border-[#CDD3D8]"
+                    className="w-3.5 h-3.5 accent-[#5C1A24] rounded border-mb-border"
                   />
                   <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
                       <span
                         key={i}
-                        className={`text-sm ${
-                          i < item.rating ? 'text-[#E80071]' : 'text-[#CDD3D8]'
+                        className={`text-xs ${
+                          i < item.rating ? 'text-[#C6A477]' : 'text-mb-dusty'
                         }`}
                       >
                         ★
                       </span>
                     ))}
-                    <span className="text-xs text-[#595E63] ml-1">& up</span>
+                    <span className="text-[11px] text-mb-muted ml-1">& up</span>
                   </div>
                 </div>
-                <span className="text-xs text-[#595E63]">({item.count})</span>
+                <span className="text-[11px] text-mb-muted">({item.count})</span>
               </label>
             ))}
           </div>
@@ -149,26 +151,26 @@ export default function SearchFiltersPanel({ onFiltersChange }: SearchFiltersPro
       <div>
         <button
           onClick={() => toggleSection('brand')}
-          className="flex justify-between items-center w-full mb-3"
+          className="flex justify-between items-center w-full mb-3 text-xs font-semibold text-mb-text"
         >
-          <h4 className="font-semibold text-[#000000]">Brand</h4>
-          <span className="text-[#595E63]">{expandedSections.brand ? '−' : '+'}</span>
+          <span>Collection / Brand</span>
+          <span className="text-mb-muted">{expandedSections.brand ? '−' : '+'}</span>
         </button>
 
         {expandedSections.brand && (
           <div className="space-y-2 max-h-48 overflow-y-auto">
             {facets.brands.map((brand) => (
-              <label key={brand.name} className="flex items-center justify-between cursor-pointer">
+              <label key={brand.name} className="flex items-center justify-between cursor-pointer text-xs text-mb-body hover:text-mb-text">
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={filters.brand === brand.name}
                     onChange={() => handleBrandChange(brand.name)}
-                    className="w-4 h-4 rounded border-[#CDD3D8]"
+                    className="w-3.5 h-3.5 accent-[#5C1A24] rounded border-mb-border"
                   />
-                  <span className="text-sm text-[#595E63]">{brand.name}</span>
+                  <span>{brand.name}</span>
                 </div>
-                <span className="text-xs text-[#595E63]">({brand.count})</span>
+                <span className="text-[11px] text-mb-muted">({brand.count})</span>
               </label>
             ))}
           </div>

@@ -39,6 +39,7 @@ export interface Category {
   slug: string;
   parentId?: number | null;
   children?: Category[];
+  subcategories?: Category[];
 }
 
 export interface Variant {

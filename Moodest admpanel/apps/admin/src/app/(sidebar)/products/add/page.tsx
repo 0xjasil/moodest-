@@ -10,9 +10,6 @@ export default function AddProductPage() {
             <h1 className="text-2xl font-bold tracking-tight text-gray-900">
               Add New Product
             </h1>
-            <p className="text-muted-foreground">
-              Fill in the details below to create a new product. Add variants if needed.
-            </p>
           </div>
 
           {/* Product Form */}

@@ -656,7 +656,7 @@ function AbayaVariantsManagerUI({
               className="h-9 gap-1.5 rounded-lg border-gray-200 dark:border-white/10 text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5"
               title="Explore all catalog products grouped by variant sizes and colors"
             >
-              <Package className="size-3.5 text-indigo-600 dark:text-indigo-400" />
+              <Package className="size-3.5 text-[#5C1A24] dark:text-[#D29A90]" />
               Products by Variant
             </Button>
           </Link>
@@ -672,9 +672,9 @@ function AbayaVariantsManagerUI({
               setGenQty(baseProduct.baseQuantity > 0 ? String(baseProduct.baseQuantity) : "10");
               setGeneratorOpen(true);
             }}
-            className="h-9 gap-1.5 rounded-lg border-gray-200 dark:border-white/10 text-xs font-medium"
+            className="h-9 gap-1.5 rounded-lg border-gray-200 dark:border-white/10 text-xs font-medium text-[#5C1A24] dark:text-[#D29A90] hover:bg-[#F5EDE6]/50"
           >
-            <Sparkles className="size-3.5 text-indigo-500" />
+            <Sparkles className="size-3.5 text-[#C6A477]" />
             Generate Combinations
           </Button>
 
@@ -683,7 +683,7 @@ function AbayaVariantsManagerUI({
             type="button"
             size="sm"
             onClick={handleOpenAddModal}
-            className="h-9 gap-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium shadow-2xs"
+            className="h-9 gap-1.5 rounded-lg bg-[#5C1A24] hover:bg-[#42121B] text-white text-xs font-medium shadow-2xs"
           >
             <Plus className="size-4" />
             Add Variant
@@ -727,16 +727,16 @@ function AbayaVariantsManagerUI({
                 variant="outline"
                 size="sm"
                 onClick={() => setGeneratorOpen(true)}
-                className="text-xs"
+                className="text-xs text-[#5C1A24] dark:text-[#D29A90] hover:bg-[#F5EDE6]/50"
               >
-                <Sparkles className="size-3.5 mr-1 text-indigo-500" />
+                <Sparkles className="size-3.5 mr-1 text-[#C6A477]" />
                 Generate Combinations
               </Button>
               <Button
                 type="button"
                 size="sm"
                 onClick={handleOpenAddModal}
-                className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white"
+                className="text-xs bg-[#5C1A24] hover:bg-[#42121B] text-white"
               >
                 <Plus className="size-3.5 mr-1" />
                 Add Single Variant
@@ -778,7 +778,7 @@ function AbayaVariantsManagerUI({
                               ? "bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800/40"
                               : v.size.toLowerCase().includes("custom") || v.size.toLowerCase().includes("measure")
                               ? "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800/40"
-                              : "bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-mono border-indigo-100 dark:border-indigo-900/30"
+                              : "bg-[#F5EDE6] dark:bg-[#5C1A24]/30 text-[#5C1A24] dark:text-[#D29A90] font-mono border-[#DCC1B9] dark:border-white/10"
                           )}
                         >
                           {v.size.startsWith("Size ") || v.size.toLowerCase().includes("free") || v.size.toLowerCase().includes("custom")
@@ -902,7 +902,7 @@ function AbayaVariantsManagerUI({
                             variant="ghost"
                             size="sm"
                             onClick={() => handleOpenEditModal(v)}
-                            className="size-7 p-0 rounded-lg text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/40"
+                            className="size-7 p-0 rounded-lg text-gray-600 hover:text-[#5C1A24] hover:bg-[#F5EDE6] dark:hover:bg-[#5C1A24]/20"
                             title="Edit variant"
                           >
                             <Edit2 className="size-3.5" />
@@ -1100,9 +1100,9 @@ function AbayaVariantsManagerUI({
               )}
 
               {formSizeType === "free" && (
-                <div className="p-2.5 rounded-lg bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200/50 dark:border-indigo-800/40 text-xs text-indigo-700 dark:text-indigo-300 flex items-center justify-between">
+                <div className="p-2.5 rounded-lg bg-[#F5EDE6]/60 dark:bg-[#5C1A24]/20 border border-[#DCC1B9] dark:border-white/10 text-xs text-[#5C1A24] dark:text-[#D29A90] flex items-center justify-between">
                   <span className="font-medium">Free Size / One Size (Flowy universal fit)</span>
-                  <Badge variant="secondary" className="text-[10px] bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300">
+                  <Badge variant="secondary" className="text-[10px] bg-[#EAD9D2] dark:bg-[#5C1A24]/60 text-[#5C1A24] dark:text-[#D29A90]">
                     Flexible Sizing
                   </Badge>
                 </div>
@@ -1243,7 +1243,7 @@ function AbayaVariantsManagerUI({
                     setFormSku(suggested);
                     setSkuManuallyEdited(false);
                   }}
-                  className="text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer font-medium"
+                  className="text-[11px] text-[#5C1A24] dark:text-[#D29A90] hover:underline flex items-center gap-1 cursor-pointer font-medium"
                 >
                   <RefreshCw className="size-3" />
                   Regenerate SKU
@@ -1356,7 +1356,7 @@ function AbayaVariantsManagerUI({
               type="button"
               size="sm"
               onClick={handleSaveModalVariant}
-              className="text-xs h-9 bg-indigo-600 hover:bg-indigo-700 text-white"
+              className="text-xs h-9 bg-[#5C1A24] hover:bg-[#42121B] text-white"
             >
               {editingVariantId ? "Update Variant" : "Add Variant"}
             </Button>
@@ -1371,11 +1371,11 @@ function AbayaVariantsManagerUI({
         <DialogContent className="sm:max-w-[540px]">
           <DialogHeader>
             <DialogTitle className="text-base font-bold flex items-center gap-2">
-              <Sparkles className="size-4 text-indigo-500" />
+              <Sparkles className="size-4 text-[#C6A477]" />
               Generate Abaya Variations
             </DialogTitle>
-            <DialogDescription className="text-xs">
-              Select multiple sizes and colors to bulk-create all combinations without overwriting existing variants.
+            <DialogDescription className="sr-only">
+              Bulk-create variations for sizes and colors without overwriting existing variants.
             </DialogDescription>
           </DialogHeader>
 
@@ -1388,7 +1388,7 @@ function AbayaVariantsManagerUI({
                   <button
                     type="button"
                     onClick={() => setGenSelectedSizes([...ABAYA_SIZES])}
-                    className="text-indigo-600 hover:underline cursor-pointer"
+                    className="text-[#5C1A24] dark:text-[#D29A90] font-medium hover:underline cursor-pointer"
                   >
                     Standard Sizes
                   </button>
@@ -1396,7 +1396,7 @@ function AbayaVariantsManagerUI({
                   <button
                     type="button"
                     onClick={() => setGenSelectedSizes([...ABAYA_SIZES, ...FLEXIBLE_SIZES])}
-                    className="text-indigo-600 hover:underline cursor-pointer"
+                    className="text-[#5C1A24] dark:text-[#D29A90] font-medium hover:underline cursor-pointer"
                   >
                     Select All
                   </button>
@@ -1427,7 +1427,7 @@ function AbayaVariantsManagerUI({
                       className={cn(
                         "px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-colors border cursor-pointer",
                         isSelected
-                          ? "bg-indigo-600 text-white border-indigo-600"
+                          ? "bg-[#5C1A24] text-white border-[#5C1A24]"
                           : "bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-white/10 hover:bg-gray-50"
                       )}
                     >
@@ -1453,8 +1453,8 @@ function AbayaVariantsManagerUI({
                       className={cn(
                         "px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors border cursor-pointer",
                         isSelected
-                          ? "bg-purple-600 text-white border-purple-600"
-                          : "bg-purple-50/50 dark:bg-purple-950/20 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800/40 hover:bg-purple-100/50"
+                          ? "bg-[#8D414A] text-white border-[#8D414A]"
+                          : "bg-[#F5EDE6]/60 dark:bg-white/5 text-[#5C1A24] dark:text-[#D29A90] border-[#DCC1B9] dark:border-white/10 hover:bg-[#F5EDE6]"
                       )}
                     >
                       {sz}
@@ -1509,7 +1509,7 @@ function AbayaVariantsManagerUI({
                           className={cn(
                             "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border cursor-pointer transition-colors",
                             isSelected
-                              ? "bg-indigo-50 border-indigo-500 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300"
+                              ? "bg-[#F5EDE6] border-[#5C1A24] text-[#5C1A24] dark:bg-[#5C1A24]/30 dark:text-white font-semibold"
                               : "bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-gray-50"
                           )}
                         >
@@ -1582,7 +1582,7 @@ function AbayaVariantsManagerUI({
               size="sm"
               disabled={genSelectedSizes.length === 0 || (genColorMode === "colors" && genSelectedColors.length === 0)}
               onClick={() => setPreviewOpen(true)}
-              className="text-xs h-9 bg-indigo-600 hover:bg-indigo-700 text-white"
+              className="text-xs h-9 bg-[#5C1A24] hover:bg-[#42121B] text-white font-medium"
             >
               Preview Combinations ({prospectiveCombinations.length})
             </Button>
@@ -1602,8 +1602,8 @@ function AbayaVariantsManagerUI({
                 {newCombinationsCount} New · {prospectiveCombinations.length - newCombinationsCount} Existing
               </Badge>
             </DialogTitle>
-            <DialogDescription className="text-xs">
-              Existing combinations will NOT be overwritten. Only new variants will be added.
+            <DialogDescription className="sr-only">
+              Existing combinations will not be overwritten. Only new variants will be added.
             </DialogDescription>
           </DialogHeader>
 
@@ -1619,7 +1619,7 @@ function AbayaVariantsManagerUI({
                 )}
               >
                 <div className="flex items-center gap-2">
-                  <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
+                  <span className="font-mono font-bold text-[#5C1A24] dark:text-[#D29A90]">
                     Size {c.size}
                   </span>
                   <span>·</span>
@@ -1660,7 +1660,7 @@ function AbayaVariantsManagerUI({
               size="sm"
               disabled={newCombinationsCount === 0}
               onClick={handleApplyCombinations}
-              className="text-xs h-9 bg-indigo-600 hover:bg-indigo-700 text-white"
+              className="text-xs h-9 bg-[#5C1A24] hover:bg-[#42121B] text-white font-medium"
             >
               Confirm &amp; Add ({newCombinationsCount}) Combinations
             </Button>
@@ -1706,7 +1706,7 @@ function AbayaVariantsManagerUI({
                 setAlertAction("deactivate");
                 handleConfirmAlert();
               }}
-              className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white"
+              className="text-xs bg-[#5C1A24] hover:bg-[#42121B] text-white"
             >
               Deactivate Safely
             </AlertDialogAction>
@@ -1726,13 +1726,11 @@ function AbayaVariantsManagerUI({
         <DialogContent className="sm:max-w-[560px]">
           <DialogHeader>
             <DialogTitle className="text-base font-bold flex items-center gap-2 text-gray-900 dark:text-white">
-              <Package className="size-4 text-indigo-600" />
+              <Package className="size-4 text-[#5C1A24]" />
               Products Matching Variant
             </DialogTitle>
-            <DialogDescription className="text-xs">
-              Showing boutique catalog abayas configured with Size{" "}
-              <strong>{variantProductsTarget?.size}</strong>
-              {variantProductsTarget?.color ? ` and Color "${variantProductsTarget.color}"` : ""}
+            <DialogDescription className="sr-only">
+              Showing boutique catalog abayas configured with Size {variantProductsTarget?.size}
             </DialogDescription>
           </DialogHeader>
 
@@ -1765,7 +1763,7 @@ function AbayaVariantsManagerUI({
                         {p.sku} • {p.category}
                       </p>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                        <span className="text-xs font-semibold text-[#5C1A24] dark:text-[#D29A90]">
                           {formatMoney(p.price)}
                         </span>
                         <span className="text-[10px] text-muted-foreground">
@@ -1780,7 +1778,7 @@ function AbayaVariantsManagerUI({
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="size-8 p-0 text-gray-600 hover:text-indigo-600"
+                      className="size-8 p-0 text-gray-600 hover:text-[#5C1A24]"
                       title="View product in catalog"
                     >
                       <ExternalLink className="size-4" />
@@ -1795,7 +1793,7 @@ function AbayaVariantsManagerUI({
             <Link
               href="/variations"
               target="_blank"
-              className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1"
+              className="text-xs text-[#5C1A24] dark:text-[#D29A90] hover:underline inline-flex items-center gap-1"
             >
               Open Variations Hub <ExternalLink className="size-3" />
             </Link>

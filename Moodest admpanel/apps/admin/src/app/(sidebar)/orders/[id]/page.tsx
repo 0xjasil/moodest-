@@ -26,5 +26,5 @@ export default async function OrderDetailPage({ params }: PageProps) {
     console.warn(`[OrderDetailPage] Server-side fetch for ${id} not available, will attempt client-side:`, error);
   }
 
-  return <OrderDetail order={orderData ?? undefined} orderId={id} />;
+  return <OrderDetail order={orderData} orderId={id} />;
 }

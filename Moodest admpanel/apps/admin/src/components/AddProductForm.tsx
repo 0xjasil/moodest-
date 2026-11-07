@@ -13,9 +13,6 @@ export default function ProductFormSection() {
     <Card className="space-y-4 w-full h-full shadow-none border-none">
       <CardHeader className="pb-3">
         <CardTitle>Basic Product Details</CardTitle>
-        <CardDescription>
-          Enter the essential information for this abaya. Pricing, SKU, and stock quantities are managed in the Abaya Variants table below.
-        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 pt-0">
         <div className="space-y-2">
