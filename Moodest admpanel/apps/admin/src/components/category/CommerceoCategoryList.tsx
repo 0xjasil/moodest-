@@ -16,6 +16,7 @@ import {
   X,
   Upload,
   Check,
+  Loader2,
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -53,6 +54,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { apiFetch, API_URL } from "@/lib/apiFetch";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 export interface MockCategory {
   id: string;
   name: string;
@@ -196,6 +198,7 @@ export function CommerceoCategoryList() {
   const [formParent, setFormParent] = useState("none");
   const [formStatus, setFormStatus] = useState<"Active" | "Inactive" | "Scheduled">("Active");
   const [formDescription, setFormDescription] = useState("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const handleOpenAdd = () => {
     setEditingCategory(null);
@@ -206,6 +209,7 @@ export function CommerceoCategoryList() {
     setFormParent("none");
     setFormStatus("Active");
     setFormDescription("");
+    setIsUploadingImage(false);
     setIsSheetOpen(true);
   };
 
@@ -218,6 +222,7 @@ export function CommerceoCategoryList() {
     setFormParent("none");
     setFormStatus(cat.status || "Active");
     setFormDescription(cat.description || "");
+    setIsUploadingImage(false);
     setIsSheetOpen(true);
   };
 
@@ -234,17 +239,29 @@ export function CommerceoCategoryList() {
     }
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setFormFileName(file.name);
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target?.result) {
-          setFormImage(event.target.result as string);
-        }
-      };
-      reader.readAsDataURL(file);
+      try {
+        setIsUploadingImage(true);
+        toast.loading("Uploading category image to Cloudinary CDN...", { id: "cat-upload" });
+        const cdnUrl = await uploadToCloudinary(file, "moodest/categories");
+        setFormImage(cdnUrl);
+        toast.success("Image uploaded to Cloudinary CDN successfully!", { id: "cat-upload" });
+      } catch (err: any) {
+        console.error("Cloudinary upload error:", err);
+        toast.error(err.message || "Failed to upload to Cloudinary", { id: "cat-upload" });
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          if (event.target?.result) {
+            setFormImage(event.target.result as string);
+          }
+        };
+        reader.readAsDataURL(file);
+      } finally {
+        setIsUploadingImage(false);
+      }
     }
   };
 
@@ -255,11 +272,23 @@ export function CommerceoCategoryList() {
       return;
     }
 
+    let finalImageUrl = formImage || "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80";
+
+    // If still in base64 format, ensure uploaded to Cloudinary before saving
+    if (finalImageUrl.startsWith("data:")) {
+      try {
+        toast.loading("Syncing image to Cloudinary...", { id: "cat-save" });
+        finalImageUrl = await uploadToCloudinary(finalImageUrl, "moodest/categories");
+      } catch (e) {
+        console.warn("Base64 upload to Cloudinary failed:", e);
+      }
+    }
+
     const payload: Record<string, any> = {
       name: formTitle.trim(),
       slug: formSlug.trim() || formTitle.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
       description: formDescription.trim(),
-      image: formImage || "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80",
+      image: finalImageUrl,
     };
 
     if (formParent !== "none" && formParent) {
@@ -275,10 +304,10 @@ export function CommerceoCategoryList() {
           body: JSON.stringify(payload),
         });
         if (res.ok) {
-          toast.success(`Category "${formTitle}" updated successfully`);
+          toast.success(`Category "${formTitle}" updated successfully`, { id: "cat-save" });
         } else {
           const err = await res.json().catch(() => ({}));
-          toast.error(err.message || "Failed to update category");
+          toast.error(err.message || "Failed to update category", { id: "cat-save" });
         }
       } else {
         const res = await apiFetch(`/categories`, {
@@ -287,14 +316,14 @@ export function CommerceoCategoryList() {
           body: JSON.stringify(payload),
         });
         if (res.ok) {
-          toast.success(`Category "${formTitle}" created successfully`);
+          toast.success(`Category "${formTitle}" created successfully`, { id: "cat-save" });
         } else {
           const err = await res.json().catch(() => ({}));
-          toast.error(err.message || "Failed to create category");
+          toast.error(err.message || "Failed to create category", { id: "cat-save" });
         }
       }
     } catch {
-      toast.error("Network error saving category");
+      toast.error("Network error saving category", { id: "cat-save" });
     }
 
     await fetchCategories();
@@ -527,14 +556,18 @@ export function CommerceoCategoryList() {
                       </td>
                       <td className="px-4 py-3 align-middle">
                         <div className="flex items-center gap-3">
-                          <div className="size-11 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200/80 dark:border-white/10 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs">
+                          <div className="size-11 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200/80 dark:border-white/10 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs relative">
                             {cat.image ? (
-                              <Image
+                              <img
                                 src={cat.image}
                                 alt={cat.name}
-                                width={44}
-                                height={44}
                                 className="size-full object-cover aspect-square"
+                                onError={(e) => {
+                                  const target = e.currentTarget;
+                                  if (!target.src.includes("unsplash.com")) {
+                                    target.src = "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80";
+                                  }
+                                }}
                               />
                             ) : (
                               <span className="text-xs font-semibold text-muted-foreground">
@@ -746,6 +779,13 @@ export function CommerceoCategoryList() {
                 </span>
               </div>
 
+              {isUploadingImage && (
+                <div className="flex items-center gap-2 text-xs text-indigo-600 dark:text-indigo-400 py-1 font-medium animate-pulse">
+                  <Loader2 className="size-3.5 animate-spin" />
+                  <span>Uploading to Cloudinary CDN...</span>
+                </div>
+              )}
+
               {formImage && (
                 <div className="flex items-center gap-2 pt-1.5">
                   <div className="relative size-12 rounded-lg border border-gray-200 dark:border-white/10 overflow-hidden bg-gray-50 dark:bg-white/5 flex-shrink-0">
@@ -754,6 +794,11 @@ export function CommerceoCategoryList() {
                       alt="Preview"
                       className="size-full object-cover"
                     />
+                    {isUploadingImage && (
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                        <Loader2 className="size-4 text-white animate-spin" />
+                      </div>
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <Input
@@ -762,6 +807,11 @@ export function CommerceoCategoryList() {
                       onChange={(e) => setFormImage(e.target.value)}
                       className="h-8 rounded-lg text-xs bg-white dark:bg-[#181818] border-gray-200 dark:border-white/10"
                     />
+                    {formImage.includes("cloudinary.com") && (
+                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium block mt-0.5">
+                        ✓ Hosted on Cloudinary CDN
+                      </span>
+                    )}
                   </div>
                 </div>
               )}

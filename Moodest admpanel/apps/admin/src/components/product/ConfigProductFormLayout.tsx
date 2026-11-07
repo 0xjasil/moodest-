@@ -12,6 +12,7 @@ import {
 } from "@/context/ConfigurableProductContext";
 import { toast } from "sonner";
 import { apiFetch } from "@/lib/apiFetch";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 
 interface ProductFormContentProps {
   isSimpleProduct: boolean;
@@ -136,7 +137,43 @@ function ProductFormContent({}: ProductFormContentProps) {
         }
       }
 
-      // 6. Format Clean Decimal Serialized Product Payload
+      // 6. Upload Main Image and Thumbnails to Cloudinary CDN
+      let mainImageUrl = "";
+      const rawMain: any = baseProduct.mainImage;
+      if (rawMain instanceof File) {
+        toast.loading("Uploading main product image to Cloudinary...", { id: "product-save" });
+        mainImageUrl = await uploadToCloudinary(rawMain, "moodest/products/main");
+      } else if (typeof rawMain === "string" && rawMain.startsWith("data:")) {
+        toast.loading("Uploading main product image to Cloudinary...", { id: "product-save" });
+        mainImageUrl = await uploadToCloudinary(rawMain, "moodest/products/main");
+      } else if (typeof rawMain === "string") {
+        mainImageUrl = rawMain;
+      }
+
+      const uploadedThumbnailUrls: string[] = [];
+      for (let i = 0; i < baseProduct.thumbnails.length; i++) {
+        const thumb: any = baseProduct.thumbnails[i];
+        if (thumb instanceof File) {
+          toast.loading(`Uploading thumbnail ${i + 1}/${baseProduct.thumbnails.length} to Cloudinary...`, { id: "product-save" });
+          const thumbUrl = await uploadToCloudinary(thumb, "moodest/products/thumbnails");
+          uploadedThumbnailUrls.push(thumbUrl);
+        } else if (typeof thumb === "string" && thumb.startsWith("data:")) {
+          toast.loading(`Uploading thumbnail ${i + 1}/${baseProduct.thumbnails.length} to Cloudinary...`, { id: "product-save" });
+          const thumbUrl = await uploadToCloudinary(thumb, "moodest/products/thumbnails");
+          uploadedThumbnailUrls.push(thumbUrl);
+        } else if (typeof thumb === "string") {
+          uploadedThumbnailUrls.push(thumb);
+        }
+      }
+
+      toast.loading("Publishing product to database...", { id: "product-save" });
+
+      const allImages = [mainImageUrl, ...uploadedThumbnailUrls].filter(Boolean);
+      if (allImages.length === 0) {
+        allImages.push("https://res.cloudinary.com/dsaegpb70/image/upload/v1758345272/Banner_npoe1w.jpg");
+      }
+
+      // 7. Format Clean Decimal Serialized Product Payload
       const slug =
         baseProduct.name
           .toLowerCase()
@@ -156,7 +193,8 @@ function ProductFormContent({}: ProductFormContentProps) {
         categoryId: baseProduct.categoryId ? String(baseProduct.categoryId) : null,
         subCategoryId: baseProduct.subCategoryId ? String(baseProduct.subCategoryId) : null,
         basePrice: minPrice,
-        images: ["/images/products/1.webp"],
+        image: mainImageUrl || allImages[0],
+        images: allImages,
         isCustomerFavorite: Boolean(baseProduct.isCustomerFavorite),
         isNewArrival: Boolean(baseProduct.isNewArrival),
         variants: variants.map((v) => ({
@@ -226,7 +264,7 @@ function ProductFormContent({}: ProductFormContentProps) {
         }
       }
 
-      toast.success("Abaya product and variants created successfully!");
+      toast.success("Abaya product and Cloudinary CDN images created successfully!", { id: "product-save" });
       resetBaseProduct();
       router.push("/products");
       router.refresh();

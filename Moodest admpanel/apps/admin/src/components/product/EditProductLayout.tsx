@@ -10,6 +10,7 @@ import EditProductFormSection from "./EditProductForm";
 import EditProductImageAndCategories from "./EditProductImageAndCategories";
 import AbayaVariantsManager from "./AbayaVariantsManager";
 import { apiFetch } from "@/lib/apiFetch";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 
 interface EditProductLayoutProps {
   productId: string;
@@ -190,10 +191,41 @@ function EditProductFormContent({ productId }: { productId: string }) {
         }
       }
 
-      // 5. Update Product Details via API
+      // 5. Upload any updated images to Cloudinary CDN
+      const rawMain: any = baseProduct.mainImage;
+      let mainImageUrl = typeof rawMain === "string" ? rawMain : "";
+      if (rawMain instanceof File) {
+        toast.loading("Uploading main image to Cloudinary...", { id: "edit-prod-save" });
+        mainImageUrl = await uploadToCloudinary(rawMain, "moodest/products/main");
+      } else if (typeof rawMain === "string" && rawMain.startsWith("data:")) {
+        toast.loading("Uploading main image to Cloudinary...", { id: "edit-prod-save" });
+        mainImageUrl = await uploadToCloudinary(rawMain, "moodest/products/main");
+      }
+
+      const uploadedThumbnailUrls: string[] = [];
+      for (let i = 0; i < (baseProduct.thumbnails || []).length; i++) {
+        const thumb: any = baseProduct.thumbnails[i];
+        if (thumb instanceof File) {
+          toast.loading(`Uploading thumbnail ${i + 1} to Cloudinary...`, { id: "edit-prod-save" });
+          const thumbUrl = await uploadToCloudinary(thumb, "moodest/products/thumbnails");
+          uploadedThumbnailUrls.push(thumbUrl);
+        } else if (typeof thumb === "string" && thumb.startsWith("data:")) {
+          toast.loading(`Uploading thumbnail ${i + 1} to Cloudinary...`, { id: "edit-prod-save" });
+          const thumbUrl = await uploadToCloudinary(thumb, "moodest/products/thumbnails");
+          uploadedThumbnailUrls.push(thumbUrl);
+        } else if (typeof thumb === "string") {
+          uploadedThumbnailUrls.push(thumb);
+        }
+      }
+
+      toast.loading("Updating product details...", { id: "edit-prod-save" });
+
+      const allImages = [mainImageUrl, ...uploadedThumbnailUrls].filter(Boolean);
+
+      // 6. Update Product Details via API
       const minPrice = Math.min(...variants.map((v) => Number(v.price) || 0));
 
-      const payload = {
+      const payload: Record<string, any> = {
         name: baseProduct.name.trim(),
         description: baseProduct.description.trim(),
         fabric: baseProduct.fabric ? baseProduct.fabric.trim() : null,
@@ -220,6 +252,13 @@ function EditProductFormContent({ productId }: { productId: string }) {
           isModified: v.isModified,
         })),
       };
+
+      if (mainImageUrl) {
+        payload.image = mainImageUrl;
+      }
+      if (allImages.length > 0) {
+        payload.images = allImages;
+      }
 
       const response = await apiFetch(`/products/${productId}`, {
         method: "PATCH",
@@ -292,7 +331,7 @@ function EditProductFormContent({ productId }: { productId: string }) {
         }
       }
 
-      toast.success("Abaya product and variants updated successfully!");
+      toast.success("Abaya product and Cloudinary CDN images updated successfully!", { id: "edit-prod-save" });
     } catch (error) {
       console.error("Error updating product:", error);
       // PRESERVE FORM DATA: Form data is maintained so user can correct and retry

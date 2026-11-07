@@ -203,6 +203,7 @@ export default function EditProductImageAndCategories() {
                     alt="Main Product"
                     width={500}
                     height={500}
+                    unoptimized
                     className="w-full h-full object-cover rounded-lg"
                   />
                 ) : (
@@ -260,6 +261,7 @@ export default function EditProductImageAndCategories() {
                     alt={`Product ${idx + 1}`}
                     width={64}
                     height={64}
+                    unoptimized
                     className="w-full h-full object-cover rounded"
                   />
                   <Button
