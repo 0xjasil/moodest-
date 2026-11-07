@@ -18,22 +18,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function OrderDetailPage({ params }: PageProps) {
   const { id } = await params;
   
+  let orderData: OrderDetailed | null = null;
   try {
     const res = await serverFetch<OrderDetailed & { data?: OrderDetailed }>(`/orders/${id}`);
-    const orderData = res?.data || res;
-    if (orderData) {
-      return <OrderDetail order={orderData} />;
-    }
+    orderData = res?.data || res || null;
   } catch (error) {
-    console.error(`[OrderDetailPage] Failed to fetch order ${id} from backend:`, error);
+    console.warn(`[OrderDetailPage] Server-side fetch for ${id} not available, will attempt client-side:`, error);
   }
 
-  return (
-    <div className="flex flex-1 flex-col items-center justify-center p-12 text-center">
-      <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Order #{id} Not Found</h2>
-      <p className="mt-2 text-sm text-gray-500">
-        The requested order could not be retrieved from the backend API.
-      </p>
-    </div>
-  );
+  return <OrderDetail order={orderData ?? undefined} orderId={id} />;
 }

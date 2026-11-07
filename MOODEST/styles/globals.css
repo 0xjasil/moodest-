@@ -68,11 +68,13 @@
   --shadow-dropdown:
     0 5px 22px rgba(45, 26, 31, 0.15);
 
-  /* Typography */
-  --font-serif:
-    "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  /* Typography - Unified Exact Match to Brand UI */
   --font-sans:
-    "Jost", system-ui, -apple-system, sans-serif;
+    "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  --font-heading:
+    "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  --font-serif:
+    "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
   --font: var(--font-sans);
 
   /* ══ Motion ═════════════════════════════════════════════════ */
@@ -95,10 +97,10 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-serif);
+  font-family: var(--font-heading);
   color: var(--color-text-main);
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 a { color: inherit; text-decoration: none; }

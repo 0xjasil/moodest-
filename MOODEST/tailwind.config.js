@@ -34,9 +34,9 @@ module.exports = {
         },
       },
       fontFamily: {
-        serif: ["'Cormorant Garamond'", "Georgia", "serif"],
-        sans: ["'Jost'", "system-ui", "-apple-system", "sans-serif"],
-        heading: ["'Cormorant Garamond'", "Georgia", "serif"],
+        sans: ["'Inter'", "-apple-system", "BlinkMacSystemFont", "'SF Pro Display'", "'SF Pro Text'", "'Segoe UI'", "Roboto", "sans-serif"],
+        heading: ["'Inter'", "-apple-system", "BlinkMacSystemFont", "'SF Pro Display'", "'SF Pro Text'", "'Segoe UI'", "Roboto", "sans-serif"],
+        serif: ["'Inter'", "-apple-system", "BlinkMacSystemFont", "'SF Pro Display'", "'SF Pro Text'", "'Segoe UI'", "Roboto", "sans-serif"],
       },
       boxShadow: {
         card: "0 2px 12px rgba(109,58,78,0.10)",
