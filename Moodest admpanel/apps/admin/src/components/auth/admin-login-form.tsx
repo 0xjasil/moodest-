@@ -54,7 +54,7 @@ export function AdminLoginForm({
     try {
       // login() calls NestJS /auth/login then /users/me,
       // validates admin role, stores tokens + sets cookie
-      await login(data.email, data.password);
+      await login(data.email.trim(), data.password.trim());
 
       toast.success("Login successful");
 
