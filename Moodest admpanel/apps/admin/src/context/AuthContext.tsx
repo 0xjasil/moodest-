@@ -112,11 +112,11 @@ async function attemptTokenRefresh(refreshToken: string): Promise<string | null>
     const res = await fetch(`${API_URL}/auth/refresh`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refresh_token: refreshToken }),
+      body: JSON.stringify({ refreshToken, refresh_token: refreshToken }),
     });
     if (!res.ok) return null;
-    const { access_token } = await res.json();
-    return access_token as string;
+    const body = (await res.json()) as any;
+    return body.access_token || body.data?.access_token || body.data?.accessToken || null;
   } catch {
     return null;
   }
@@ -150,7 +150,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
 
         if (res.ok) {
-          const user: AdminUser = await res.json();
+          const rawMe = (await res.json()) as any;
+          const user: AdminUser = rawMe.data || rawMe;
           setTokenCookie(storedToken);
           dispatch({ type: "LOGIN_SUCCESS", user, token: storedToken, refreshToken: storedRefreshToken });
           return;
@@ -167,7 +168,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               headers: { Authorization: `Bearer ${newToken}` },
             });
             if (meRes.ok) {
-              const user: AdminUser = await meRes.json();
+              const rawMe = (await meRes.json()) as any;
+              const user: AdminUser = rawMe.data || rawMe;
               dispatch({ type: "LOGIN_SUCCESS", user, token: newToken, refreshToken: storedRefreshToken });
               return;
             }
@@ -205,10 +207,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error(body.message || "Invalid credentials");
       }
 
-      const { access_token, refresh_token } = await res.json() as {
-        access_token: string;
-        refresh_token: string;
-      };
+      const rawLogin = (await res.json()) as any;
+      const access_token =
+        rawLogin.access_token ||
+        rawLogin.accessToken ||
+        rawLogin.data?.access_token ||
+        rawLogin.data?.accessToken;
+      const refresh_token =
+        rawLogin.refresh_token ||
+        rawLogin.refreshToken ||
+        rawLogin.data?.refresh_token ||
+        rawLogin.data?.refreshToken;
+
+      if (!access_token) {
+        throw new Error("No access token returned from backend");
+      }
 
       // Fetch the actual user profile to get role + details
       const meRes = await fetch(`${API_URL}/users/me`, {
@@ -219,7 +232,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error("Failed to fetch admin profile");
       }
 
-      const user: AdminUser = await meRes.json();
+      const rawMe = (await meRes.json()) as any;
+      const user: AdminUser = rawMe.data || rawMe;
 
       // Enforce admin-only access
       if (!ADMIN_ROLES.includes(user.role as typeof ADMIN_ROLES[number])) {
