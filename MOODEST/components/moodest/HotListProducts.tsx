@@ -60,9 +60,9 @@ export default function HotListProducts() {
             ? [...Array(8)].map((_, i) => (
                 <div
                   key={i}
-                  className="flex-shrink-0 w-[190px] sm:w-[220px] bg-mb-surface rounded-[12px] border border-mb-border p-3.5 animate-pulse"
+                  className="flex-shrink-0 w-[190px] sm:w-[220px] bg-mb-surface rounded-[4px] sm:rounded-[6px] border border-mb-border p-3.5 animate-pulse"
                 >
-                  <div className="aspect-square w-full bg-mb-bg rounded-[8px] mb-2.5" />
+                  <div className="aspect-square w-full bg-mb-bg rounded-[4px] mb-2.5" />
                   <div className="h-3 bg-mb-border rounded w-full mb-2" />
                   <div className="h-2 bg-mb-border rounded w-2/3" />
                 </div>
@@ -74,7 +74,7 @@ export default function HotListProducts() {
                 return (
                   <div
                     key={product.id}
-                    className="flex-shrink-0 w-[190px] sm:w-[220px] bg-mb-surface rounded-[12px] border border-mb-border shadow-card hover:shadow-dropdown transition-all flex flex-col justify-between p-3.5 relative group/card"
+                    className="flex-shrink-0 w-[190px] sm:w-[220px] bg-mb-surface rounded-[4px] sm:rounded-[6px] border border-mb-border shadow-card hover:shadow-dropdown transition-all flex flex-col justify-between p-3.5 relative group/card"
                   >
                     {/* Badges */}
                     <div className="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1">
@@ -116,7 +116,7 @@ export default function HotListProducts() {
                     </button>
 
                     {/* Image */}
-                    <div className="relative aspect-square w-full overflow-hidden rounded-[8px] bg-mb-surface flex items-center justify-center mb-2.5">
+                    <div className="relative aspect-square w-full overflow-hidden rounded-[4px] bg-mb-surface flex items-center justify-center mb-2.5">
                       <img
                         src={product.image}
                         alt={product.name}
@@ -162,7 +162,7 @@ export default function HotListProducts() {
                       {/* Add to Bag CTA */}
                       <button
                         onClick={(e) => handleAddToCart(e, product)}
-                        className={`w-full py-2 text-xs font-semibold rounded-[10px] transition-all shadow-sm ${
+                        className={`w-full py-2 text-xs font-semibold rounded-[4px] sm:rounded-[6px] transition-all shadow-sm ${
                           inCart
                             ? "bg-mb-primary text-mb-bg border border-mb-primary"
                             : "bg-mb-primary hover:bg-mb-primary-hover text-mb-bg"

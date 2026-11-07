@@ -43,12 +43,12 @@ module.exports = {
         dropdown: "0 4px 20px rgba(109,58,78,0.15)",
       },
       borderRadius: {
-        DEFAULT: "10px",
-        sm: "6px",
-        md: "10px",
-        lg: "12px",
-        xl: "14px",
-        "2xl": "18px",
+        DEFAULT: "4px",
+        sm: "2px",
+        md: "4px",
+        lg: "6px",
+        xl: "8px",
+        "2xl": "10px",
         full: "9999px",
       },
       maxWidth: {

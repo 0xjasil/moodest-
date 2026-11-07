@@ -33,8 +33,8 @@ export default function Home() {
       <Header />
 
       <main id="main-content" className="min-h-screen bg-mb-bg w-full overflow-x-hidden">
-        {/* 2. Top Banner — 100% Full Width Edge-to-Edge Without Gaps */}
-        <div className="w-full mb-4 sm:mb-6">
+        {/* 2. Top Banner — Hidden on Mobile Screens, Visible on Desktop (Edge-to-Edge) */}
+        <div className="hidden md:block w-full mb-4 sm:mb-6">
           <Link href="/category/all" className="block w-full">
             <img
               src="/banners/top-promo-banner.jpg"
@@ -128,9 +128,9 @@ export default function Home() {
       {showAppBanner && (
         <aside
           aria-label="App Download Promotion"
-          className="fixed bottom-5 left-5 z-40 hidden md:flex items-center gap-3 bg-mb-surface p-3.5 rounded-[12px] shadow-dropdown border border-mb-border animate-fade-in"
+          className="fixed bottom-5 left-5 z-40 hidden md:flex items-center gap-3 bg-mb-surface p-3.5 rounded-[6px] shadow-dropdown border border-mb-border animate-fade-in"
         >
-          <div className="w-12 h-12 bg-mb-bg border border-mb-border rounded-[8px] p-1 flex items-center justify-center flex-shrink-0">
+          <div className="w-12 h-12 bg-mb-bg border border-mb-border rounded-[4px] p-1 flex items-center justify-center flex-shrink-0">
             <svg viewBox="0 0 24 24" className="w-full h-full text-mb-primary" fill="currentColor">
               <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14 0h-4v2h2v2h-2v2h4v-2h2v-2h-2v-2zm-2-2h4v2h-4v-2zm2 6h2v2h-2v-2z" />
             </svg>

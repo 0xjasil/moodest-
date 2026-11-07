@@ -108,7 +108,7 @@ export default function HeroCarousel() {
       aria-label="Promotional Highlights Carousel"
     >
       {/* Container for slides */}
-      <div className="relative overflow-hidden rounded-[14px]">
+      <div className="relative overflow-hidden rounded-[6px] md:rounded-[8px]">
         <div
           className="flex transition-transform duration-500 ease-out"
           style={{
@@ -124,7 +124,7 @@ export default function HeroCarousel() {
             >
               <Link
                 href={item.link}
-                className="group relative block overflow-hidden rounded-[12px] bg-mb-surface border border-mb-border shadow-card hover:shadow-dropdown transition-all"
+                className="group relative block overflow-hidden rounded-[4px] sm:rounded-[6px] bg-mb-surface border border-mb-border shadow-card hover:shadow-dropdown transition-all"
               >
                 {/* Image */}
                 <div className="relative aspect-[16/10] sm:aspect-[4/3] w-full overflow-hidden bg-mb-surface">

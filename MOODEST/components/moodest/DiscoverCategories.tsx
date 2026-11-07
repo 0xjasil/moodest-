@@ -36,7 +36,7 @@ export default function DiscoverCategories() {
             <Link
               key={i}
               href={href}
-              className="group block overflow-hidden rounded-[10px] sm:rounded-[12px] bg-mb-surface border border-mb-border shadow-card hover:shadow-dropdown hover:-translate-y-1 transition-all duration-300"
+              className="group block overflow-hidden rounded-[4px] sm:rounded-[6px] bg-mb-surface border border-mb-border shadow-card hover:shadow-dropdown hover:-translate-y-1 transition-all duration-300"
             >
               <div className="relative aspect-[287/322] w-full overflow-hidden bg-[#EEE4D8]">
                 <img

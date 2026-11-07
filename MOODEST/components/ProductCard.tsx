@@ -35,7 +35,7 @@ export default function ProductCard({ product }: { product: Product }) {
     : null;
 
   return (
-    <article className="group relative flex flex-col bg-mb-surface border border-mb-border rounded-[12px] shadow-card hover:shadow-dropdown transition-all overflow-hidden">
+    <article className="group relative flex flex-col bg-mb-surface border border-mb-border rounded-[4px] sm:rounded-[6px] shadow-card hover:shadow-dropdown transition-all overflow-hidden">
 
       {/* ── Badges [BESTSELLER / NEW / FEATURED] ───────────────── */}
       {(product.badge || (product.discount && product.discount > 10)) && (
@@ -149,7 +149,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <button type="button"
           aria-label={inCart ? `${product.name} added to bag` : `Add ${product.name} to bag`}
           onClick={onAdd}
-          className={`w-full py-2 text-[12px] font-semibold rounded-[10px] transition-all shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-mb-accent ${
+          className={`w-full py-2 text-[12px] font-semibold rounded-[4px] sm:rounded-[6px] transition-all shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-mb-accent ${
             inCart
               ? "bg-mb-primary text-mb-bg border border-mb-primary"
               : "bg-mb-primary hover:bg-mb-primary-hover text-mb-bg"
