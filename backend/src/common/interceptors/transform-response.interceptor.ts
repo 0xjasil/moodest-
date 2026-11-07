@@ -33,7 +33,11 @@ export class TransformResponseInterceptor<T>
           'message' in res &&
           'data' in res
         ) {
-          return res;
+          const isObjectData = res.data && typeof res.data === 'object' && !Array.isArray(res.data);
+          return {
+            ...res,
+            ...(isObjectData ? res.data : {}),
+          };
         }
 
         let message = '';
@@ -49,10 +53,15 @@ export class TransformResponseInterceptor<T>
           }
         }
 
+        const isObjectData = data && typeof data === 'object' && !Array.isArray(data);
+        const isObjectRes = res && typeof res === 'object' && !Array.isArray(res);
+
         return {
           success: true,
           message: message || '',
           data: data ?? {},
+          ...(isObjectData ? data : {}),
+          ...(isObjectRes ? res : {}),
         };
       }),
     );

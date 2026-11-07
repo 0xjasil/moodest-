@@ -139,6 +139,17 @@ export class AuthService {
 
     return {
       message: 'Login successful',
+      access_token: tokens.accessToken,
+      accessToken: tokens.accessToken,
+      refresh_token: tokens.refreshToken,
+      refreshToken: tokens.refreshToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        phone: user.phone,
+        role: user.role,
+      },
       data: {
         user: {
           id: user.id,
