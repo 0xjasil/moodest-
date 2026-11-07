@@ -238,8 +238,13 @@ export function CommerceoCategoryList() {
     const file = e.target.files?.[0];
     if (file) {
       setFormFileName(file.name);
-      const url = URL.createObjectURL(file);
-      setFormImage(url);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          setFormImage(event.target.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -740,6 +745,26 @@ export function CommerceoCategoryList() {
                   {formFileName || "No file chosen"}
                 </span>
               </div>
+
+              {formImage && (
+                <div className="flex items-center gap-2 pt-1.5">
+                  <div className="relative size-12 rounded-lg border border-gray-200 dark:border-white/10 overflow-hidden bg-gray-50 dark:bg-white/5 flex-shrink-0">
+                    <img
+                      src={formImage}
+                      alt="Preview"
+                      className="size-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <Input
+                      placeholder="Or enter Image URL"
+                      value={formImage}
+                      onChange={(e) => setFormImage(e.target.value)}
+                      className="h-8 rounded-lg text-xs bg-white dark:bg-[#181818] border-gray-200 dark:border-white/10"
+                    />
+                  </div>
+                </div>
+              )}
 
               {/* Preset Icon Picker */}
               <div className="pt-2">

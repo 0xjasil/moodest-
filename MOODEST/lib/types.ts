@@ -34,10 +34,12 @@ export interface Brand {
 }
 
 export interface Category {
-  id: number;
+  id: number | string;
   name: string;
   slug: string;
-  parentId?: number | null;
+  description?: string | null;
+  image?: string | null;
+  parentId?: number | string | null;
   children?: Category[];
   subcategories?: Category[];
 }
