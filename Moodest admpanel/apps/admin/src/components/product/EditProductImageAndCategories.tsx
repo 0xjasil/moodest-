@@ -112,8 +112,7 @@ export default function EditProductImageAndCategories() {
         })
         .catch(() => {});
     }
-    fetchSubCategories();
-  }, [baseProduct.categoryId]);
+  }, [baseProduct.categoryId, categories]);
 
   // Handle main image browse
   const handleBrowseMain = (e: React.ChangeEvent<HTMLInputElement>) => {
