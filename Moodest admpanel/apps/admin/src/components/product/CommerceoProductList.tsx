@@ -139,8 +139,8 @@ const DEFAULT_ABAYA_PRODUCTS: CommerceoProductItem[] = [
     price: 5499,
     priceDisplay: "₹5,499.00 - ₹5,999.00",
     qty: 18,
-    variantCount: 4,
-    availableSizes: ["52", "54", "56", "58"],
+    variantCount: 5,
+    availableSizes: ["52", "54", "56", "58", "Free Size"],
     status: "Scheduled",
     image: "/images/products/3.webp",
     iconType: "package",
@@ -155,8 +155,8 @@ const DEFAULT_ABAYA_PRODUCTS: CommerceoProductItem[] = [
     price: 2999,
     priceDisplay: "₹2,999.00",
     qty: 0,
-    variantCount: 3,
-    availableSizes: ["52", "54", "56"],
+    variantCount: 4,
+    availableSizes: ["52", "54", "56", "Custom Size"],
     status: "Inactive",
     image: "/images/products/4.webp",
     iconType: "package",
@@ -174,6 +174,7 @@ export default function CommerceoProductList() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [stockFilter, setStockFilter] = useState<string>("all");
+  const [sizeFilter, setSizeFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
 
   // Pagination states
@@ -283,6 +284,15 @@ export default function CommerceoProductList() {
     return Array.from(set);
   }, [products]);
 
+  // Extract unique variant sizes
+  const availableVariantSizes = useMemo(() => {
+    const set = new Set<string>();
+    products.forEach((p) => {
+      (p.availableSizes || []).forEach((sz) => set.add(sz));
+    });
+    return Array.from(set).sort();
+  }, [products]);
+
   // Filtered products
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
@@ -297,6 +307,13 @@ export default function CommerceoProductList() {
       // Stock
       if (stockFilter === "in_stock" && !p.stock) return false;
       if (stockFilter === "out_of_stock" && p.stock) return false;
+      // Size / Variant
+      if (sizeFilter !== "all") {
+        const hasSize = (p.availableSizes || []).some(
+          (s) => s.toLowerCase() === sizeFilter.toLowerCase()
+        );
+        if (!hasSize) return false;
+      }
       // Search query
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase().trim();
@@ -307,7 +324,7 @@ export default function CommerceoProductList() {
       }
       return true;
     });
-  }, [products, statusFilter, categoryFilter, stockFilter, searchQuery]);
+  }, [products, statusFilter, categoryFilter, stockFilter, sizeFilter, searchQuery]);
 
   // Pagination calculation
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
@@ -319,7 +336,7 @@ export default function CommerceoProductList() {
   // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [statusFilter, categoryFilter, stockFilter, searchQuery, pageSize]);
+  }, [statusFilter, categoryFilter, stockFilter, sizeFilter, searchQuery, pageSize]);
 
   // Toggle stock status
   const toggleStock = (id: string) => {
@@ -391,6 +408,7 @@ export default function CommerceoProductList() {
     setStatusFilter("all");
     setCategoryFilter("all");
     setStockFilter("all");
+    setSizeFilter("all");
     setSearchQuery("");
   };
 
@@ -398,6 +416,7 @@ export default function CommerceoProductList() {
     statusFilter !== "all" ||
     categoryFilter !== "all" ||
     stockFilter !== "all" ||
+    sizeFilter !== "all" ||
     searchQuery !== "";
 
   // Delete product action
@@ -509,10 +528,10 @@ export default function CommerceoProductList() {
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {/* Status (All) */}
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="h-10 bg-white dark:bg-[#181818] border-gray-200 dark:border-white/10 rounded-xl text-sm">
+              <SelectTrigger className="h-10 bg-white dark:bg-[#181818] border-gray-200 dark:border-white/10 rounded-xl text-xs sm:text-sm">
                 <SelectValue placeholder="Status (All)" />
               </SelectTrigger>
               <SelectContent>
@@ -525,7 +544,7 @@ export default function CommerceoProductList() {
 
             {/* Category (All) */}
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="h-10 bg-white dark:bg-[#181818] border-gray-200 dark:border-white/10 rounded-xl text-sm">
+              <SelectTrigger className="h-10 bg-white dark:bg-[#181818] border-gray-200 dark:border-white/10 rounded-xl text-xs sm:text-sm">
                 <SelectValue placeholder="Category (All)" />
               </SelectTrigger>
               <SelectContent>
@@ -540,13 +559,30 @@ export default function CommerceoProductList() {
 
             {/* Stock (All) */}
             <Select value={stockFilter} onValueChange={setStockFilter}>
-              <SelectTrigger className="h-10 bg-white dark:bg-[#181818] border-gray-200 dark:border-white/10 rounded-xl text-sm">
+              <SelectTrigger className="h-10 bg-white dark:bg-[#181818] border-gray-200 dark:border-white/10 rounded-xl text-xs sm:text-sm">
                 <SelectValue placeholder="Stock (All)" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Stock (All)</SelectItem>
                 <SelectItem value="in_stock">In Stock</SelectItem>
                 <SelectItem value="out_of_stock">Out of Stock</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {/* Variant Size (All) */}
+            <Select value={sizeFilter} onValueChange={setSizeFilter}>
+              <SelectTrigger className="h-10 bg-white dark:bg-[#181818] border-gray-200 dark:border-white/10 rounded-xl text-xs sm:text-sm">
+                <SelectValue placeholder="Variant Size (All)" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Variant Size (All)</SelectItem>
+                {availableVariantSizes.map((sz) => (
+                  <SelectItem key={sz} value={sz.toLowerCase()}>
+                    {sz.startsWith("Size ") || sz.toLowerCase().includes("free") || sz.toLowerCase().includes("custom")
+                      ? sz
+                      : `Size ${sz}`}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -706,12 +742,19 @@ export default function CommerceoProductList() {
                                 <div className="flex items-center gap-1">
                                   <span className="text-[10px] text-muted-foreground">Sizes:</span>
                                   {item.availableSizes.slice(0, 4).map((s) => (
-                                    <span
+                                    <button
                                       key={s}
-                                      className="px-1 py-0.2 rounded bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-mono text-[10px] border border-indigo-100 dark:border-indigo-900/40"
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSizeFilter(s.toLowerCase());
+                                        toast.info(`Filtered products by ${s.startsWith("Size ") ? s : `Size ${s}`}`);
+                                      }}
+                                      title={`Filter catalog by ${s}`}
+                                      className="px-1.5 py-0.2 rounded bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/40 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 font-mono text-[10px] border border-indigo-100 dark:border-indigo-900/40 cursor-pointer transition-colors"
                                     >
                                       {s}
-                                    </span>
+                                    </button>
                                   ))}
                                   {item.availableSizes.length > 4 && (
                                     <span className="text-[10px] text-muted-foreground">

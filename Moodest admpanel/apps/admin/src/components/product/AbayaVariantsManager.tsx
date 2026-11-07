@@ -48,6 +48,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 export const ABAYA_SIZES = ["50", "52", "54", "56", "58", "60", "62"] as const;
+export const FLEXIBLE_SIZES = ["Free Size", "Custom Size"] as const;
 
 export const PRESET_COLORS: { name: string; hex: string; code: string }[] = [
   { name: "Black", hex: "#000000", code: "BLK" },
@@ -138,7 +139,20 @@ export function generateSuggestedSku(
   const brand = "MDS";
   const prod = getProductSkuPrefix(productName);
   const col = getColorSkuCode(color);
-  const sizePart = size.trim().toUpperCase();
+  
+  let sizePart = (size || "").trim().toUpperCase();
+  if (sizePart.includes("FREE")) {
+    sizePart = "FREE";
+  } else if (sizePart.startsWith("SIZE ") || sizePart.startsWith("SZ ")) {
+    sizePart = sizePart.replace(/^(SIZE|SZ)\s*/i, "").trim();
+  } else if (!/^[0-9]+$/.test(sizePart)) {
+    const numMatch = sizePart.match(/\d+/);
+    if (numMatch) {
+      sizePart = `CUST${numMatch[0]}`;
+    } else {
+      sizePart = "CUST";
+    }
+  }
 
   if (col) {
     return `${brand}-${prod}-${col}-${sizePart}`;
@@ -172,7 +186,9 @@ function AbayaVariantsManagerUI({
   const [editingVariantId, setEditingVariantId] = useState<string | null>(null);
 
   // Form fields inside modal
+  const [formSizeType, setFormSizeType] = useState<"preset" | "custom" | "free">("preset");
   const [formSize, setFormSize] = useState<string>("54");
+  const [formCustomSize, setFormCustomSize] = useState<string>("");
   const [formColorType, setFormColorType] = useState<"preset" | "custom" | "none">("preset");
   const [formColor, setFormColor] = useState<string>("Black");
   const [formColorHex, setFormColorHex] = useState<string>("#000000");
@@ -216,6 +232,8 @@ function AbayaVariantsManagerUI({
   // Open Add Variant Modal
   const handleOpenAddModal = () => {
     setEditingVariantId(null);
+    setFormSizeType("preset");
+    setFormCustomSize("");
     setFormSize("54");
     setFormColorType("preset");
     setFormColor("Black");
@@ -234,7 +252,22 @@ function AbayaVariantsManagerUI({
   // Open Edit Variant Modal
   const handleOpenEditModal = (variant: AbayaVariantItem) => {
     setEditingVariantId(variant.id);
-    setFormSize(variant.size);
+    const isStandardSize = (ABAYA_SIZES as readonly string[]).includes(variant.size);
+    const isFree = variant.size.toLowerCase().includes("free");
+    if (isStandardSize) {
+      setFormSizeType("preset");
+      setFormSize(variant.size);
+      setFormCustomSize("");
+    } else if (isFree) {
+      setFormSizeType("free");
+      setFormSize("Free Size");
+      setFormCustomSize("");
+    } else {
+      setFormSizeType("custom");
+      setFormSize(variant.size);
+      setFormCustomSize(variant.size);
+    }
+
     if (!variant.color || variant.color === NO_COLOR_VALUE || variant.color === NO_COLOR_LABEL) {
       setFormColorType("none");
       setFormColor("");
@@ -285,7 +318,8 @@ function AbayaVariantsManagerUI({
     const errors: { [key: string]: string } = {};
 
     // 1. Size
-    if (!formSize || !formSize.trim()) {
+    const finalSize = formSizeType === "free" ? "Free Size" : formSize.trim();
+    if (!finalSize) {
       errors.size = "Abaya size is required.";
     }
 
@@ -307,11 +341,11 @@ function AbayaVariantsManagerUI({
       if (editingVariantId && v.id === editingVariantId) return false;
       const vColor = v.color ? v.color.trim().toLowerCase() : "";
       const curColor = finalColor.toLowerCase();
-      return v.size === formSize && vColor === curColor;
+      return v.size.trim().toLowerCase() === finalSize.toLowerCase() && vColor === curColor;
     });
 
     if (comboExists) {
-      errors.combo = `Variant for Size "${formSize}" and Color "${finalColor || "None"}" already exists in this product.`;
+      errors.combo = `Variant for Size "${finalSize}" and Color "${finalColor || "None"}" already exists in this product.`;
     }
 
     // 4. SKU
@@ -362,7 +396,7 @@ function AbayaVariantsManagerUI({
         if (v.id === editingVariantId) {
           return {
             ...v,
-            size: formSize,
+            size: finalSize,
             color: finalColor,
             colorHex: finalHex,
             sku: cleanSku,
@@ -380,7 +414,7 @@ function AbayaVariantsManagerUI({
     } else {
       const newVariant: AbayaVariantItem = {
         id: `temp_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
-        size: formSize,
+        size: finalSize,
         color: finalColor,
         colorHex: finalHex,
         sku: cleanSku,
@@ -698,8 +732,19 @@ function AbayaVariantsManagerUI({
                     >
                       {/* Size */}
                       <td className="py-3 px-3 align-middle font-bold text-gray-900 dark:text-white">
-                        <span className="inline-flex items-center justify-center size-7 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-mono text-xs border border-indigo-100 dark:border-indigo-900/30">
-                          {v.size}
+                        <span
+                          className={cn(
+                            "inline-flex items-center justify-center px-2 py-1 rounded-lg text-xs font-semibold border",
+                            v.size.toLowerCase().includes("free")
+                              ? "bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800/40"
+                              : v.size.toLowerCase().includes("custom") || v.size.toLowerCase().includes("measure")
+                              ? "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800/40"
+                              : "bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-mono border-indigo-100 dark:border-indigo-900/30"
+                          )}
+                        >
+                          {v.size.startsWith("Size ") || v.size.toLowerCase().includes("free") || v.size.toLowerCase().includes("custom")
+                            ? v.size
+                            : `Size ${v.size}`}
                         </span>
                       </td>
 
@@ -869,23 +914,112 @@ function AbayaVariantsManagerUI({
               </div>
             )}
 
-            {/* Size Selector */}
-            <div className="space-y-1.5">
-              <Label htmlFor="variant-size" className="text-xs font-semibold">
-                Abaya Size (Length) <span className="text-red-500">*</span>
-              </Label>
-              <Select value={formSize} onValueChange={updateFormSize}>
-                <SelectTrigger id="variant-size" className="h-9 text-xs">
-                  <SelectValue placeholder="Select abaya size" />
-                </SelectTrigger>
-                <SelectContent>
-                  {ABAYA_SIZES.map((s) => (
-                    <SelectItem key={s} value={s} className="text-xs">
-                      Size {s}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            {/* Size Selector with Flexible Modes */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="variant-size" className="text-xs font-semibold">
+                  Abaya Size (Length) <span className="text-red-500">*</span>
+                </Label>
+                <div className="flex items-center gap-3 text-xs">
+                  <label className="flex items-center gap-1 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="sizeMode"
+                      checked={formSizeType === "preset"}
+                      onChange={() => {
+                        setFormSizeType("preset");
+                        updateFormSize("54");
+                      }}
+                      className="text-xs"
+                    />
+                    Preset
+                  </label>
+                  <label className="flex items-center gap-1 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="sizeMode"
+                      checked={formSizeType === "custom"}
+                      onChange={() => {
+                        setFormSizeType("custom");
+                        const val = formCustomSize.trim() || "55";
+                        setFormCustomSize(val);
+                        updateFormSize(val);
+                      }}
+                      className="text-xs"
+                    />
+                    Custom
+                  </label>
+                  <label className="flex items-center gap-1 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="sizeMode"
+                      checked={formSizeType === "free"}
+                      onChange={() => {
+                        setFormSizeType("free");
+                        updateFormSize("Free Size");
+                      }}
+                      className="text-xs"
+                    />
+                    Free Size
+                  </label>
+                </div>
+              </div>
+
+              {formSizeType === "preset" && (
+                <Select value={formSize} onValueChange={updateFormSize}>
+                  <SelectTrigger id="variant-size" className="h-9 text-xs">
+                    <SelectValue placeholder="Select abaya size" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ABAYA_SIZES.map((s) => (
+                      <SelectItem key={s} value={s} className="text-xs">
+                        Size {s} ({s}&quot; length)
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+
+              {formSizeType === "custom" && (
+                <div className="space-y-2">
+                  <Input
+                    id="variant-custom-size"
+                    value={formCustomSize}
+                    onChange={(e) => {
+                      setFormCustomSize(e.target.value);
+                      updateFormSize(e.target.value);
+                    }}
+                    placeholder="e.g. 55 or Custom (Length 55, Bust 44)"
+                    className="h-9 text-xs"
+                  />
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[11px] text-muted-foreground">Quick:</span>
+                    {["53", "55", "57", "59", "Made to Measure", "Petite Cut", "Tall Cut"].map((sugg) => (
+                      <button
+                        key={sugg}
+                        type="button"
+                        onClick={() => {
+                          setFormCustomSize(sugg);
+                          updateFormSize(sugg);
+                        }}
+                        className="px-2 py-0.5 rounded text-[11px] bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/15 text-gray-700 dark:text-gray-300 transition-colors cursor-pointer"
+                      >
+                        {sugg}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {formSizeType === "free" && (
+                <div className="p-2.5 rounded-lg bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200/50 dark:border-indigo-800/40 text-xs text-indigo-700 dark:text-indigo-300 flex items-center justify-between">
+                  <span className="font-medium">Free Size / One Size (Flowy universal fit)</span>
+                  <Badge variant="secondary" className="text-[10px] bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300">
+                    Flexible Sizing
+                  </Badge>
+                </div>
+              )}
+
               {formErrors.size && (
                 <p className="text-[11px] text-red-500">{formErrors.size}</p>
               )}
@@ -1168,6 +1302,14 @@ function AbayaVariantsManagerUI({
                     onClick={() => setGenSelectedSizes([...ABAYA_SIZES])}
                     className="text-indigo-600 hover:underline cursor-pointer"
                   >
+                    Standard Sizes
+                  </button>
+                  <span>·</span>
+                  <button
+                    type="button"
+                    onClick={() => setGenSelectedSizes([...ABAYA_SIZES, ...FLEXIBLE_SIZES])}
+                    className="text-indigo-600 hover:underline cursor-pointer"
+                  >
                     Select All
                   </button>
                   <span>·</span>
@@ -1202,6 +1344,32 @@ function AbayaVariantsManagerUI({
                       )}
                     >
                       Size {sz}
+                    </button>
+                  );
+                })}
+
+                {/* Flexible Sizing Options */}
+                {FLEXIBLE_SIZES.map((sz) => {
+                  const isSelected = genSelectedSizes.includes(sz);
+                  return (
+                    <button
+                      key={sz}
+                      type="button"
+                      onClick={() => {
+                        if (isSelected) {
+                          setGenSelectedSizes(genSelectedSizes.filter((s) => s !== sz));
+                        } else {
+                          setGenSelectedSizes([...genSelectedSizes, sz]);
+                        }
+                      }}
+                      className={cn(
+                        "px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors border cursor-pointer",
+                        isSelected
+                          ? "bg-purple-600 text-white border-purple-600"
+                          : "bg-purple-50/50 dark:bg-purple-950/20 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800/40 hover:bg-purple-100/50"
+                      )}
+                    >
+                      {sz}
                     </button>
                   );
                 })}
