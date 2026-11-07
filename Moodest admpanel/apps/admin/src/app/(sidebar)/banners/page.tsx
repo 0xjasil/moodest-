@@ -329,14 +329,16 @@ export default function AdminBannersPage() {
   const fetchBanners = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/banners?all=true`);
+      const res = await fetch(`/api/banners?all=true`).catch(() =>
+        fetch(`${API_URL}/banners?all=true`)
+      );
       if (res.ok) {
         const json = await res.json();
         const data = Array.isArray(json) ? json : json.data || json.banners || [];
         setBanners(data);
       }
     } catch (e) {
-      console.error("Failed to load CMS banners:", e);
+      console.warn("Failed to load CMS banners:", e);
     } finally {
       setLoading(false);
     }
