@@ -52,7 +52,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { API_URL } from "@/lib/api-client";
+import { apiFetch, API_URL } from "@/lib/apiFetch";
 export interface MockCategory {
   id: string;
   name: string;
@@ -136,43 +136,45 @@ const PRESET_IMAGES = [
 export function CommerceoCategoryList() {
   const [categories, setCategories] = useState<MockCategory[]>(DEFAULT_MOODEST_CATEGORIES);
 
-  React.useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch(`/api/categories`).catch(() => fetch(`${API_URL}/categories`));
-        if (res.ok) {
-          const list = await res.json();
-          if (Array.isArray(list) && list.length > 0) {
-            setCategories(
-              list.map((c: any, idx: number) => {
-                const subNames = Array.isArray(c.children)
-                  ? c.children.map((sub: any) => sub.name)
-                  : Array.isArray(c.subcategories)
-                  ? c.subcategories.map((sub: any) => sub.name)
-                  : undefined;
-                return {
-                  id: String(c.id),
-                  name: c.name,
-                  slug: c.slug || c.name.toLowerCase().replace(/\s+/g, "-"),
-                  description: c.description || (c.parentId ? `Subcategory of #${c.parentId}` : "Moodest collection category"),
-                  image: c.image || PRESET_IMAGES[idx % PRESET_IMAGES.length],
-                  totalEarnings: c.totalEarnings || "₹0.00",
-                  totalProducts: c.totalProducts || c.productCount || 0,
-                  subcategories: subNames,
-                  status: "Active" as const,
-                  createdAt: c.createdAt ? new Date(c.createdAt) : new Date(),
-                  updatedAt: c.updatedAt ? new Date(c.updatedAt) : new Date(),
-                };
-              })
-            );
-          }
+  const fetchCategories = React.useCallback(async () => {
+    try {
+      const res = await apiFetch("/categories");
+      if (res.ok) {
+        const list = await res.json();
+        const items = Array.isArray(list) ? list : Array.isArray(list?.data) ? list.data : [];
+        if (items.length > 0) {
+          setCategories(
+            items.map((c: any, idx: number) => {
+              const subNames = Array.isArray(c.children)
+                ? c.children.map((sub: any) => sub.name)
+                : Array.isArray(c.subcategories)
+                ? c.subcategories.map((sub: any) => sub.name)
+                : undefined;
+              return {
+                id: String(c.id),
+                name: c.name,
+                slug: c.slug || c.name.toLowerCase().replace(/\s+/g, "-"),
+                description: c.description || (c.parentId ? `Subcategory of #${c.parentId}` : "Moodest collection category"),
+                image: c.image || PRESET_IMAGES[idx % PRESET_IMAGES.length],
+                totalEarnings: c.totalEarnings || "₹0.00",
+                totalProducts: c.totalProducts || c.productCount || 0,
+                subcategories: subNames,
+                status: "Active" as const,
+                createdAt: c.createdAt ? new Date(c.createdAt) : new Date(),
+                updatedAt: c.updatedAt ? new Date(c.updatedAt) : new Date(),
+              };
+            })
+          );
         }
-      } catch (err) {
-        console.warn("[CommerceoCategoryList] Could not load categories from API, using fallback:", err);
       }
-    };
-    fetchCategories();
+    } catch (err) {
+      console.warn("[CommerceoCategoryList] Could not load categories from API, using fallback:", err);
+    }
   }, []);
+
+  React.useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
   const [searchQuery, setSearchQuery] = useState("");
   const [pageSize, setPageSize] = useState<number>(10);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -248,67 +250,49 @@ export function CommerceoCategoryList() {
       return;
     }
 
-    const payload = {
+    const payload: Record<string, any> = {
       name: formTitle.trim(),
-      slug: formSlug.trim() || formTitle.toLowerCase().replace(/\s+/g, "-"),
-      parentId: formParent !== "none" ? Number(formParent) : undefined,
+      slug: formSlug.trim() || formTitle.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+      description: formDescription.trim(),
+      image: formImage || "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80",
     };
+
+    if (formParent !== "none" && formParent) {
+      payload.parentId = formParent;
+      payload.categoryId = formParent;
+    }
 
     try {
       if (editingCategory) {
-        const res = await fetch(`/api/categories/${editingCategory.id}`, {
+        const res = await apiFetch(`/categories/${editingCategory.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
         if (res.ok) {
           toast.success(`Category "${formTitle}" updated successfully`);
+        } else {
+          const err = await res.json().catch(() => ({}));
+          toast.error(err.message || "Failed to update category");
         }
       } else {
-        const res = await fetch(`/api/categories`, {
+        const res = await apiFetch(`/categories`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
         if (res.ok) {
           toast.success(`Category "${formTitle}" created successfully`);
+        } else {
+          const err = await res.json().catch(() => ({}));
+          toast.error(err.message || "Failed to create category");
         }
       }
     } catch {
       toast.error("Network error saving category");
     }
 
-    if (editingCategory) {
-      setCategories((prev) =>
-        prev.map((c) =>
-          c.id === editingCategory.id
-            ? {
-                ...c,
-                name: formTitle.trim(),
-                slug: formSlug.trim() || formTitle.toLowerCase().replace(/\s+/g, "-"),
-                image: formImage,
-                status: formStatus,
-                description: formDescription.trim(),
-              }
-            : c
-        )
-      );
-    } else {
-      const newCategory: MockCategory = {
-        id: `cat-${Date.now()}`,
-        name: formTitle.trim(),
-        slug: formSlug.trim() || formTitle.toLowerCase().replace(/\s+/g, "-"),
-        image: formImage,
-        description: formDescription.trim() || "No description provided",
-        totalProducts: 0,
-        totalEarnings: "$0.00",
-        status: formStatus,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      setCategories((prev) => [newCategory, ...prev]);
-    }
-
+    await fetchCategories();
     setIsSheetOpen(false);
   };
 
@@ -323,15 +307,17 @@ export function CommerceoCategoryList() {
   const handleDeleteConfirm = async () => {
     if (!deletingCategory) return;
     try {
-      await fetch(`/api/categories/${deletingCategory.id}`, { method: "DELETE" }).catch(() =>
-        fetch(`${API_URL}/categories/${deletingCategory.id}`, { method: "DELETE" })
-      );
+      const res = await apiFetch(`/categories/${deletingCategory.id}`, { method: "DELETE" });
+      if (res.ok) {
+        toast.success(`Category "${deletingCategory.name}" deleted`);
+      } else {
+        toast.error("Failed to delete category");
+      }
     } catch {
-      // ignore
+      toast.error("Network error deleting category");
     }
-    setCategories((prev) => prev.filter((c) => c.id !== deletingCategory.id));
+    await fetchCategories();
     setSelectedIds((prev) => prev.filter((id) => id !== deletingCategory.id));
-    toast.success(`Category "${deletingCategory.name}" deleted`);
     setDeletingCategory(null);
   };
 

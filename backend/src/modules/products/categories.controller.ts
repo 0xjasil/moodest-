@@ -28,6 +28,9 @@ export class CategoriesController {
     const categories = await this.prisma.category.findMany({
       include: {
         subCategories: true,
+        _count: {
+          select: { products: true },
+        },
       },
       orderBy: { name: 'asc' },
     });
@@ -38,6 +41,7 @@ export class CategoriesController {
       slug: c.slug,
       description: c.description || '',
       image: c.image,
+      totalProducts: (c as any)._count?.products ?? 0,
       children: c.subCategories.map((sc) => ({
         id: sc.id,
         name: sc.name,
@@ -86,14 +90,36 @@ export class CategoriesController {
   @Post()
   @Roles(Role.ADMIN)
   @ApiBearerAuth('access-token')
-  @ApiOperation({ summary: 'Create category (Admin)' })
-  async create(@Body() body: { name: string; slug?: string; description?: string; image?: string }) {
+  @ApiOperation({ summary: 'Create category or subcategory (Admin)' })
+  async create(
+    @Body()
+    body: {
+      name: string;
+      slug?: string;
+      description?: string;
+      image?: string;
+      parentId?: string;
+      categoryId?: string;
+    },
+  ) {
+    const parentId = body.parentId || body.categoryId;
     const slug =
       body.slug ||
       body.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '');
+
+    if (parentId && parentId !== 'none') {
+      const sub = await this.prisma.subCategory.create({
+        data: {
+          name: body.name,
+          slug,
+          categoryId: parentId,
+        },
+      });
+      return sub;
+    }
 
     const category = await this.prisma.category.create({
       data: {
