@@ -40,29 +40,64 @@ async function bootstrap() {
   const apiPrefix = (process.env.API_PREFIX || '/api').replace(/^\//, '');
   app.setGlobalPrefix(apiPrefix);
 
-  // CORS whitelist: localhost only allowed in non-production environments
-  const allowedOrigins = [
+  // Parse and normalize allowed origins from environment variables
+  const rawOrigins = [
     process.env.FRONTEND_URL,
     process.env.ADMIN_URL,
-  ].filter(Boolean) as string[];
+    process.env.ALLOWED_ORIGINS,
+    'https://modest-eta.vercel.app',
+    'https://admin-moodest-25.vercel.app',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'http://localhost:5173',
+  ]
+    .filter(Boolean)
+    .flatMap((entry) => (entry as string).split(','))
+    .map((origin) => origin.trim().replace(/\/+$/, ''))
+    .filter(Boolean);
 
-  if (process.env.NODE_ENV !== 'production') {
-    allowedOrigins.push('http://localhost:3000', 'http://localhost:3001');
-  }
+  const allowedOriginsSet = new Set(rawOrigins);
 
   app.enableCors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, server-to-server)
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        // Return false without throwing error to cleanly reject disallowed origins
-        callback(null, false);
+      // Allow requests with no origin (mobile apps, server-to-server, curl)
+      if (!origin) {
+        return callback(null, true);
       }
+
+      const cleanOrigin = origin.trim().replace(/\/+$/, '');
+
+      // Check explicit allowed origins
+      if (allowedOriginsSet.has(cleanOrigin)) {
+        return callback(null, true);
+      }
+
+      // Automatically allow all Vercel deployments and localhost
+      const isVercelDomain = /^https:\/\/[a-zA-Z0-9_-]+\.vercel\.app$/i.test(cleanOrigin);
+      const isLocalhost = /^http:\/\/localhost:\d+$/i.test(cleanOrigin);
+
+      if (isVercelDomain || isLocalhost) {
+        return callback(null, true);
+      }
+
+      logger.warn(`CORS blocked for origin: ${origin}`);
+      callback(null, false);
     },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+      'Accept',
+      'Origin',
+      'Access-Control-Request-Method',
+      'Access-Control-Request-Headers',
+    ],
+    exposedHeaders: ['Set-Cookie'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   });
 
   // Global Validation Pipe (whitelist, forbidNonWhitelisted, transform)
