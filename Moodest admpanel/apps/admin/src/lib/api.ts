@@ -235,6 +235,7 @@ export interface Category {
   parentId?: number;
   children?: Category[];
   image?: string;
+  description?: string;
 }
 
 export interface Brand {

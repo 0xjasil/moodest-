@@ -61,32 +61,80 @@ export interface MockCategory {
   image: string;
   totalProducts: number;
   totalEarnings: string;
+  subcategories?: string[];
   status?: "Active" | "Inactive" | "Scheduled";
   createdAt: Date;
   updatedAt: Date;
 }
 
+export const DEFAULT_MOODEST_CATEGORIES: MockCategory[] = [
+  {
+    id: "cat-everyday",
+    name: "Everyday Abayas",
+    slug: "everyday-abayas",
+    description: "Effortless, breathable everyday modest wear crafted from premium Cey crepe and soft Nida fabrics.",
+    image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80",
+    totalProducts: 24,
+    totalEarnings: "₹1,18,500.00",
+    subcategories: ["Front Open Abayas", "Pull-over Closed Abayas"],
+    status: "Active",
+    createdAt: new Date("2024-01-15"),
+    updatedAt: new Date("2026-02-01"),
+  },
+  {
+    id: "cat-occasion",
+    name: "Occasion & Luxury Abayas",
+    slug: "occasion-luxury-abayas",
+    description: "Opulent embroidery, hand-beaded lace, and flowing silk georgette designed for weddings and special moments.",
+    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
+    totalProducts: 18,
+    totalEarnings: "₹1,84,200.00",
+    subcategories: ["Hand-Embroidered Luxury", "Bridal Velvet Abayas"],
+    status: "Active",
+    createdAt: new Date("2024-01-20"),
+    updatedAt: new Date("2026-02-01"),
+  },
+  {
+    id: "cat-jilbabs",
+    name: "Jilbabs & Khimars",
+    slug: "jilbabs-khimars",
+    description: "Full-coverage French jilbabs, overhead robes, and instant tie-back khimars.",
+    image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+    totalProducts: 12,
+    totalEarnings: "₹72,400.00",
+    subcategories: ["French Khimars"],
+    status: "Active",
+    createdAt: new Date("2024-02-10"),
+    updatedAt: new Date("2026-02-01"),
+  },
+  {
+    id: "cat-hijabs",
+    name: "Hijabs & Stoles",
+    slug: "hijabs-stoles",
+    description: "Malaysian chiffon, modal cotton, and silk modal stoles in soothing neutral palettes.",
+    image: "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=800&q=80",
+    totalProducts: 32,
+    totalEarnings: "₹54,900.00",
+    subcategories: ["Malaysian Instant Stoles"],
+    status: "Active",
+    createdAt: new Date("2024-03-05"),
+    updatedAt: new Date("2026-02-01"),
+  },
+];
+
 const PRESET_IMAGES = [
-  "/images/ecommerce-products/product-1.webp",
-  "/images/ecommerce-products/product-2.webp",
-  "/images/ecommerce-products/product-3.webp",
-  "/images/ecommerce-products/product-4.webp",
-  "/images/ecommerce-products/product-5.webp",
-  "/images/ecommerce-products/product-6.webp",
-  "/images/ecommerce-products/product-7.webp",
-  "/images/ecommerce-products/product-8.webp",
-  "/images/ecommerce-products/product-9.webp",
-  "/images/ecommerce-products/product-10.webp",
-  "/images/ecommerce-products/product-11.webp",
-  "/images/ecommerce-products/product-12.webp",
-  "/images/ecommerce-products/product-13.webp",
-  "/images/ecommerce-products/product-14.webp",
-  "/images/ecommerce-products/product-15.webp",
-  "/images/ecommerce-products/product-16.webp",
+  "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=800&q=80",
+  "/images/products/1.webp",
+  "/images/products/2.webp",
+  "/images/products/3.webp",
+  "/images/products/4.webp",
 ];
 
 export function CommerceoCategoryList() {
-  const [categories, setCategories] = useState<MockCategory[]>([]);
+  const [categories, setCategories] = useState<MockCategory[]>(DEFAULT_MOODEST_CATEGORIES);
 
   React.useEffect(() => {
     const fetchCategories = async () => {
@@ -96,16 +144,26 @@ export function CommerceoCategoryList() {
           const list = await res.json();
           if (Array.isArray(list) && list.length > 0) {
             setCategories(
-              list.map((c: { id: number | string; name: string; slug?: string; parentId?: number }, idx: number) => ({
-                id: String(c.id),
-                name: c.name,
-                slug: c.slug || c.name.toLowerCase().replace(/\s+/g, "-"),
-                description: c.parentId ? `Subcategory of #${c.parentId}` : "E-commerce product category",
-                image: `/images/ecommerce-products/product-${(idx % 16) + 1}.webp`,
-                totalEarnings: "$0.00",
-                totalProducts: 0,
-                status: "Active" as const, createdAt: new Date(), updatedAt: new Date(),
-              }))
+              list.map((c: any, idx: number) => {
+                const subNames = Array.isArray(c.children)
+                  ? c.children.map((sub: any) => sub.name)
+                  : Array.isArray(c.subcategories)
+                  ? c.subcategories.map((sub: any) => sub.name)
+                  : undefined;
+                return {
+                  id: String(c.id),
+                  name: c.name,
+                  slug: c.slug || c.name.toLowerCase().replace(/\s+/g, "-"),
+                  description: c.description || (c.parentId ? `Subcategory of #${c.parentId}` : "Moodest collection category"),
+                  image: c.image || PRESET_IMAGES[idx % PRESET_IMAGES.length],
+                  totalEarnings: c.totalEarnings || "₹0.00",
+                  totalProducts: c.totalProducts || c.productCount || 0,
+                  subcategories: subNames,
+                  status: "Active" as const,
+                  createdAt: c.createdAt ? new Date(c.createdAt) : new Date(),
+                  updatedAt: c.updatedAt ? new Date(c.updatedAt) : new Date(),
+                };
+              })
             );
           }
         }
@@ -478,14 +536,14 @@ export function CommerceoCategoryList() {
                       </td>
                       <td className="px-4 py-3 align-middle">
                         <div className="flex items-center gap-3">
-                          <div className="size-10 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200/80 dark:border-white/10 flex items-center justify-center shrink-0 overflow-hidden p-1 shadow-2xs">
+                          <div className="size-11 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200/80 dark:border-white/10 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs">
                             {cat.image ? (
                               <Image
                                 src={cat.image}
                                 alt={cat.name}
-                                width={40}
-                                height={40}
-                                className="size-full object-contain aspect-square"
+                                width={44}
+                                height={44}
+                                className="size-full object-cover aspect-square"
                               />
                             ) : (
                               <span className="text-xs font-semibold text-muted-foreground">
@@ -500,6 +558,18 @@ export function CommerceoCategoryList() {
                             <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1 max-w-xs sm:max-w-md truncate mt-0.5">
                               {cat.description}
                             </p>
+                            {cat.subcategories && cat.subcategories.length > 0 && (
+                              <div className="flex items-center gap-1.5 flex-wrap mt-1.5">
+                                {cat.subcategories.map((sub) => (
+                                  <span
+                                    key={sub}
+                                    className="inline-flex items-center text-[10px] font-medium px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200/60 dark:border-indigo-800/40"
+                                  >
+                                    ↳ {sub}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </td>
@@ -736,14 +806,11 @@ export function CommerceoCategoryList() {
                   <SelectValue placeholder="Select Category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">None (Top Level)</SelectItem>
-                  <SelectItem value="smart-phone">Smart Phone</SelectItem>
-                  <SelectItem value="electronics">Electronics</SelectItem>
-                  <SelectItem value="clocks">Clocks</SelectItem>
-                  <SelectItem value="shoes">Shoes</SelectItem>
-                  <SelectItem value="accessories">Accessories</SelectItem>
-                  <SelectItem value="games">Games</SelectItem>
-                  <SelectItem value="home-decor">Home Decor</SelectItem>
+                  <SelectItem value="none">None (Top Level Category)</SelectItem>
+                  <SelectItem value="everyday-abayas">Everyday Abayas</SelectItem>
+                  <SelectItem value="occasion-luxury-abayas">Occasion & Luxury Abayas</SelectItem>
+                  <SelectItem value="jilbabs-khimars">Jilbabs & Khimars</SelectItem>
+                  <SelectItem value="hijabs-stoles">Hijabs & Stoles</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -75,8 +75,8 @@ export default function EditProductImageAndCategories() {
     const fetchDropdownData = async () => {
       try {
         const [categoriesRes, brandsRes] = await Promise.all([
-          apiFetch<any>(`/categories`).catch(() => null),
-          apiFetch<any>(`/brands`).catch(() => null),
+          apiFetch(`/categories`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+          apiFetch(`/brands`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
         ]);
         const categoriesData: Category[] = Array.isArray(categoriesRes)
           ? categoriesRes
@@ -113,7 +113,8 @@ export default function EditProductImageAndCategories() {
     if (currentCat?.children && currentCat.children.length > 0) {
       setSubCategories(currentCat.children);
     } else {
-      apiFetch<any>(`/categories/${baseProduct.categoryId}/subcategories`)
+      apiFetch(`/categories/${baseProduct.categoryId}/subcategories`)
+        .then((r) => (r.ok ? r.json() : null))
         .then((res) => {
           const subList = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [];
           if (subList.length > 0) {

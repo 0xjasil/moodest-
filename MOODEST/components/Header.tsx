@@ -70,7 +70,7 @@ const DEFAULT_CATEGORY_NAV: NavCategoryItem[] = [
     ],
   },
   {
-    label: "Occasion & Luxury",
+    label: "Occasion & Luxury Abayas",
     href: "/category/occasion-luxury-abayas",
     children: [
       { label: "Hand-Embroidered Luxury", href: "/category/hand-embroidered-luxury" },
@@ -580,13 +580,32 @@ export default function Header() {
           <div className="mx-auto max-w-content px-4 md:px-6">
             <ul className="flex items-center overflow-x-auto no-scrollbar gap-1" role="list">
               {navCategories.map(cat => (
-                <li key={cat.label} role="listitem">
+                <li key={cat.label} role="listitem" className="relative group">
                   <Link href={cat.href}
-                    className={`block px-3 py-2.5 text-[13px] font-medium whitespace-nowrap border-b-2 border-transparent hover:border-mb-accent hover:text-mb-accent-deep transition-colors capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent ${
+                    className={`inline-flex items-center gap-1 px-3.5 py-2.5 text-[13px] font-medium whitespace-nowrap border-b-2 border-transparent group-hover:border-mb-accent group-hover:text-mb-accent-deep transition-colors capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent ${
                       cat.accent ? "text-mb-accent-deep font-semibold" : "text-mb-text"
                     }`}>
-                    {cat.label}
+                    <span>{cat.label}</span>
+                    {cat.children && cat.children.length > 0 && (
+                      <span className="opacity-40 group-hover:opacity-100 transition-opacity">
+                        <ChevronDown />
+                      </span>
+                    )}
                   </Link>
+
+                  {cat.children && cat.children.length > 0 && (
+                    <div className="absolute top-full left-0 hidden group-hover:block z-50 min-w-[210px] bg-white border border-mb-border rounded-b-md shadow-lg py-1.5 animate-in fade-in-50 duration-150">
+                      {cat.children.map(sub => (
+                        <Link
+                          key={sub.label}
+                          href={sub.href}
+                          className="block px-4 py-2 text-xs text-mb-text hover:bg-mb-surface hover:text-mb-accent-deep font-medium transition-colors"
+                        >
+                          {sub.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>
@@ -624,11 +643,31 @@ export default function Header() {
               {navCategories.map(cat => (
                 <li key={cat.label} role="listitem">
                   <Link href={cat.href} onClick={() => setMenuOpen(false)}
-                    className={`flex items-center px-4 py-3 text-[13px] font-medium border-b border-mb-border-lite hover:bg-mb-surface capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-mb-accent ${
+                    className={`flex items-center justify-between px-4 py-3 text-[13px] font-medium border-b border-mb-border-lite hover:bg-mb-surface capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-mb-accent ${
                       cat.accent ? "text-mb-accent-deep font-semibold" : "text-mb-text"
                     }`}>
-                    {cat.label}
+                    <span>{cat.label}</span>
+                    {cat.children && cat.children.length > 0 && (
+                      <span className="text-[11px] text-mb-placeholder font-normal">
+                        ({cat.children.length})
+                      </span>
+                    )}
                   </Link>
+
+                  {cat.children && cat.children.length > 0 && (
+                    <div className="bg-mb-surface/40 border-b border-mb-border-lite pl-6 pr-4 py-1 space-y-1">
+                      {cat.children.map(sub => (
+                        <Link
+                          key={sub.label}
+                          href={sub.href}
+                          onClick={() => setMenuOpen(false)}
+                          className="block py-1.5 text-xs text-mb-body hover:text-mb-accent-deep transition-colors"
+                        >
+                          ↳ {sub.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </li>
               ))}
               {isAuthenticated && user ? (

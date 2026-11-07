@@ -62,12 +62,12 @@ export function ProfileOverviewPage() {
       color: "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800/40",
     },
     {
-      title: "Variations & Sizing",
-      description: "Configure standard sizes (50–62), Free Size, and tailored custom options",
-      href: "/variations",
+      title: "Categories & Collections",
+      description: "Manage abaya categories, subcategories, and catalog collections",
+      href: "/products/categories-list",
       icon: Layers,
-      badge: "Variants",
-      color: "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40 border-purple-200 dark:border-purple-800/40",
+      badge: "Categories",
+      color: "text-[#5C1A24] dark:text-[#D29A90] bg-[#5C1A24]/10 dark:bg-[#5C1A24]/20 border-[#5C1A24]/20 dark:border-[#5C1A24]/30",
     },
     {
       title: "Customer Directory",

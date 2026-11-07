@@ -92,8 +92,8 @@ function ProductImageAndCategories() {
     const fetchDropdownData = async () => {
       try {
         const [categoriesResponse, brandsResponse] = await Promise.all([
-          apiFetch<any>(`/categories`).catch(() => null),
-          apiFetch<any>(`/brands`).catch(() => null),
+          apiFetch(`/categories`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+          apiFetch(`/brands`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
         ]);
         const catList: Category[] = Array.isArray(categoriesResponse)
           ? categoriesResponse
@@ -129,7 +129,8 @@ function ProductImageAndCategories() {
     if (currentCat?.children && currentCat.children.length > 0) {
       setSubCategories(currentCat.children);
     } else {
-      apiFetch<any>(`/categories/${baseProduct.categoryId}/subcategories`)
+      apiFetch(`/categories/${baseProduct.categoryId}/subcategories`)
+        .then((r) => (r.ok ? r.json() : null))
         .then((res) => {
           const subList = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [];
           if (subList.length > 0) {

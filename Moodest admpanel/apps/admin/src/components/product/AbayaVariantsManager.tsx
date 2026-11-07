@@ -647,20 +647,6 @@ function AbayaVariantsManagerUI({
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Explore Products by Variant */}
-          <Link href="/variations" target="_blank" rel="noopener noreferrer">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="h-9 gap-1.5 rounded-lg border-gray-200 dark:border-white/10 text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5"
-              title="Explore all catalog products grouped by variant sizes and colors"
-            >
-              <Package className="size-3.5 text-[#5C1A24] dark:text-[#D29A90]" />
-              Products by Variant
-            </Button>
-          </Link>
-
           {/* Combinations Generator Button */}
           <Button
             type="button"
@@ -1789,14 +1775,7 @@ function AbayaVariantsManagerUI({
             )}
           </div>
 
-          <DialogFooter className="flex items-center justify-between sm:justify-between pt-2">
-            <Link
-              href="/variations"
-              target="_blank"
-              className="text-xs text-[#5C1A24] dark:text-[#D29A90] hover:underline inline-flex items-center gap-1"
-            >
-              Open Variations Hub <ExternalLink className="size-3" />
-            </Link>
+          <DialogFooter className="flex items-center justify-end pt-2">
             <Button
               type="button"
               variant="outline"
