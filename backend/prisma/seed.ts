@@ -99,7 +99,7 @@ async function main() {
       name: 'Jilbabs & Khimars',
       slug: 'jilbabs-khimars',
       description: 'Full-coverage French jilbabs, overhead robes, and instant tie-back khimars.',
-      image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80',
+      image: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=800&q=80',
     },
     {
       name: 'Hijabs & Stoles',

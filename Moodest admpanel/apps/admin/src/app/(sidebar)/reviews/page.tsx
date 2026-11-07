@@ -56,7 +56,7 @@ const DEFAULT_REVIEWS: Review[] = [
   {
     id: "1",
     productName: "Classic Black Flare Abaya",
-    productImage: "/images/abaya-classic.jpg",
+    productImage: "/images/products/1.webp",
     userName: "Fatima Al-Zahra",
     rating: 5,
     comment: "The fabric quality and drape are impeccable. The stitching on the sleeves is very elegant.",
@@ -66,7 +66,7 @@ const DEFAULT_REVIEWS: Review[] = [
   {
     id: "2",
     productName: "Embroidered Silk Abaya - Midnight Navy",
-    productImage: "/images/abaya-navy.jpg",
+    productImage: "/images/products/2.webp",
     userName: "Mariam Noor",
     rating: 5,
     comment: "Beautiful embroidery work, looks even better in person. Fits true to size.",
@@ -76,7 +76,7 @@ const DEFAULT_REVIEWS: Review[] = [
   {
     id: "3",
     productName: "Linen Open Front Abaya - Sand Beige",
-    productImage: "/images/abaya-beige.jpg",
+    productImage: "/images/products/3.webp",
     userName: "Aisha Rahman",
     rating: 4,
     comment: "Lightweight and breathable, perfect for summer days. Fast shipping to Dubai.",

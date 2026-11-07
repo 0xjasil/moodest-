@@ -101,7 +101,7 @@ export const DEFAULT_MOODEST_CATEGORIES: MockCategory[] = [
     name: "Jilbabs & Khimars",
     slug: "jilbabs-khimars",
     description: "Full-coverage French jilbabs, overhead robes, and instant tie-back khimars.",
-    image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=800&q=80",
     totalProducts: 12,
     totalEarnings: "₹72,400.00",
     subcategories: ["French Khimars"],
@@ -127,7 +127,7 @@ export const DEFAULT_MOODEST_CATEGORIES: MockCategory[] = [
 const PRESET_IMAGES = [
   "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80",
   "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=800&q=80",
   "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=800&q=80",
   "/images/products/1.webp",
   "/images/products/2.webp",

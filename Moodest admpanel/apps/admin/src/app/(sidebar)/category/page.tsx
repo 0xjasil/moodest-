@@ -23,7 +23,7 @@ export default async function CategoriesPage() {
     topLevel = [
       { id: 1, name: "Everyday Abayas", slug: "everyday-abayas", description: "Effortless, breathable everyday modest wear crafted from premium Cey crepe and soft Nida fabrics.", image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80" },
       { id: 2, name: "Occasion & Luxury Abayas", slug: "occasion-luxury-abayas", description: "Opulent embroidery, hand-beaded lace, and flowing silk georgette designed for weddings and special moments.", image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80" },
-      { id: 3, name: "Jilbabs & Khimars", slug: "jilbabs-khimars", description: "Full-coverage French jilbabs, overhead robes, and instant tie-back khimars.", image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80" },
+      { id: 3, name: "Jilbabs & Khimars", slug: "jilbabs-khimars", description: "Full-coverage French jilbabs, overhead robes, and instant tie-back khimars.", image: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=800&q=80" },
       { id: 4, name: "Hijabs & Stoles", slug: "hijabs-stoles", description: "Malaysian chiffon, modal cotton, and silk modal stoles in soothing neutral palettes.", image: "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=800&q=80" },
     ];
   }
