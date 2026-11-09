@@ -19,7 +19,9 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
   const [flash, setFlash] = useState(false);
   const [liveProduct, setLiveProduct] = useState<Product | null>(initialProduct);
   const [selectedVariantId, setSelectedVariantId] = useState<any>(initialProduct?.variantId);
-  const [selectedImage, setSelectedImage] = useState<string | null>(initialProduct?.image || null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(
+    initialProduct?.variants?.find((v: any) => v.id === initialProduct?.variantId)?.image || initialProduct?.image || null
+  );
   const [reviews, setReviews] = useState<Review[]>([]);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
@@ -52,8 +54,13 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
           setLiveProduct(mapped);
           if (mapped.variantId) {
             setSelectedVariantId(mapped.variantId);
-          }
-          if (mapped.image) {
+            const activeV = mapped.variants?.find((v: any) => v.id === mapped.variantId);
+            if (activeV?.image) {
+              setSelectedImage(activeV.image);
+            } else if (mapped.image) {
+              setSelectedImage(mapped.image);
+            }
+          } else if (mapped.image) {
             setSelectedImage(mapped.image);
           }
         }
@@ -165,11 +172,12 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                 />
               </div>
 
-              {/* Gallery Thumbnails (De-duplicated valid photos) */}
+              {/* Gallery Thumbnails (De-duplicated valid photos including variant images) */}
               {(() => {
+                const variantImages = (product.variants || []).map((v: any) => v.image).filter(Boolean);
                 const uniqueImages = Array.from(
                   new Set(
-                    [product.image, ...(product.images || [])].filter(
+                    [product.image, ...(product.images || []), ...variantImages].filter(
                       (url): url is string => Boolean(url && typeof url === "string" && !url.includes("placeholder.png"))
                     )
                   )
@@ -185,7 +193,13 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                         <button
                           key={idx}
                           type="button"
-                          onClick={() => setSelectedImage(imgUrl)}
+                          onClick={() => {
+                            setSelectedImage(imgUrl);
+                            const matchingVariant = product.variants?.find((v: any) => v.image === imgUrl);
+                            if (matchingVariant) {
+                              setSelectedVariantId(matchingVariant.id);
+                            }
+                          }}
                           aria-label={`View photo ${idx + 1}`}
                           className={`size-16 rounded-md border p-1 shrink-0 overflow-hidden bg-mb-surface transition-all ${
                             isSelected
@@ -237,37 +251,45 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                     </svg>
                   </span>
-                  <span className="text-xs text-mb-muted">
-                    {(product.reviewCount || reviews.length || 120).toLocaleString()} verified reviews
-                  </span>
+                  {(product.reviewCount || reviews.length) > 0 ? (
+                    <span className="text-xs text-mb-muted">
+                      {(product.reviewCount || reviews.length).toLocaleString()} verified reviews
+                    </span>
+                  ) : null}
                 </div>
 
-                {/* Variation-Aware Price */}
+                {/* Variation-Aware Dynamic Price */}
                 {(() => {
                   const activeVariant = product.variants?.find((v: any) => String(v.id) === String(selectedVariantId));
                   const displayPrice = activeVariant?.offerPrice ?? activeVariant?.price ?? product.price;
-                  const displayOriginalPrice = activeVariant?.offerPrice ? activeVariant.price : product.originalPrice;
+                  const displayOriginalPrice = activeVariant?.offerPrice && activeVariant?.price
+                    ? activeVariant.price
+                    : (!activeVariant ? product.originalPrice : undefined);
+                  const discountPct =
+                    activeVariant?.offerPrice && activeVariant?.price && Number(activeVariant.price) > Number(activeVariant.offerPrice)
+                      ? Math.round(((Number(activeVariant.price) - Number(activeVariant.offerPrice)) / Number(activeVariant.price)) * 100)
+                      : (!activeVariant ? product.discount : undefined);
 
                   return (
                     <div className="flex items-baseline gap-3 border-t border-mb-border-lite pt-4 mb-4">
                       <span className="text-3xl font-bold text-mb-text">
                         ₹{Number(displayPrice).toLocaleString()}
                       </span>
-                      {displayOriginalPrice && (
+                      {displayOriginalPrice && Number(displayOriginalPrice) > Number(displayPrice) && (
                         <span className="text-sm text-mb-muted line-through">
                           ₹{Number(displayOriginalPrice).toLocaleString()}
                         </span>
                       )}
-                      {product.discount && (
+                      {discountPct ? (
                         <span className="text-sm font-bold text-mb-accent-deep">
-                          {product.discount}% Off
+                          {discountPct}% Off
                         </span>
-                      )}
+                      ) : null}
                     </div>
                   );
                 })()}
 
-                {/* Variants Selection (Size & Color options) */}
+                {/* Variants Selection (Size & Color options with dynamic photo switching) */}
                 {product.variants && product.variants.length > 0 && (
                   <div className="mb-5 space-y-2">
                     <div className="flex items-center justify-between">
@@ -290,6 +312,7 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                       {product.variants.map((v) => {
                         const isSelected = String(selectedVariantId) === String(v.id);
                         const label = [v.size ? `Size ${v.size}` : null, v.color].filter(Boolean).join(" • ") || `Option ${v.id}`;
+                        const vPrice = v.offerPrice ?? v.price;
                         return (
                           <button
                             key={v.id}
@@ -298,6 +321,8 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                               setSelectedVariantId(v.id);
                               if (v.image) {
                                 setSelectedImage(v.image);
+                              } else if (product.image) {
+                                setSelectedImage(product.image);
                               }
                             }}
                             className={`flex items-center gap-2 px-3.5 py-2 text-xs font-medium rounded-lg border transition-all ${
@@ -306,18 +331,32 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                                 : "border-mb-border bg-white hover:border-[#5C1A24]/60 text-mb-text hover:bg-[#5C1A24]/5"
                             }`}
                           >
-                            {v.colorHex && (
+                            {v.image ? (
+                              <img
+                                src={v.image}
+                                alt={label}
+                                className="size-5 rounded-full object-cover border border-black/15 shrink-0"
+                              />
+                            ) : v.colorHex ? (
                               <span
-                                className="size-3 rounded-full border border-black/20 shrink-0"
+                                className="size-3.5 rounded-full border border-black/20 shrink-0"
                                 style={{ backgroundColor: v.colorHex }}
                               />
-                            )}
+                            ) : null}
                             <span>{label}</span>
-                            {v.offerPrice && v.price && Number(v.offerPrice) < Number(v.price) && (
-                              <span className={`text-[10px] ${isSelected ? "text-amber-200" : "text-emerald-600 font-semibold"}`}>
-                                ₹{Number(v.offerPrice).toLocaleString()}
+                            {vPrice ? (
+                              <span
+                                className={`text-[11px] font-semibold ${
+                                  isSelected
+                                    ? "text-amber-200"
+                                    : v.offerPrice
+                                    ? "text-emerald-600"
+                                    : "text-mb-muted"
+                                }`}
+                              >
+                                ₹{Number(vPrice).toLocaleString()}
                               </span>
-                            )}
+                            ) : null}
                           </button>
                         );
                       })}

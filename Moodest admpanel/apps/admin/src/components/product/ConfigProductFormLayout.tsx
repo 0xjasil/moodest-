@@ -263,13 +263,17 @@ function ProductFormContent({}: ProductFormContentProps) {
 
       // In case backend separates variant additions into /products/:id/variants
       if (prodId && createdProduct && !createdProduct.variants) {
-        for (const v of variants) {
+        for (let i = 0; i < variants.length; i++) {
+          const v = variants[i];
+          const pv = processedVariants[i];
+          const variantImageUrl = pv?.image || (typeof v.image === "string" ? v.image : null);
           await apiFetch(`/products/${prodId}/variants`, {
             method: "POST",
             body: JSON.stringify({
               size: v.size,
               color: v.color || "",
               colorHex: v.colorHex || null,
+              image: variantImageUrl,
               sku: v.sku.trim(),
               price: Number(v.price).toFixed(2),
               offerPrice:

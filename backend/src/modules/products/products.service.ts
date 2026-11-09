@@ -423,7 +423,7 @@ export class ProductsService {
               offerPrice: v.offerPrice ? new Prisma.Decimal(v.offerPrice) : null,
               qty: v.qty || 0,
               isActive: true,
-            },
+            } as any,
           });
         }
       }
@@ -508,12 +508,12 @@ export class ProductsService {
         offerPrice: data.offerPrice ? new Prisma.Decimal(data.offerPrice) : null,
         qty: data.qty ?? data.stock ?? 0,
         isActive: data.isActive !== undefined ? Boolean(data.isActive) : true,
-      },
+      } as any,
     });
   }
 
   async updateVariant(variantId: string, data: any) {
-    const existing = await this.prisma.productVariant.findUnique({ where: { id: variantId } });
+    const existing = await this.prisma.productVariant.findUnique({ where: { id: variantId } }) as any;
     if (!existing) throw new NotFoundException(`Variant ${variantId} not found`);
 
     return this.prisma.productVariant.update({
@@ -538,7 +538,7 @@ export class ProductsService {
             ? Number(data.stock)
             : existing.qty,
         isActive: data.isActive !== undefined ? Boolean(data.isActive) : existing.isActive,
-      },
+      } as any,
     });
   }
 

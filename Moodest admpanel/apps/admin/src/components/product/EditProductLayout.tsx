@@ -353,7 +353,11 @@ function EditProductFormContent({ productId }: { productId: string }) {
       }
 
       // Create new variants added during edit
-      for (const v of variants) {
+      for (let i = 0; i < variants.length; i++) {
+        const v = variants[i];
+        const pv = processedVariants[i];
+        const variantImageUrl = pv?.image || (typeof v.image === 'string' ? v.image : null);
+
         if (v.isNew) {
           await apiFetch(`/products/${productId}/variants`, {
             method: "POST",
@@ -361,6 +365,7 @@ function EditProductFormContent({ productId }: { productId: string }) {
               size: v.size,
               color: v.color || "",
               colorHex: v.colorHex || null,
+              image: variantImageUrl,
               sku: v.sku.trim(),
               price: Number(v.price).toFixed(2),
               offerPrice:
@@ -379,6 +384,7 @@ function EditProductFormContent({ productId }: { productId: string }) {
               size: v.size,
               color: v.color || "",
               colorHex: v.colorHex || null,
+              image: variantImageUrl,
               sku: v.sku.trim(),
               price: Number(v.price).toFixed(2),
               offerPrice:
