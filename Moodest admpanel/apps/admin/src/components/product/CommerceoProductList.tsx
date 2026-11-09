@@ -20,9 +20,6 @@ import {
   Headphones,
   Armchair,
   Package,
-  Store,
-  Globe,
-  Percent,
   Users,
   ChevronLeft,
   ChevronRight,
@@ -432,84 +429,6 @@ export default function CommerceoProductList() {
 
   return (
     <div className="flex flex-1 flex-col space-y-6">
-      {/* 1. Metric Cards Header matching CommerceO */}
-      <div className="rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#141414] p-6 shadow-xs">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-gray-200/70 dark:divide-white/10">
-          {/* In-store Sales */}
-          <div className="flex items-start justify-between sm:pr-6">
-            <div className="space-y-1">
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">In-store Sales</p>
-              <p className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                $5,345.43
-              </p>
-              <div className="flex items-center gap-2 text-xs">
-                <span className="text-gray-500 dark:text-gray-400">5k orders</span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                  +5.7%
-                </span>
-              </div>
-            </div>
-            <div className="flex size-11 items-center justify-center rounded-xl bg-gray-100 dark:bg-white/5 text-gray-800 dark:text-gray-200">
-              <Store className="size-5" />
-            </div>
-          </div>
-
-          {/* Website Sales */}
-          <div className="flex items-start justify-between pt-4 sm:pt-0 sm:px-6">
-            <div className="space-y-1">
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Website Sales</p>
-              <p className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                $674,347.12
-              </p>
-              <div className="flex items-center gap-2 text-xs">
-                <span className="text-gray-500 dark:text-gray-400">21k orders</span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                  +12.4%
-                </span>
-              </div>
-            </div>
-            <div className="flex size-11 items-center justify-center rounded-xl bg-gray-100 dark:bg-white/5 text-gray-800 dark:text-gray-200">
-              <Globe className="size-5" />
-            </div>
-          </div>
-
-          {/* Discount */}
-          <div className="flex items-start justify-between pt-4 sm:pt-0 sm:px-6">
-            <div className="space-y-1">
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Discount</p>
-              <p className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                $14,235.12
-              </p>
-              <div className="flex items-center gap-2 text-xs">
-                <span className="text-gray-500 dark:text-gray-400">6k orders</span>
-              </div>
-            </div>
-            <div className="flex size-11 items-center justify-center rounded-xl bg-gray-100 dark:bg-white/5 text-gray-800 dark:text-gray-200">
-              <Percent className="size-5" />
-            </div>
-          </div>
-
-          {/* Affiliate */}
-          <div className="flex items-start justify-between pt-4 sm:pt-0 sm:pl-6">
-            <div className="space-y-1">
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Affiliate</p>
-              <p className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                $8,345.23
-              </p>
-              <div className="flex items-center gap-2 text-xs">
-                <span className="text-gray-500 dark:text-gray-400">150 orders</span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full font-medium bg-rose-500/10 text-rose-600 dark:text-rose-400">
-                  -3.5%
-                </span>
-              </div>
-            </div>
-            <div className="flex size-11 items-center justify-center rounded-xl bg-gray-100 dark:bg-white/5 text-gray-800 dark:text-gray-200">
-              <Users className="size-5" />
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* 2. Main Card with Filters, Toolbar, Table & Pagination */}
       <div className="rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#141414] shadow-xs overflow-hidden">
         {/* Filter Section */}
