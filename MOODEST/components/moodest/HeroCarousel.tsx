@@ -1,184 +1,129 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
-export const heroData = [
+export const heroSlides = [
+  {
+    img: "/banners/top-promo-banner.jpg",
+    link: "/category/all",
+  },
+  {
+    img: "/banners/category-highlights-banner.jpg",
+    link: "/category/all",
+  },
+  {
+    img: "/banners/timeless-beauty-banner.jpg",
+    link: "/category/all",
+  },
   {
     img: "/abaya/hero/hero-1.jpg",
-    offer: "Up To 30% Off",
-    description: "Imperial Black Nidha Abayas",
-    link: "/category/all"
-  },
-  {
-    img: "/abaya/hero/hero-2.jpg",
-    offer: "Bestseller Set",
-    description: "Mocha Silk Kimono & Slip Dress",
-    link: "/category/all"
-  },
-  {
-    img: "/abaya/hero/hero-3.jpg",
-    offer: "Summer Linen Edit",
-    description: "Sage Breathable Casual Abayas",
-    link: "/category/all"
+    link: "/category/the-classics",
   },
   {
     img: "/abaya/hero/hero-4.jpg",
-    offer: "Festive Grandeur",
-    description: "Champagne Satin Occasion Abayas",
-    link: "/category/all"
-  },
-  {
-    img: "/abaya/hero/hero-5.jpg",
-    offer: "Haute Modesty",
-    description: "Midnight Velvet Trim Abayas",
-    link: "/category/all"
+    link: "/category/occasion-wear",
   },
   {
     img: "/abaya/hero/hero-6.jpg",
-    offer: "Signature Flow",
-    description: "Draped Butterfly Farasha Cuts",
-    link: "/category/all"
+    link: "/category/open-abaya-edit",
   },
-  {
-    img: "/abaya/hero/hero-7.jpg",
-    offer: "Special Occasion",
-    description: "Pearl & Crystal Collar Abayas",
-    link: "/category/all"
-  },
-  {
-    img: "/abaya/hero/hero-8.jpg",
-    offer: "Royal Heritage",
-    description: "Moroccan Crepe Handwoven Kaftans",
-    link: "/category/all"
-  }
 ];
 
 export default function HeroCarousel() {
-  const [startIndex, setStartIndex] = useState(0);
+  const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [cardsPerView, setCardsPerView] = useState(3);
-  const total = heroData.length;
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (typeof window !== "undefined") {
-        if (window.innerWidth < 640) {
-          setCardsPerView(1);
-        } else if (window.innerWidth < 1024) {
-          setCardsPerView(2);
-        } else {
-          setCardsPerView(3);
-        }
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Maximum valid index ensures cards always fully fill the view without empty whitespace
-  const maxIndex = Math.max(0, total - cardsPerView);
+  const total = heroSlides.length;
 
   const nextSlide = () => {
-    setStartIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+    setCurrent((prev) => (prev + 1) % total);
   };
 
   const prevSlide = () => {
-    setStartIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
+    setCurrent((prev) => (prev - 1 + total) % total);
   };
 
   useEffect(() => {
     if (isPaused) return;
-    const interval = setInterval(nextSlide, 4000);
+    const interval = setInterval(nextSlide, 4500);
     return () => clearInterval(interval);
-  }, [isPaused, maxIndex]);
-
-  // If window resize reduces maxIndex below current startIndex, clamp it
-  useEffect(() => {
-    if (startIndex > maxIndex) {
-      setStartIndex(maxIndex);
-    }
-  }, [maxIndex, startIndex]);
+  }, [isPaused, total]);
 
   return (
     <div
-      className="relative w-full px-3 sm:px-6 pt-3 pb-2 select-none"
+      className="relative w-full h-[70vh] sm:h-[80vh] md:h-[88vh] lg:h-[92vh] max-h-[960px] overflow-hidden select-none bg-neutral-900"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       role="region"
-      aria-label="Promotional Highlights Carousel"
+      aria-label="Hero Full Viewport Visual Slider"
     >
-      {/* Container for slides */}
-      <div className="relative overflow-hidden rounded-[6px] md:rounded-[8px]">
-        <div
-          className="flex transition-transform duration-500 ease-out"
-          style={{
-            transform: `translateX(-${startIndex * (100 / total)}%)`,
-            width: `${(total / cardsPerView) * 100}%`
-          }}
-        >
-          {heroData.map((item, idx) => (
-            <div
-              key={idx}
-              className="px-2"
-              style={{ width: `${100 / total}%` }}
+      {/* Slides Container */}
+      <div
+        className="flex h-full w-full transition-transform duration-700 ease-out"
+        style={{ transform: `translateX(-${current * 100}%)` }}
+      >
+        {heroSlides.map((slide, idx) => (
+          <div key={idx} className="relative w-full h-full flex-shrink-0">
+            <Link
+              href={slide.link}
+              className="block w-full h-full relative cursor-pointer group"
+              aria-label={`Featured Collection Slide ${idx + 1}`}
             >
-              <Link
-                href={item.link}
-                className="group relative block overflow-hidden rounded-[4px] sm:rounded-[6px] bg-mb-surface border border-mb-border shadow-card hover:shadow-dropdown transition-all"
-              >
-                {/* Image */}
-                <div className="relative aspect-[16/10] sm:aspect-[4/3] w-full overflow-hidden bg-mb-surface">
-                  <img
-                    src={item.img}
-                    alt={item.description}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  
-                    onError={(e) => {
-                      const target = e.currentTarget;
-                      if (!target.src.includes("/abaya/hero/hero-1.jpg")) {
-                        target.src = "/abaya/hero/hero-1.jpg";
-                      }
-                    }} />
-                </div>
-
-                {/* Card text placed at bottom */}
-                <div className="p-3.5 bg-mb-surface border-t border-mb-border">
-                  <h3 className="font-serif text-sm sm:text-base font-semibold text-mb-text group-hover:text-mb-primary transition-colors leading-snug truncate">
-                    {item.offer}
-                  </h3>
-                  <p className="text-xs text-mb-body mt-0.5 truncate font-medium">
-                    {item.description}
-                  </p>
-                </div>
-              </Link>
-            </div>
-          ))}
-        </div>
+              <img
+                src={slide.img}
+                alt={`Modest Studio Visual ${idx + 1}`}
+                className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-[1.02]"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (!target.src.includes("/banners/top-promo-banner.jpg")) {
+                    target.src = "/banners/top-promo-banner.jpg";
+                  }
+                }}
+              />
+              {/* Subtle top/bottom luxury vignette overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/15 pointer-events-none" />
+            </Link>
+          </div>
+        ))}
       </div>
 
-      {/* Prev button */}
+      {/* Prev Navigation Arrow */}
       <button
         type="button"
         onClick={prevSlide}
-        aria-label="Previous slide"
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-mb-bg border border-mb-border text-mb-primary shadow-card hover:bg-mb-surface hover:scale-105 flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-mb-accent cursor-pointer"
+        aria-label="Previous Hero Image"
+        className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 hover:bg-white text-neutral-900 shadow-xl backdrop-blur-sm flex items-center justify-center transition-all hover:scale-105 active:scale-95 focus:outline-none"
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
         </svg>
       </button>
 
-      {/* Next button */}
+      {/* Next Navigation Arrow */}
       <button
         type="button"
         onClick={nextSlide}
-        aria-label="Next slide"
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-mb-bg border border-mb-border text-mb-primary shadow-card hover:bg-mb-surface hover:scale-105 flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-mb-accent cursor-pointer"
+        aria-label="Next Hero Image"
+        className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 hover:bg-white text-neutral-900 shadow-xl backdrop-blur-sm flex items-center justify-center transition-all hover:scale-105 active:scale-95 focus:outline-none"
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
         </svg>
       </button>
+
+      {/* Slide Indicators */}
+      <div className="absolute bottom-5 sm:bottom-7 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+        {heroSlides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrent(i)}
+            aria-label={`Go to slide ${i + 1}`}
+            className={`transition-all duration-300 rounded-full ${
+              current === i
+                ? "w-8 h-2 bg-white shadow-md"
+                : "w-2 h-2 bg-white/50 hover:bg-white/80"
+            }`}
+          />
+        ))}
+      </div>
     </div>
   );
 }

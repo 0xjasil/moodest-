@@ -1,88 +1,138 @@
 import React from "react";
 import Link from "next/link";
 
-const GALLERY_TILES = [
-  {
-    image: "/abaya/hero/hero-4.jpg",
-    title: "Occasion Silk Satin",
-    subtitle: "Fluid Drapes & Opulent Sheen",
-    href: "/category/occasion-wear",
-  },
-  {
-    image: "/abaya/hero/hero-5.jpg",
-    title: "Artisanal Velvet & Lace",
-    subtitle: "Embroidered Midnight Silhouettes",
-    href: "/category/syrian-collection",
-  },
-  {
-    image: "/abaya/hero/hero-6.jpg",
-    title: "Tailored Open Fronts",
-    subtitle: "Minimalist Modern Cutaways",
-    href: "/category/open-abaya-edit",
-  },
-];
-
 export default function EditorialGalleryBanner() {
   return (
-    <section className="w-full my-12" aria-label="Editorial Gallery">
-      {/* Full viewport width editorial section */}
-      <div className="w-full bg-[#111] text-white py-10 sm:py-14 px-3 sm:px-6">
-        <div className="max-w-content mx-auto mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-          <div>
-            <span className="text-[10px] sm:text-xs text-[#D29A90] font-sans uppercase tracking-[0.25em] font-semibold block mb-1">
-              Curated Craftsmanship
-            </span>
-            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-white">
-              The Atelier Gallery
-            </h2>
-            <p className="text-xs sm:text-sm text-gray-400 mt-1 max-w-xl">
-              Hand-finished silhouettes draped in pure Japanese Nida, breathable Cey crepe, and bespoke embroidery.
-            </p>
-          </div>
+    <section className="w-full px-3 sm:px-6 my-12" aria-label="Signature Visual Gallery">
+      {/* Full Viewport Height & Width Reference Mosaic Gallery */}
+      <div className="w-full min-h-[75vh] md:h-[85vh] lg:h-[88vh] max-h-[920px] grid grid-cols-1 md:grid-cols-12 gap-3.5 sm:gap-4.5">
+        
+        {/* Column 1: Left Tall Vertical Card (Reference: Two women by doorway with circular arrow button) */}
+        <div className="md:col-span-4 h-[440px] md:h-full">
           <Link
-            href="/category/all"
-            className="text-xs sm:text-sm font-semibold text-[#D29A90] hover:text-white transition-colors inline-flex items-center gap-1 group whitespace-nowrap"
+            href="/category/syrian-collection"
+            className="group relative block w-full h-full overflow-hidden rounded-[20px] sm:rounded-[24px] bg-neutral-100 shadow-sm hover:shadow-xl transition-all"
+            aria-label="Explore Syrian Collection"
           >
-            <span>Explore All Couture</span>
-            <span className="transition-transform group-hover:translate-x-1">→</span>
+            <img
+              src="/abaya/hero/hero-6.jpg"
+              alt="Syrian Collection — Modest Silhouettes"
+              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (!target.src.includes("/banners/top-promo-banner.jpg")) {
+                  target.src = "/banners/top-promo-banner.jpg";
+                }
+              }}
+            />
+            {/* Gradient & Floating Circular Arrow Button */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-between p-5">
+              <span className="font-serif text-base sm:text-lg font-semibold text-white drop-shadow-md">
+                Syrian Edits
+              </span>
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-neutral-900 shadow-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
           </Link>
         </div>
 
-        {/* 3 High-Fashion Portrait Tiles */}
-        <div className="max-w-content mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {GALLERY_TILES.map((tile, i) => (
-            <Link
-              key={i}
-              href={tile.href}
-              className="group relative block overflow-hidden rounded-[8px] bg-neutral-900 border border-white/10 aspect-[4/5] shadow-lg hover:shadow-2xl transition-all"
-            >
-              <img
-                src={tile.image}
-                alt={tile.title}
-                className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 opacity-90 group-hover:opacity-100"
-                onError={(e) => {
-                  const target = e.currentTarget;
-                  if (!target.src.includes("/banners/timeless-beauty-banner.jpg")) {
-                    target.src = "/banners/timeless-beauty-banner.jpg";
-                  }
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent flex flex-col justify-end p-5">
-                <span className="font-serif text-base sm:text-lg font-semibold text-white group-hover:text-[#D29A90] transition-colors">
-                  {tile.title}
-                </span>
-                <span className="text-xs text-gray-300 font-sans mt-0.5">
-                  {tile.subtitle}
-                </span>
-                <span className="text-[11px] text-[#D29A90] font-semibold font-sans mt-2 inline-flex items-center gap-1 group-hover:underline">
-                  Discover Lookbook →
-                </span>
+        {/* Column 2: Center 2 Stacked Cards (Reference: Top silk abayas, Bottom terracotta arch) */}
+        <div className="md:col-span-4 flex flex-col gap-3.5 sm:gap-4.5 h-[560px] md:h-full">
+          {/* Top Card */}
+          <Link
+            href="/category/the-classics"
+            className="group flex-1 relative block w-full overflow-hidden rounded-[20px] sm:rounded-[24px] bg-neutral-100 shadow-sm hover:shadow-xl transition-all"
+            aria-label="Explore The Classics Collection"
+          >
+            <img
+              src="/abaya/hero/hero-2.jpg"
+              alt="The Classics — Silk & Midnight Nida"
+              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (!target.src.includes("/banners/category-highlights-banner.jpg")) {
+                  target.src = "/banners/category-highlights-banner.jpg";
+                }
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-between p-4 sm:p-5">
+              <span className="font-serif text-base font-semibold text-white drop-shadow-md">
+                The Classics
+              </span>
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white text-neutral-900 shadow-md flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+                </svg>
               </div>
-            </Link>
-          ))}
+            </div>
+          </Link>
+
+          {/* Bottom Card */}
+          <Link
+            href="/category/the-luxe-edit"
+            className="group flex-1 relative block w-full overflow-hidden rounded-[20px] sm:rounded-[24px] bg-neutral-100 shadow-sm hover:shadow-xl transition-all"
+            aria-label="Explore The Luxe Edit"
+          >
+            <img
+              src="/abaya/hero/hero-3.jpg"
+              alt="The Luxe Edit — Earth Tones & Arches"
+              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (!target.src.includes("/banners/timeless-beauty-banner.jpg")) {
+                  target.src = "/banners/timeless-beauty-banner.jpg";
+                }
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-between p-4 sm:p-5">
+              <span className="font-serif text-base font-semibold text-white drop-shadow-md">
+                The Luxe Edit
+              </span>
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white text-neutral-900 shadow-md flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </Link>
         </div>
+
+        {/* Column 3: Right Tall Vertical Card (Reference: Woman in red gingham with floating circular button) */}
+        <div className="md:col-span-4 h-[440px] md:h-full">
+          <Link
+            href="/category/occasion-wear"
+            className="group relative block w-full h-full overflow-hidden rounded-[20px] sm:rounded-[24px] bg-neutral-100 shadow-sm hover:shadow-xl transition-all"
+            aria-label="Explore Occasion Wear"
+          >
+            <img
+              src="/abaya/hero/hero-4.jpg"
+              alt="Occasion Wear — Bespoke Celebratory Cuts"
+              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (!target.src.includes("/banners/top-promo-banner.jpg")) {
+                  target.src = "/banners/top-promo-banner.jpg";
+                }
+              }}
+            />
+            {/* Gradient & Floating Circular Arrow Button */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-between p-5">
+              <span className="font-serif text-base sm:text-lg font-semibold text-white drop-shadow-md">
+                Occasion Wear
+              </span>
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-neutral-900 shadow-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </Link>
+        </div>
+
       </div>
     </section>
   );
 }
-
