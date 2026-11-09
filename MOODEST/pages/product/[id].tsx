@@ -2,24 +2,24 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
+import type { GetServerSideProps } from "next";
 import Header from "@/components/Header";
 import ReviewForm from "@/components/ReviewForm";
 import Footer from "@/components/Footer";
-import { products as fallbackProducts } from "@/components/ProductGrid";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { productAPI, reviewAPI, mapBackendProductToProduct } from "@/lib/api";
 import type { Product } from "@/components/ProductCard";
 import type { Review } from "@/lib/types";
 
-export default function ProductDetail() {
+export default function ProductDetail({ initialProduct = null }: { initialProduct?: Product | null }) {
   const router = useRouter();
   const { id } = router.query;
   const [qty, setQty] = useState(1);
   const [flash, setFlash] = useState(false);
-  const [liveProduct, setLiveProduct] = useState<Product | null>(null);
-  const [selectedVariantId, setSelectedVariantId] = useState<any>(undefined);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [liveProduct, setLiveProduct] = useState<Product | null>(initialProduct);
+  const [selectedVariantId, setSelectedVariantId] = useState<any>(initialProduct?.variantId);
+  const [selectedImage, setSelectedImage] = useState<string | null>(initialProduct?.image || null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
@@ -37,9 +37,7 @@ export default function ProductDetail() {
   const { addItem, items } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
 
-  // Initial fallback product
-  const initialFallback = fallbackProducts.find((p) => p.id === id) ?? fallbackProducts[0];
-  const product = liveProduct ?? initialFallback;
+  const product = liveProduct ?? initialProduct;
 
   // Fetch product and reviews from NestJS backend
   useEffect(() => {
@@ -79,6 +77,22 @@ export default function ProductDetail() {
 
   const inCart = items.some((i) => i.product.id === product.id);
   const wishlisted = isWishlisted(product.id);
+
+  if (!product) {
+    return (
+      <>
+        <Header />
+        <main className="min-h-[60vh] flex flex-col items-center justify-center p-8 text-center bg-mb-bg">
+          <h1 className="text-xl font-serif font-bold text-mb-text mb-2">Product Not Found</h1>
+          <p className="text-sm text-mb-muted mb-6">The requested product could not be located in our catalog.</p>
+          <Link href="/category/all" className="px-5 py-2.5 bg-[#5C1A24] text-white text-xs font-semibold rounded-lg hover:bg-[#42121B] transition-colors">
+            Return to All Collections
+          </Link>
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
   const handleAddToCart = () => {
     const itemToAdd: Product = {
@@ -428,3 +442,30 @@ export default function ProductDetail() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { id } = context.params || {};
+  if (!id || typeof id !== "string") {
+    return { notFound: true };
+  }
+
+  try {
+    const raw = await productAPI.getById(id);
+    if (!raw) {
+      return { notFound: true };
+    }
+    const initialProduct = mapBackendProductToProduct(raw);
+    return {
+      props: {
+        initialProduct,
+      },
+    };
+  } catch (error) {
+    console.warn(`[getServerSideProps] Product ${id} not found:`, error);
+    return {
+      props: {
+        initialProduct: null,
+      },
+    };
+  }
+};

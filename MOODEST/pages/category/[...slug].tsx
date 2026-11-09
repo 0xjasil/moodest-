@@ -4,8 +4,8 @@ import Footer from "@/components/Footer";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import type { GetServerSideProps } from "next";
 import ProductCard, { type Product } from "@/components/ProductCard";
-import { products as fallbackProducts } from "@/components/ProductGrid";
 import { productAPI, categoryAPI, mapBackendProductToProduct } from "@/lib/api";
 
 const DEFAULT_CATEGORIES = [
@@ -70,13 +70,22 @@ const ChevronDown = ({ open }: { open: boolean }) => (
   </svg>
 );
 
-export default function Category() {
+interface CategoryPageProps {
+  initialProducts?: Product[];
+  initialCategories?: typeof DEFAULT_CATEGORIES;
+}
+
+export default function Category({
+  initialProducts = [],
+  initialCategories = DEFAULT_CATEGORIES,
+}: CategoryPageProps) {
   const router = useRouter();
   const { slug, q } = router.query;
   const [sortBy, setSortBy] = useState("popularity");
   const [sortOpen, setSortOpen] = useState(false);
-  const [catalogItems, setCatalogItems] = useState<Product[]>(fallbackProducts);
-  const [liveCategories, setLiveCategories] = useState(DEFAULT_CATEGORIES);
+  const [catalogItems, setCatalogItems] = useState<Product[]>(initialProducts);
+  const [liveCategories, setLiveCategories] = useState(initialCategories);
+  const [loading, setLoading] = useState(false);
   const [priceRangeIndex, setPriceRangeIndex] = useState(0);
   const [minRating, setMinRating] = useState<number | null>(null);
 
@@ -104,7 +113,7 @@ export default function Category() {
           setLiveCategories(formatted);
         }
       } catch {
-        // Keep DEFAULT_CATEGORIES
+        // Keep initialCategories
       }
     })();
     return () => {
@@ -116,18 +125,21 @@ export default function Category() {
   useEffect(() => {
     let isSubscribed = true;
     (async () => {
+      setLoading(true);
       try {
         const res = await productAPI.getAll({
           category: categorySlug === "all" ? undefined : categorySlug,
           search: searchQuery || undefined,
           limit: 50,
         });
-        if (isSubscribed && res && Array.isArray(res.items) && res.items.length > 0) {
+        if (isSubscribed && res && Array.isArray(res.items)) {
           const mapped = res.items.map(mapBackendProductToProduct);
           setCatalogItems(mapped);
         }
-      } catch {
-        // Fallback to initial mock data
+      } catch (err) {
+        console.error("Failed to load category products:", err);
+      } finally {
+        if (isSubscribed) setLoading(false);
       }
     })();
     return () => {
@@ -180,7 +192,6 @@ export default function Category() {
         }
         return matchesCat;
       });
-      if (list.length === 0) list = catalogItems; // fallback if no specific match
     }
 
     // Price filter
@@ -439,3 +450,58 @@ export default function Category() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (context) => {
+  const { slug, q } = context.query;
+  const categorySlug = Array.isArray(slug) ? slug[0] : slug ?? "all";
+  const searchQuery = typeof q === "string" ? q.trim().toLowerCase() : "";
+
+  try {
+    const [productsRes, categoriesRes] = await Promise.all([
+      productAPI.getAll({
+        category: categorySlug === "all" ? undefined : categorySlug,
+        search: searchQuery || undefined,
+        limit: 50,
+      }).catch((err) => {
+        console.warn("[getServerSideProps] Failed to fetch products:", err);
+        return null;
+      }),
+      categoryAPI.getAll().catch((err) => {
+        console.warn("[getServerSideProps] Failed to fetch categories:", err);
+        return null;
+      }),
+    ]);
+
+    const initialProducts = Array.isArray(productsRes?.items)
+      ? productsRes.items.map(mapBackendProductToProduct)
+      : [];
+
+    const initialCategories = Array.isArray(categoriesRes) && categoriesRes.length > 0
+      ? categoriesRes.map((c: any) => ({
+          id: String(c.id),
+          name: c.name,
+          slug: c.slug || c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          subcategories: ((c.subcategories || c.children || []) as any[]).map((sc: any) => ({
+            id: String(sc.id),
+            name: String(sc.name),
+            slug: sc.slug || String(sc.name).toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          })),
+        }))
+      : DEFAULT_CATEGORIES;
+
+    return {
+      props: {
+        initialProducts,
+        initialCategories,
+      },
+    };
+  } catch (error) {
+    console.error("[getServerSideProps] Category page error:", error);
+    return {
+      props: {
+        initialProducts: [],
+        initialCategories: DEFAULT_CATEGORIES,
+      },
+    };
+  }
+};
