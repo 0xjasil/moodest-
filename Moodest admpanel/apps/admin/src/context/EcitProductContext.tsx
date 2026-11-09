@@ -6,6 +6,7 @@ export interface EditBaseProductData {
   fabric?: string;
   careInstructions?: string;
   mainImage: File | string | null; // Can be URL (existing) or File (new)
+  hoverImage?: File | string | null; // Can be URL (existing) or File (new)
   basePrice: number;
   baseQuantity: number;
   baseDiscountPrice: number;
@@ -28,6 +29,7 @@ export interface EditVariantData {
   qty?: number;
   offerPrice?: number | null;
   isActive: boolean;
+  image?: File | string | null;
   images?: (File | string)[]; // Can be URLs (existing) or Files (new)
   attributes?: {
     attributeId: string;
@@ -74,6 +76,7 @@ export function EditProductProvider({
     name: "",
     description: "",
     mainImage: null,
+    hoverImage: null,
     basePrice: 0,
     baseQuantity: 0,
     baseDiscountPrice: 0,
@@ -131,6 +134,7 @@ export function EditProductProvider({
       name: "",
       description: "",
       mainImage: null,
+      hoverImage: null,
       basePrice: 0,
       baseQuantity: 0,
       baseDiscountPrice: 0,

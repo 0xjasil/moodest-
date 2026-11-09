@@ -39,37 +39,71 @@ function EditProductFormContent({ productId }: { productId: string }) {
         const res = await response.json();
 
         if (response.ok && res) {
-          const product: ProductDetail = res.data || res;
+          const product: any = res.data || res;
 
           // Set base product data
           const variantsList = product.variants || [];
           const firstVariant = variantsList[0];
-          const totalQty = variantsList.reduce((sum, v) => sum + (v.qty || 0), 0);
+          const totalQty = variantsList.reduce((sum: number, v: any) => sum + (Number(v.qty) || 0), 0);
+
+          // Resolve images from DB (Cloudinary CDN URLs)
+          const rawImages: string[] = Array.isArray(product.images)
+            ? product.images
+            : Array.isArray(product.subimage)
+            ? product.subimage
+            : [];
+
+          const mainImage = product.image || rawImages[0] || null;
+          const hoverImage = product.hoverImage || (rawImages.length > 1 ? rawImages[1] : null);
+          const galleryThumbnails = rawImages.length > 2
+            ? rawImages.slice(2)
+            : rawImages.length === 2 && !product.hoverImage
+            ? rawImages.slice(1)
+            : [];
+
+          const resolvedCategoryId = product.categoryId
+            ? String(product.categoryId)
+            : product.category?.id
+            ? String(product.category.id)
+            : "";
+
+          const resolvedBrandId = product.brandId
+            ? String(product.brandId)
+            : product.brand?.id
+            ? String(product.brand.id)
+            : null;
+
+          const resolvedSubCategoryId = product.subCategoryId
+            ? String(product.subCategoryId)
+            : product.subCategory?.id
+            ? String(product.subCategory.id)
+            : "";
 
           setBaseProduct({
             name: product.name || "",
             description: product.description || "",
-            fabric: (product as { fabric?: string }).fabric || "",
-            careInstructions: (product as { careInstructions?: string }).careInstructions || "",
-            mainImage: product.image || null,
-            basePrice: firstVariant ? Number(firstVariant.price) : 0,
+            fabric: product.fabric || "",
+            careInstructions: product.careInstructions || "",
+            mainImage,
+            hoverImage,
+            basePrice: firstVariant ? Number(firstVariant.price) : (Number(product.basePrice || product.price) || 0),
             baseQuantity: totalQty,
             baseDiscountPrice: firstVariant?.offerPrice ? Number(firstVariant.offerPrice) : 0,
-            thumbnails: product.subimage || [],
-            brandId: product.brandId ? String(product.brandId) : null,
-            categoryId: product.categoryId ? String(product.categoryId) : "",
-            subCategoryId: product.subCategoryId ? String(product.subCategoryId) : "",
-            isCustomerFavorite: Boolean(product.isCustomerFavorite),
+            thumbnails: galleryThumbnails,
+            brandId: resolvedBrandId,
+            categoryId: resolvedCategoryId,
+            subCategoryId: resolvedSubCategoryId,
+            isCustomerFavorite: Boolean(product.isCustomerFavorite || product.isFeatured),
             isNewArrival: Boolean(product.isNewArrival),
           });
 
           // Set variants data - preserve existing variant IDs!
-          const mappedVariants = variantsList.map((variant) => {
+          const mappedVariants = variantsList.map((variant: any) => {
             const sizeOption = variant.options?.find(
-              (o) => o.attribute?.name?.toLowerCase() === "size"
+              (o: any) => o.attribute?.name?.toLowerCase() === "size"
             )?.attributeValue?.value;
             const colorOption = variant.options?.find(
-              (o) => o.attribute?.name?.toLowerCase() === "color"
+              (o: any) => o.attribute?.name?.toLowerCase() === "color"
             )?.attributeValue?.value;
 
             return {
@@ -84,6 +118,7 @@ function EditProductFormContent({ productId }: { productId: string }) {
               qty: typeof variant.qty === "number" ? variant.qty : 0,
               isActive: variant.isActive !== false,
               reservations: variant.reservations,
+              image: variant.image || (variant.images?.[0] as any) || null,
               images: variant.images || [],
               isNew: false,
               isModified: false,
@@ -202,6 +237,16 @@ function EditProductFormContent({ productId }: { productId: string }) {
         mainImageUrl = await uploadToCloudinary(rawMain, "moodest/products/main");
       }
 
+      const rawHover: any = baseProduct.hoverImage;
+      let hoverImageUrl = typeof rawHover === "string" ? rawHover : "";
+      if (rawHover instanceof File) {
+        toast.loading("Uploading hover thumbnail to Cloudinary...", { id: "edit-prod-save" });
+        hoverImageUrl = await uploadToCloudinary(rawHover, "moodest/products/thumbnails");
+      } else if (typeof rawHover === "string" && rawHover.startsWith("data:")) {
+        toast.loading("Uploading hover thumbnail to Cloudinary...", { id: "edit-prod-save" });
+        hoverImageUrl = await uploadToCloudinary(rawHover, "moodest/products/thumbnails");
+      }
+
       const uploadedThumbnailUrls: string[] = [];
       for (let i = 0; i < (baseProduct.thumbnails || []).length; i++) {
         const thumb: any = baseProduct.thumbnails[i];
@@ -218,9 +263,37 @@ function EditProductFormContent({ productId }: { productId: string }) {
         }
       }
 
+      // Upload variant images if new files provided
+      const processedVariants = [];
+      for (let i = 0; i < variants.length; i++) {
+        const v = variants[i];
+        let variantImageUrl = typeof v.image === "string" ? v.image : null;
+        if (v.image instanceof File) {
+          toast.loading(`Uploading variant photo (${v.size}/${v.color || "Default"}) to Cloudinary...`, { id: "edit-prod-save" });
+          variantImageUrl = await uploadToCloudinary(v.image, "moodest/products/variants");
+        }
+        processedVariants.push({
+          id: v.isNew ? undefined : v.id, // Preserve existing variant ID
+          size: v.size,
+          color: v.color || "",
+          colorHex: v.colorHex || null,
+          sku: v.sku.trim(),
+          price: Number(v.price).toFixed(2),
+          offerPrice:
+            v.offerPrice != null && Number(v.offerPrice) > 0
+              ? Number(v.offerPrice).toFixed(2)
+              : null,
+          qty: Math.max(0, Math.floor(Number(v.qty || 0))),
+          isActive: v.isActive !== false,
+          image: variantImageUrl,
+          isNew: v.isNew,
+          isModified: v.isModified,
+        });
+      }
+
       toast.loading("Updating product details...", { id: "edit-prod-save" });
 
-      const allImages = [mainImageUrl, ...uploadedThumbnailUrls].filter(Boolean);
+      const allImages = [mainImageUrl, hoverImageUrl, ...uploadedThumbnailUrls].filter(Boolean);
 
       // 6. Update Product Details via API
       const minPrice = Math.min(...variants.map((v) => Number(v.price) || 0));
@@ -235,26 +308,14 @@ function EditProductFormContent({ productId }: { productId: string }) {
         basePrice: minPrice,
         isCustomerFavorite: Boolean(baseProduct.isCustomerFavorite),
         isNewArrival: Boolean(baseProduct.isNewArrival),
-        variants: variants.map((v) => ({
-          id: v.isNew ? undefined : v.id, // Preserve existing variant ID
-          size: v.size,
-          color: v.color || "",
-          colorHex: v.colorHex || null,
-          sku: v.sku.trim(),
-          price: Number(v.price).toFixed(2),
-          offerPrice:
-            v.offerPrice != null && Number(v.offerPrice) > 0
-              ? Number(v.offerPrice).toFixed(2)
-              : null,
-          qty: Math.max(0, Math.floor(Number(v.qty || 0))),
-          isActive: v.isActive !== false,
-          isNew: v.isNew,
-          isModified: v.isModified,
-        })),
+        variants: processedVariants,
       };
 
       if (mainImageUrl) {
         payload.image = mainImageUrl;
+      }
+      if (hoverImageUrl) {
+        payload.hoverImage = hoverImageUrl;
       }
       if (allImages.length > 0) {
         payload.images = allImages;

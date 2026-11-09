@@ -1962,6 +1962,7 @@ function EditAbayaVariantsWrapper(props: { backendSkuError?: string | null }) {
       isNew: v.isNew,
       isModified: v.isModified,
       reservations: v.reservations,
+      image: v.image || (v.images?.[0] as any) || null,
     }));
   }, [ctx.variants, ctx.baseProduct.basePrice, ctx.baseProduct.baseDiscountPrice, ctx.baseProduct.baseQuantity]);
 
@@ -1984,6 +1985,7 @@ function EditAbayaVariantsWrapper(props: { backendSkuError?: string | null }) {
             isActive: u.isActive,
             isNew: !!u.isNew,
             isModified: !u.isNew,
+            image: u.image || null,
             images: [],
             reservations: u.reservations,
             attributes: [

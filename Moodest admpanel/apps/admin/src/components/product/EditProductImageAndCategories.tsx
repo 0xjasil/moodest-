@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import Checkbox from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEditProduct } from '@/context/EcitProductContext';
 import { toast } from 'sonner';
@@ -34,32 +33,35 @@ interface Brand {
   name: string;
 }
 
-const MAX_THUMBNAILS = 3;
+const MAX_GALLERY_IMAGES = 10;
 
 export default function EditProductImageAndCategories() {
   const { baseProduct, updateBaseProduct, isFileImage } = useEditProduct();
   const [categories, setCategories] = useState<Category[]>([]);
-  const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [errors, setErrors] = useState({
     mainImage: false,
-    thumbnails: false,
+    hoverImage: false,
     brandId: false,
     categoryId: false,
-    subCategoryId: false,
   });
 
   // Get preview URL for main image (handles both File and URL string)
   const getMainImagePreview = () => {
     if (!baseProduct.mainImage) return null;
-    
     if (isFileImage(baseProduct.mainImage)) {
-      // It's a File object - create object URL
       return URL.createObjectURL(baseProduct.mainImage as File);
     }
-    
-    // It's a string URL from database
     return baseProduct.mainImage as string;
+  };
+
+  // Get preview URL for hover image (handles both File and URL string)
+  const getHoverImagePreview = () => {
+    if (!baseProduct.hoverImage) return null;
+    if (isFileImage(baseProduct.hoverImage)) {
+      return URL.createObjectURL(baseProduct.hoverImage as File);
+    }
+    return baseProduct.hoverImage as string;
   };
 
   // Get preview URL for thumbnail (handles both File and URL string)
@@ -102,28 +104,6 @@ export default function EditProductImageAndCategories() {
     };
     fetchDropdownData();
   }, []);
-
-  // Fetch subcategories when category changes
-  useEffect(() => {
-    if (!baseProduct.categoryId) {
-      setSubCategories([]);
-      return;
-    }
-    const currentCat = categories.find((c) => c.id === baseProduct.categoryId);
-    if (currentCat?.children && currentCat.children.length > 0) {
-      setSubCategories(currentCat.children);
-    } else {
-      apiFetch(`/categories/${baseProduct.categoryId}/subcategories`)
-        .then((r) => (r.ok ? r.json() : null))
-        .then((res) => {
-          const subList = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [];
-          if (subList.length > 0) {
-            setSubCategories(subList);
-          }
-        })
-        .catch(() => {});
-    }
-  }, [baseProduct.categoryId, categories]);
 
   // Unified Category Options
   const categoryOptions = useMemo(() => {
@@ -171,7 +151,7 @@ export default function EditProductImageAndCategories() {
     }
   };
 
-  // Handle main image browse
+  // Handle main image browse / replace
   const handleBrowseMain = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -181,162 +161,220 @@ export default function EditProductImageAndCategories() {
     e.target.value = '';
   };
 
-  // Handle main image replace
-  const handleReplaceMain = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle hover image browse / replace
+  const handleBrowseHover = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      updateBaseProduct({ mainImage: file });
-      setErrors((prev) => ({ ...prev, mainImage: false }));
+      updateBaseProduct({ hoverImage: file });
+      setErrors((prev) => ({ ...prev, hoverImage: false }));
     }
     e.target.value = '';
   };
 
-  // Handle adding thumbnail images
-  const handleAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle adding gallery images
+  const handleAddGalleryImages = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
     if (fileList && fileList.length) {
       const newFiles = Array.from(fileList);
-      const availableSlots = MAX_THUMBNAILS - baseProduct.thumbnails.length;
+      const availableSlots = MAX_GALLERY_IMAGES - (baseProduct.thumbnails || []).length;
 
       if (availableSlots <= 0) {
-        toast.error(`Maximum ${MAX_THUMBNAILS} thumbnails allowed`);
+        toast.error(`Maximum ${MAX_GALLERY_IMAGES} gallery images allowed`);
         e.target.value = '';
         return;
       }
 
       const filesToAdd = newFiles.slice(0, availableSlots);
-      const newThumbnails = [...baseProduct.thumbnails, ...filesToAdd];
+      const newThumbnails = [...(baseProduct.thumbnails || []), ...filesToAdd];
 
       updateBaseProduct({ thumbnails: newThumbnails });
-      setErrors((prev) => ({ ...prev, thumbnails: false }));
 
       if (newFiles.length > availableSlots) {
-        toast.warning(`Only ${availableSlots} image(s) added. Maximum ${MAX_THUMBNAILS} allowed`);
+        toast.warning(`Only ${availableSlots} image(s) added. Maximum ${MAX_GALLERY_IMAGES} allowed`);
       }
     }
     e.target.value = '';
   };
 
-  // Remove a thumbnail by index
-  const removeThumbnail = (idx: number) => {
-    const newThumbnails = baseProduct.thumbnails.filter((_, i) => i !== idx);
+  // Remove a gallery thumbnail by index
+  const removeGalleryImage = (idx: number) => {
+    const newThumbnails = (baseProduct.thumbnails || []).filter((_, i) => i !== idx);
     updateBaseProduct({ thumbnails: newThumbnails });
   };
 
+  const mainPreview = getMainImagePreview();
+  const hoverPreview = getHoverImagePreview();
+
   return (
-    <Card className="space-y-1 w-full">
-      {/* Image Upload Section */}
+    <Card className="space-y-4 w-full">
+      {/* ── Image Upload Section (Dual Hover Thumbnails + Multi-Gallery) ── */}
       <Card className="shadow-none border-none">
-        <CardHeader>
-          <CardTitle>Upload Product Image</CardTitle>
+        <CardHeader className="py-4">
+          <CardTitle>Upload Product Images</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 pt-0">
-          {/* Main Image */}
-          <div className="space-y-1">
-            <Label className="text-sm font-semibold text-gray-700">
-              Product Image <span className="text-red-500">*</span>
-            </Label>
+        <CardContent className="space-y-4 pt-0">
+          {/* Primary Thumbnail */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+                Primary Thumbnail <span className="text-red-500">*</span>
+              </Label>
+              <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/50 dark:border-emerald-800 dark:text-emerald-300 px-2.5 py-0.5 rounded-full">
+                Always Shown
+              </span>
+            </div>
             <div
-              className={`border rounded-lg p-3 bg-white relative overflow-hidden ${
-                errors.mainImage ? 'border-red-500' : 'border-gray-200'
+              className={`border rounded-lg p-3 bg-white dark:bg-[#141414] relative overflow-hidden flex flex-col justify-between ${
+                errors.mainImage ? 'border-red-500' : 'border-gray-200 dark:border-white/10'
               }`}
-              style={{ minHeight: 200 }}
+              style={{ minHeight: 180 }}
             >
-              <div className="flex justify-center items-center h-[140px]">
-                {getMainImagePreview() ? (
+              <div className="flex justify-center items-center h-[120px] w-full">
+                {mainPreview ? (
                   <Image
-                    src={getMainImagePreview()!}
-                    alt="Main Product"
-                    width={500}
-                    height={500}
+                    src={mainPreview}
+                    alt="Primary Thumbnail"
+                    width={400}
+                    height={400}
                     unoptimized
-                    className="w-full h-full object-cover rounded-lg"
+                    className="max-h-[120px] w-auto object-contain rounded"
                   />
                 ) : (
-                  <div className="flex flex-col items-center justify-center h-full w-full text-gray-400 gap-1">
-                    <ImageIcon size={30} />
-                    <span className="text-sm">No image</span>
+                  <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-1.5">
+                    <ImageIcon size={36} className="stroke-[1.5]" />
+                    <span className="text-xs">No primary image selected</span>
                   </div>
                 )}
               </div>
-              <div className="flex items-center gap-3 mt-3">
-                {!baseProduct.mainImage && (
-                  <label className="px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer flex items-center gap-2 text-sm">
-                    <ImageIcon size={14} />
-                    Browse
-                    <input 
-                      type="file" 
-                      accept="image/*" 
-                      className="hidden" 
-                      onChange={handleBrowseMain} 
-                    />
-                  </label>
-                )}
-                {baseProduct.mainImage && (
-                  <label className="px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-lg cursor-pointer flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100 dark:border-white/5">
+                <label className="flex-1 py-1.5 border border-gray-300 dark:border-white/15 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer flex items-center justify-center gap-2 text-sm font-medium transition-colors">
+                  <ImageIcon size={14} />
+                  Browse
+                  <input type="file" accept="image/*" className="hidden" onChange={handleBrowseMain} />
+                </label>
+                {mainPreview && (
+                  <label className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/15 rounded-lg cursor-pointer flex items-center justify-center gap-2 text-sm font-medium transition-colors">
                     <RefreshCcw size={14} />
                     Replace
-                    <input 
-                      type="file" 
-                      accept="image/*" 
-                      className="hidden" 
-                      onChange={handleReplaceMain} 
-                    />
+                    <input type="file" accept="image/*" className="hidden" onChange={handleBrowseMain} />
                   </label>
                 )}
               </div>
-              {errors.mainImage && (
-                <p className="text-xs text-red-500 mt-1">Main image is required</p>
-              )}
+            </div>
+            {errors.mainImage && <p className="text-xs text-red-500">Primary thumbnail is required</p>}
+          </div>
+
+          {/* Hover Thumbnail */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+                Hover Thumbnail <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
+              </Label>
+              <span className="text-[11px] font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 dark:bg-indigo-950/50 dark:border-indigo-800 dark:text-indigo-300 px-2.5 py-0.5 rounded-full">
+                Revealed on Hover
+              </span>
+            </div>
+            <div
+              className="border border-gray-200 dark:border-white/10 rounded-lg p-3 bg-white dark:bg-[#141414] relative overflow-hidden flex flex-col justify-between"
+              style={{ minHeight: 180 }}
+            >
+              <div className="flex justify-center items-center h-[120px] w-full">
+                {hoverPreview ? (
+                  <Image
+                    src={hoverPreview}
+                    alt="Hover Thumbnail"
+                    width={400}
+                    height={400}
+                    unoptimized
+                    className="max-h-[120px] w-auto object-contain rounded"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-1.5">
+                    <ImageIcon size={36} className="stroke-[1.5]" />
+                    <span className="text-xs">No hover image selected</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100 dark:border-white/5">
+                <label className="flex-1 py-1.5 border border-gray-300 dark:border-white/15 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer flex items-center justify-center gap-2 text-sm font-medium transition-colors">
+                  <ImageIcon size={14} />
+                  Browse
+                  <input type="file" accept="image/*" className="hidden" onChange={handleBrowseHover} />
+                </label>
+                {hoverPreview && (
+                  <>
+                    <label className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/15 rounded-lg cursor-pointer flex items-center justify-center gap-2 text-sm font-medium transition-colors">
+                      <RefreshCcw size={14} />
+                      Replace
+                      <input type="file" accept="image/*" className="hidden" onChange={handleBrowseHover} />
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        updateBaseProduct({ hoverImage: null });
+                      }}
+                      className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg border border-transparent hover:border-red-200 dark:hover:border-red-900 transition-colors"
+                      title="Remove hover image"
+                    >
+                      <X size={16} />
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Thumbnails */}
-          <div className="space-y-1">
-            <Label className="text-sm font-semibold text-gray-700">
-              Thumbnails ({baseProduct.thumbnails.length}/{MAX_THUMBNAILS})
-            </Label>
-            <div className="flex items-center gap-3 flex-wrap">
-              {baseProduct.thumbnails.map((thumbnail, idx) => (
-                <div
-                  className="relative w-16 h-16 border rounded-md overflow-hidden bg-gray-50 flex items-center justify-center"
-                  key={idx}
-                >
-                  <Image
-                    src={getThumbnailPreview(thumbnail)}
-                    alt={`Product ${idx + 1}`}
-                    width={64}
-                    height={64}
-                    unoptimized
-                    className="w-full h-full object-cover rounded"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute top-0.5 right-0.5 h-4 w-4 p-0.5 bg-white/70 hover:bg-white z-10"
-                    onClick={() => removeThumbnail(idx)}
+          {/* ── Product Gallery Images (Horizontal Row) ── */}
+          <div className="space-y-2 pt-3 border-t border-gray-100 dark:border-white/5">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                Gallery Images ({(baseProduct.thumbnails || []).length}/{MAX_GALLERY_IMAGES})
+              </Label>
+              <span className="text-xs text-muted-foreground">More than 1 image supported</span>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              {(baseProduct.thumbnails || []).map((thumb, idx) => {
+                const preview = getThumbnailPreview(thumb);
+                return (
+                  <div
+                    className="relative w-16 h-16 border border-gray-200 dark:border-white/10 rounded-md overflow-hidden bg-gray-50 dark:bg-white/5 flex items-center justify-center"
+                    key={idx}
                   >
-                    <X size={10} className="text-gray-600" />
-                  </Button>
-                </div>
-              ))}
-              {baseProduct.thumbnails.length < MAX_THUMBNAILS && (
-                <label className="w-16 h-16 border-2 border-dashed rounded-md flex flex-col items-center justify-center cursor-pointer bg-gray-50 hover:bg-gray-100 text-center">
-                  <Plus size={18} className="text-green-600" />
-                  <span className="text-xs text-gray-500">Add</span>
-                  <input 
-                    type="file" 
-                    accept="image/*" 
-                    multiple 
-                    className="hidden" 
-                    onChange={handleAddImage} 
+                    <Image
+                      src={preview}
+                      alt={`Gallery ${idx + 1}`}
+                      width={64}
+                      height={64}
+                      unoptimized
+                      className="w-full h-full object-cover rounded"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-0.5 right-0.5 h-4 w-4 p-0.5 bg-white/80 dark:bg-black/80 hover:bg-white text-gray-700 dark:text-gray-200 rounded-full z-10"
+                      onClick={() => removeGalleryImage(idx)}
+                    >
+                      <X size={10} />
+                    </Button>
+                  </div>
+                );
+              })}
+
+              {(baseProduct.thumbnails || []).length < MAX_GALLERY_IMAGES && (
+                <label className="w-16 h-16 border-2 border-dashed border-gray-300 dark:border-white/20 rounded-md flex flex-col items-center justify-center cursor-pointer bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 text-center transition-colors">
+                  <Plus size={18} className="text-gray-500 dark:text-gray-400" />
+                  <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium mt-0.5">Add</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                    onChange={handleAddGalleryImages}
                   />
                 </label>
               )}
             </div>
-            {errors.thumbnails && (
-              <p className="text-xs text-red-500">At least one thumbnail is required</p>
-            )}
           </div>
         </CardContent>
       </Card>
@@ -346,10 +384,10 @@ export default function EditProductImageAndCategories() {
         <CardHeader className="py-4">
           <CardTitle>Product Information</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 pt-0">
+        <CardContent className="space-y-4 pt-0">
           {/* Brand */}
-          <div className="space-y-1">
-            <Label>
+          <div className="space-y-1.5">
+            <Label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
               Brand <span className="text-red-500">*</span>
             </Label>
             <Select
@@ -359,7 +397,7 @@ export default function EditProductImageAndCategories() {
                 setErrors((prev) => ({ ...prev, brandId: false }));
               }}
             >
-              <SelectTrigger className={`h-9 w-full ${errors.brandId ? 'border-red-500' : ''}`}>
+              <SelectTrigger className={`h-10 w-full rounded-xl text-sm ${errors.brandId ? 'border-red-500' : ''}`}>
                 <SelectValue placeholder="Select brand" />
               </SelectTrigger>
               <SelectContent>
@@ -374,7 +412,7 @@ export default function EditProductImageAndCategories() {
           </div>
 
           {/* Single Unified Category Selector */}
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <Label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
                 Category <span className="text-red-500">*</span>
@@ -385,7 +423,7 @@ export default function EditProductImageAndCategories() {
               value={selectedCategoryValue}
               onValueChange={handleCategoryChange}
             >
-              <SelectTrigger className={`h-9 w-full ${errors.categoryId ? 'border-red-500' : ''}`}>
+              <SelectTrigger className={`h-10 w-full rounded-xl text-sm ${errors.categoryId ? 'border-red-500' : ''}`}>
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent className="max-h-72">
@@ -403,40 +441,6 @@ export default function EditProductImageAndCategories() {
             {errors.categoryId && (
               <p className="text-xs text-red-500">Category is required</p>
             )}
-          </div>
-
-          {/* Product Tags Checklist */}
-          <div className="flex flex-wrap gap-6 pt-2">
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="edit-customer-favorites" 
-                checked={baseProduct.isCustomerFavorite}
-                onCheckedChange={(checked) => {
-                  updateBaseProduct({ isCustomerFavorite: !!checked });
-                }}
-              />
-              <Label 
-                htmlFor="edit-customer-favorites"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-              >
-                Customer Favorites
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="edit-new-arrivals" 
-                checked={baseProduct.isNewArrival}
-                onCheckedChange={(checked) => {
-                  updateBaseProduct({ isNewArrival: !!checked });
-                }}
-              />
-              <Label 
-                htmlFor="edit-new-arrivals"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-              >
-                New Arrivals
-              </Label>
-            </div>
           </div>
         </CardContent>
       </Card>
