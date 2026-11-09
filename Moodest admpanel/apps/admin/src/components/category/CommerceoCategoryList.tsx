@@ -857,23 +857,42 @@ export function CommerceoCategoryList() {
               </div>
             </div>
 
-            {/* Parent Category */}
+            {/* Parent Category (Optional) */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
-                Parent Category
-              </label>
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                  Parent Category <span className="text-gray-400 font-normal lowercase">(Optional)</span>
+                </label>
+                {formParent !== "none" && (
+                  <button
+                    type="button"
+                    onClick={() => setFormParent("none")}
+                    className="text-[11px] text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 font-medium"
+                  >
+                    Clear (Make Top-Level)
+                  </button>
+                )}
+              </div>
               <Select value={formParent} onValueChange={setFormParent}>
                 <SelectTrigger className="w-full h-10 rounded-xl text-sm bg-white dark:bg-[#181818] border-gray-200 dark:border-white/10">
-                  <SelectValue placeholder="Select Category" />
+                  <SelectValue placeholder="None (Independent Top-Level Category)" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">None (Top Level Category)</SelectItem>
-                  <SelectItem value="everyday-abayas">Everyday Abayas</SelectItem>
-                  <SelectItem value="occasion-luxury-abayas">Occasion & Luxury Abayas</SelectItem>
-                  <SelectItem value="jilbabs-khimars">Jilbabs & Khimars</SelectItem>
-                  <SelectItem value="hijabs-stoles">Hijabs & Stoles</SelectItem>
+                  <SelectItem value="none">
+                    None (Independent Top-Level Category)
+                  </SelectItem>
+                  {categories
+                    .filter((cat) => !editingCategory || cat.id !== editingCategory.id)
+                    .map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
+              <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                Optional: Choose a parent to create a sub-category under it, or keep &quot;None&quot; for an independent top-level category.
+              </p>
             </div>
 
             {/* Status */}

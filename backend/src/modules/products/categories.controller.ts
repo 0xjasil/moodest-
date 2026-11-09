@@ -103,22 +103,50 @@ export class CategoriesController {
     },
   ) {
     const parentId = body.parentId || body.categoryId;
-    const slug =
+    let slug =
       body.slug ||
       body.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '');
 
+    if (!slug) {
+      slug = `cat-${Date.now().toString(36)}`;
+    }
+
     if (parentId && parentId !== 'none') {
+      const parentCat = await this.prisma.category.findFirst({
+        where: {
+          OR: [{ id: parentId }, { slug: parentId }],
+        },
+      });
+
+      if (!parentCat) {
+        throw new NotFoundException(`Parent category ${parentId} not found`);
+      }
+
+      const existingSub = await this.prisma.subCategory.findUnique({
+        where: { slug },
+      });
+      if (existingSub) {
+        slug = `${slug}-${Date.now().toString(36)}`;
+      }
+
       const sub = await this.prisma.subCategory.create({
         data: {
           name: body.name,
           slug,
-          categoryId: parentId,
+          categoryId: parentCat.id,
         },
       });
       return sub;
+    }
+
+    const existingCat = await this.prisma.category.findUnique({
+      where: { slug },
+    });
+    if (existingCat) {
+      slug = `${slug}-${Date.now().toString(36)}`;
     }
 
     const category = await this.prisma.category.create({
