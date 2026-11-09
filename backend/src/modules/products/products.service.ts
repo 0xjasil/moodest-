@@ -348,12 +348,25 @@ export class ProductsService {
       sku?: string;
     }>;
   }) {
-    const slug =
+    let slug = (
       data.slug ||
       data.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '') + `-${Date.now().toString(36)}`;
+        .replace(/^-+|-+$/g, '')
+    );
+    if (!slug) {
+      slug = `prod-${Date.now().toString(36)}`;
+    }
+
+    // Check if slug already exists to prevent Unique constraint collision
+    const existingSlug = await this.prisma.product.findUnique({
+      where: { slug },
+      select: { id: true },
+    });
+    if (existingSlug) {
+      slug = `${slug}-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`;
+    }
 
     const createdId = await this.prisma.$transaction(async (tx) => {
       const product = await tx.product.create({
@@ -386,7 +399,16 @@ export class ProductsService {
       if (data.variants && data.variants.length > 0) {
         for (const [idx, v] of data.variants.entries()) {
           const skuSalt = Math.random().toString(36).substring(2, 7).toUpperCase();
-          const sku = v.sku || `${slug.slice(0, 10).toUpperCase()}-${v.size}-${v.color}-${idx + 1}-${skuSalt}`;
+          let sku = v.sku || `${slug.slice(0, 10).toUpperCase()}-${v.size}-${v.color}-${idx + 1}-${skuSalt}`;
+          
+          const existingVariant = await tx.productVariant.findUnique({
+            where: { sku },
+            select: { id: true },
+          });
+          if (existingVariant) {
+            sku = `${sku}-${skuSalt}`;
+          }
+
           await tx.productVariant.create({
             data: {
               productId: product.id,
@@ -462,9 +484,14 @@ export class ProductsService {
     const product = await this.prisma.product.findUnique({ where: { id: productId } });
     if (!product) throw new NotFoundException(`Product ${productId} not found`);
 
-    const sku =
+    let sku =
       data.sku ||
       `${product.slug.slice(0, 10).toUpperCase()}-${data.size}-${data.color}-${Date.now().toString(36)}`;
+
+    const existingSku = await this.prisma.productVariant.findUnique({ where: { sku } });
+    if (existingSku) {
+      sku = `${sku}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+    }
 
     return this.prisma.productVariant.create({
       data: {

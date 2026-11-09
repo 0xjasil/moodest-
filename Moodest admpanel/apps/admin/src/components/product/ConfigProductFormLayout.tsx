@@ -174,12 +174,14 @@ function ProductFormContent({}: ProductFormContentProps) {
       }
 
       // 7. Format Clean Decimal Serialized Product Payload
-      const slug =
+      const baseSlug =
         baseProduct.name
           .toLowerCase()
           .trim()
           .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-|-$/g, "") || `prod-${Date.now()}`;
+          .replace(/^-|-$/g, "") || "abaya";
+      const uniqueSuffix = Math.random().toString(36).substring(2, 7);
+      const slug = `${baseSlug}-${uniqueSuffix}`;
 
       // Calculate lowest price for basePrice fallback if needed
       const minPrice = Math.min(...variants.map((v) => Number(v.price) || 0));
