@@ -52,18 +52,8 @@ function ProductFormContent({}: ProductFormContentProps) {
         return;
       }
 
-      if (!baseProduct.subCategoryId) {
-        toast.error("Sub-category is required");
-        return;
-      }
-
       if (!baseProduct.mainImage) {
-        toast.error("Main product image is required");
-        return;
-      }
-
-      if (baseProduct.thumbnails.length === 0) {
-        toast.error("At least one thumbnail is required");
+        toast.error("Thumbnail 1: Primary image is required");
         return;
       }
 
@@ -137,38 +127,50 @@ function ProductFormContent({}: ProductFormContentProps) {
         }
       }
 
-      // 6. Upload Main Image and Thumbnails to Cloudinary CDN
+      // 6. Upload Primary Thumbnail, Hover Thumbnail, and Gallery Images to Cloudinary CDN
       let mainImageUrl = "";
       const rawMain: any = baseProduct.mainImage;
       if (rawMain instanceof File) {
-        toast.loading("Uploading main product image to Cloudinary...", { id: "product-save" });
+        toast.loading("Uploading primary thumbnail to Cloudinary...", { id: "product-save" });
         mainImageUrl = await uploadToCloudinary(rawMain, "moodest/products/main");
       } else if (typeof rawMain === "string" && rawMain.startsWith("data:")) {
-        toast.loading("Uploading main product image to Cloudinary...", { id: "product-save" });
+        toast.loading("Uploading primary thumbnail to Cloudinary...", { id: "product-save" });
         mainImageUrl = await uploadToCloudinary(rawMain, "moodest/products/main");
       } else if (typeof rawMain === "string") {
         mainImageUrl = rawMain;
       }
 
-      const uploadedThumbnailUrls: string[] = [];
+      let hoverImageUrl = "";
+      const rawHover: any = baseProduct.hoverImage;
+      if (rawHover instanceof File) {
+        toast.loading("Uploading hover thumbnail to Cloudinary...", { id: "product-save" });
+        hoverImageUrl = await uploadToCloudinary(rawHover, "moodest/products/thumbnails");
+      } else if (typeof rawHover === "string" && rawHover.startsWith("data:")) {
+        toast.loading("Uploading hover thumbnail to Cloudinary...", { id: "product-save" });
+        hoverImageUrl = await uploadToCloudinary(rawHover, "moodest/products/thumbnails");
+      } else if (typeof rawHover === "string") {
+        hoverImageUrl = rawHover;
+      }
+
+      const uploadedGalleryUrls: string[] = [];
       for (let i = 0; i < baseProduct.thumbnails.length; i++) {
         const thumb: any = baseProduct.thumbnails[i];
         if (thumb instanceof File) {
-          toast.loading(`Uploading thumbnail ${i + 1}/${baseProduct.thumbnails.length} to Cloudinary...`, { id: "product-save" });
+          toast.loading(`Uploading gallery image ${i + 1}/${baseProduct.thumbnails.length} to Cloudinary...`, { id: "product-save" });
           const thumbUrl = await uploadToCloudinary(thumb, "moodest/products/thumbnails");
-          uploadedThumbnailUrls.push(thumbUrl);
+          uploadedGalleryUrls.push(thumbUrl);
         } else if (typeof thumb === "string" && thumb.startsWith("data:")) {
-          toast.loading(`Uploading thumbnail ${i + 1}/${baseProduct.thumbnails.length} to Cloudinary...`, { id: "product-save" });
+          toast.loading(`Uploading gallery image ${i + 1}/${baseProduct.thumbnails.length} to Cloudinary...`, { id: "product-save" });
           const thumbUrl = await uploadToCloudinary(thumb, "moodest/products/thumbnails");
-          uploadedThumbnailUrls.push(thumbUrl);
+          uploadedGalleryUrls.push(thumbUrl);
         } else if (typeof thumb === "string") {
-          uploadedThumbnailUrls.push(thumb);
+          uploadedGalleryUrls.push(thumb);
         }
       }
 
       toast.loading("Publishing product to database...", { id: "product-save" });
 
-      const allImages = [mainImageUrl, ...uploadedThumbnailUrls].filter(Boolean);
+      const allImages = [mainImageUrl, hoverImageUrl, ...uploadedGalleryUrls].filter(Boolean);
       if (allImages.length === 0) {
         allImages.push("https://res.cloudinary.com/dsaegpb70/image/upload/v1758345272/Banner_npoe1w.jpg");
       }

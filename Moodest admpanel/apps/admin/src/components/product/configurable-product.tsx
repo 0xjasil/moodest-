@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Plus, RefreshCcw, X, Image as ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import { Label } from '@/components/ui/label';
@@ -45,48 +45,62 @@ const DEFAULT_BRANDS: Brand[] = [
 const DEFAULT_CATEGORIES: Category[] = [
   {
     id: "cat-1",
-    name: "Casual Abayas",
+    name: "Everyday Abayas",
     children: [
-      { id: "sub-1", name: "Linen Daily Wear" },
-      { id: "sub-2", name: "Front Open Abayas" },
-      { id: "sub-3", name: "Kimono Style" },
+      { id: "sub-1", name: "Front Open Abayas" },
+      { id: "sub-2", name: "Pull-over Closed Abayas" },
     ],
   },
   {
     id: "cat-2",
-    name: "Occasion & Luxury",
+    name: "Hijabs & Stoles",
     children: [
-      { id: "sub-4", name: "Silk & Satin" },
-      { id: "sub-5", name: "Embroidered Luxury" },
-      { id: "sub-6", name: "Bridal Collection" },
+      { id: "sub-3", name: "Malaysian Instant Stoles" },
     ],
   },
   {
     id: "cat-3",
-    name: "Kaftans & Modest Wear",
+    name: "Occasion & Luxury Abayas",
     children: [
-      { id: "sub-7", name: "Moroccan Kaftans" },
-      { id: "sub-8", name: "Travel Kaftans" },
+      { id: "sub-4", name: "Hand-Embroidered Luxury" },
+      { id: "sub-5", name: "Bridal Velvet Abayas" },
     ],
   },
 ];
 
-const MAX_THUMBNAILS = 3;
+const MAX_GALLERY_IMAGES = 10;
 
 function ProductImageAndCategories() {
   const { baseProduct, updateBaseProduct } = useConfigurableProduct();
   const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
-  const [thumbnailPreviews, setThumbnailPreviews] = useState<string[]>([]);
+  const [hoverImagePreview, setHoverImagePreview] = useState<string | null>(null);
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
   const [categories, setCategories] = useState<Category[]>(DEFAULT_CATEGORIES);
-  const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
   const [brands, setBrands] = useState<Brand[]>(DEFAULT_BRANDS);
   const [errors, setErrors] = useState({
     mainImage: false,
-    thumbnails: false,
+    hoverImage: false,
     brandId: false,
     categoryId: false,
-    subCategoryId: false,
   });
+
+  // Keep preview in sync with baseProduct
+  useEffect(() => {
+    if (baseProduct.mainImage) {
+      if (baseProduct.mainImage instanceof File) {
+        setMainImagePreview(URL.createObjectURL(baseProduct.mainImage));
+      } else if (typeof baseProduct.mainImage === 'string') {
+        setMainImagePreview(baseProduct.mainImage);
+      }
+    }
+    if (baseProduct.hoverImage) {
+      if (baseProduct.hoverImage instanceof File) {
+        setHoverImagePreview(URL.createObjectURL(baseProduct.hoverImage));
+      } else if (typeof baseProduct.hoverImage === 'string') {
+        setHoverImagePreview(baseProduct.hoverImage);
+      }
+    }
+  }, [baseProduct.mainImage, baseProduct.hoverImage]);
 
   useEffect(() => {
     const fetchDropdownData = async () => {
@@ -120,27 +134,53 @@ function ProductImageAndCategories() {
     fetchDropdownData();
   }, []);
 
-  useEffect(() => {
-    if (!baseProduct.categoryId) {
-      setSubCategories([]);
-      return;
-    }
-    const currentCat = categories.find((c) => c.id === baseProduct.categoryId);
-    if (currentCat?.children && currentCat.children.length > 0) {
-      setSubCategories(currentCat.children);
-    } else {
-      apiFetch(`/categories/${baseProduct.categoryId}/subcategories`)
-        .then((r) => (r.ok ? r.json() : null))
-        .then((res) => {
-          const subList = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [];
-          if (subList.length > 0) {
-            setSubCategories(subList);
-          }
-        })
-        .catch(() => {});
-    }
-  }, [baseProduct.categoryId, categories]);
+  // Unified Category Options (combines parents and subcategories into 1 clean selector)
+  const categoryOptions = useMemo(() => {
+    const list: { id: string; label: string; categoryId: string; subCategoryId?: string; isParent: boolean }[] = [];
+    categories.forEach((cat) => {
+      list.push({
+        id: `cat-${cat.id}`,
+        label: cat.name,
+        categoryId: cat.id,
+        isParent: true,
+      });
+      if (cat.children && cat.children.length > 0) {
+        cat.children.forEach((sub) => {
+          list.push({
+            id: `sub-${sub.id}`,
+            label: `${cat.name} › ${sub.name}`,
+            categoryId: cat.id,
+            subCategoryId: sub.id,
+            isParent: false,
+          });
+        });
+      }
+    });
+    return list;
+  }, [categories]);
 
+  const selectedCategoryValue = useMemo(() => {
+    if (baseProduct.subCategoryId) {
+      return `sub-${baseProduct.subCategoryId}`;
+    }
+    if (baseProduct.categoryId) {
+      return `cat-${baseProduct.categoryId}`;
+    }
+    return '';
+  }, [baseProduct.categoryId, baseProduct.subCategoryId]);
+
+  const handleCategoryChange = (val: string) => {
+    const opt = categoryOptions.find((o) => o.id === val);
+    if (opt) {
+      updateBaseProduct({
+        categoryId: opt.categoryId,
+        subCategoryId: opt.subCategoryId || '',
+      });
+      setErrors((prev) => ({ ...prev, categoryId: false }));
+    }
+  };
+
+  // 1. Thumbnail 1 (Primary / Always Shown) Handlers
   const handleBrowseMain = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -151,154 +191,211 @@ function ProductImageAndCategories() {
     e.target.value = '';
   };
 
-  const handleReplaceMain = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // 2. Thumbnail 2 (Hover / Shown on Hover) Handlers
+  const handleBrowseHover = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setMainImagePreview(URL.createObjectURL(file));
-      updateBaseProduct({ mainImage: file });
-      setErrors((prev) => ({ ...prev, mainImage: false }));
+      setHoverImagePreview(URL.createObjectURL(file));
+      updateBaseProduct({ hoverImage: file });
+      setErrors((prev) => ({ ...prev, hoverImage: false }));
     }
     e.target.value = '';
   };
 
-  const handleAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // 3. Additional Gallery Images Handlers (More than 1 Option)
+  const handleAddGalleryImages = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
     if (fileList && fileList.length) {
       const newFiles = Array.from(fileList);
-      const availableSlots = MAX_THUMBNAILS - baseProduct.thumbnails.length;
+      const availableSlots = MAX_GALLERY_IMAGES - baseProduct.thumbnails.length;
 
       if (availableSlots <= 0) {
-        toast.error(`Maximum ${MAX_THUMBNAILS} thumbnails allowed`);
+        toast.error(`Maximum ${MAX_GALLERY_IMAGES} gallery images allowed`);
         e.target.value = '';
         return;
       }
 
       const filesToAdd = newFiles.slice(0, availableSlots);
       const newThumbnails = [...baseProduct.thumbnails, ...filesToAdd];
-      const newPreviews = [...thumbnailPreviews, ...filesToAdd.map((file) => URL.createObjectURL(file))];
+      const newPreviews = [...galleryPreviews, ...filesToAdd.map((file) => URL.createObjectURL(file))];
 
-      setThumbnailPreviews(newPreviews);
+      setGalleryPreviews(newPreviews);
       updateBaseProduct({ thumbnails: newThumbnails });
-      setErrors((prev) => ({ ...prev, thumbnails: false }));
 
       if (newFiles.length > availableSlots) {
-        toast.warning(`Only ${availableSlots} image(s) added. Maximum ${MAX_THUMBNAILS} allowed`);
+        toast.warning(`Only ${availableSlots} image(s) added. Maximum ${MAX_GALLERY_IMAGES} allowed`);
       }
     }
     e.target.value = '';
   };
 
-  const removeThumbnail = (idx: number) => {
+  const removeGalleryImage = (idx: number) => {
     const newThumbnails = baseProduct.thumbnails.filter((_, i) => i !== idx);
-    const newPreviews = thumbnailPreviews.filter((_, i) => i !== idx);
+    const newPreviews = galleryPreviews.filter((_, i) => i !== idx);
 
-    setThumbnailPreviews(newPreviews);
+    setGalleryPreviews(newPreviews);
     updateBaseProduct({ thumbnails: newThumbnails });
   };
 
   return (
-    <Card className="space-y-1 w-full">
-      {/* Image Upload Section */}
+    <Card className="space-y-4 w-full">
+      {/* ── 2 Thumbnail Images (Primary + Hover) ── */}
       <Card className="shadow-none border-none">
-        <CardHeader>
-          <CardTitle>Upload Product Image</CardTitle>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base font-semibold">Product Thumbnails (Dual Hover System)</CardTitle>
+          <p className="text-xs text-muted-foreground">
+            Configure both display thumbnails: one always shown, and one revealed smoothly on mouse hover.
+          </p>
         </CardHeader>
-        <CardContent className="space-y-3 pt-0">
-          {/* Main Image */}
-          <div className="space-y-1">
-            <Label className="text-sm font-semibold text-gray-700">
-              Product Image <span className="text-red-500">*</span>
-            </Label>
-            <div
-              className={`border rounded-lg p-3 bg-white relative overflow-hidden ${
-                errors.mainImage ? 'border-red-500' : 'border-gray-200'
-              }`}
-              style={{ minHeight: 200 }}
-            >
-              <div className="flex justify-center items-center h-[140px]">
-                {mainImagePreview ? (
-                  <Image
-                    src={mainImagePreview}
-                    alt="Main Product"
-                    width={500}
-                    height={500}
-                    unoptimized
-                    className="w-full h-full object-cover rounded-lg"
-                  />
-                ) : (
-                  <div className="flex flex-col items-center justify-center h-full w-full text-gray-400 gap-1">
-                    <ImageIcon size={30} />
-                    <span className="text-sm">No image</span>
-                  </div>
-                )}
+        <CardContent className="space-y-4 pt-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Thumbnail 1: Primary (Always Shown) */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <Label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                  Thumbnail 1: Primary <span className="text-red-500">*</span>
+                </Label>
+                <span className="text-[11px] text-emerald-600 font-medium">Always Shown</span>
               </div>
-              <div className="flex items-center gap-3 mt-3">
-                <label className="px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer flex items-center gap-2 text-sm">
-                  <ImageIcon size={14} />
-                  Browse
-                  <input type="file" accept="image/*" className="hidden" onChange={handleBrowseMain} />
-                </label>
-                <label className="px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-lg cursor-pointer flex items-center gap-2 text-sm">
-                  <RefreshCcw size={14} />
-                  Replace
-                  <input type="file" accept="image/*" className="hidden" onChange={handleReplaceMain} />
-                </label>
+              <div
+                className={`border rounded-xl p-3 bg-white dark:bg-[#141414] relative overflow-hidden flex flex-col justify-between ${
+                  errors.mainImage ? 'border-red-500' : 'border-gray-200 dark:border-white/10'
+                }`}
+                style={{ minHeight: 180 }}
+              >
+                <div className="flex justify-center items-center h-[110px] w-full">
+                  {mainImagePreview ? (
+                    <Image
+                      src={mainImagePreview}
+                      alt="Primary Thumbnail"
+                      width={200}
+                      height={200}
+                      unoptimized
+                      className="max-h-[110px] w-auto object-contain rounded-lg"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-1">
+                      <ImageIcon size={24} />
+                      <span className="text-xs">No primary image</span>
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100 dark:border-white/5">
+                  <label className="flex-1 text-center py-1.5 border border-gray-300 dark:border-white/15 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer text-xs font-medium transition-colors">
+                    Browse
+                    <input type="file" accept="image/*" className="hidden" onChange={handleBrowseMain} />
+                  </label>
+                  {mainImagePreview && (
+                    <label className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/15 rounded-lg cursor-pointer text-xs font-medium transition-colors">
+                      <RefreshCcw size={12} />
+                      <input type="file" accept="image/*" className="hidden" onChange={handleBrowseMain} />
+                    </label>
+                  )}
+                </div>
               </div>
-              {errors.mainImage && <p className="text-xs text-red-500 mt-1">Main image is required</p>}
+              {errors.mainImage && <p className="text-xs text-red-500">Primary thumbnail is required</p>}
+            </div>
+
+            {/* Thumbnail 2: Hover (Shown on Hover) */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <Label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                  Thumbnail 2: Hover View <span className="text-gray-400 font-normal lowercase">(Optional)</span>
+                </Label>
+                <span className="text-[11px] text-indigo-600 font-medium">Revealed on Hover</span>
+              </div>
+              <div
+                className="border border-gray-200 dark:border-white/10 rounded-xl p-3 bg-white dark:bg-[#141414] relative overflow-hidden flex flex-col justify-between"
+                style={{ minHeight: 180 }}
+              >
+                <div className="flex justify-center items-center h-[110px] w-full">
+                  {hoverImagePreview ? (
+                    <Image
+                      src={hoverImagePreview}
+                      alt="Hover Thumbnail"
+                      width={200}
+                      height={200}
+                      unoptimized
+                      className="max-h-[110px] w-auto object-contain rounded-lg"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-1">
+                      <ImageIcon size={24} />
+                      <span className="text-xs">No hover image</span>
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100 dark:border-white/5">
+                  <label className="flex-1 text-center py-1.5 border border-gray-300 dark:border-white/15 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer text-xs font-medium transition-colors">
+                    Browse
+                    <input type="file" accept="image/*" className="hidden" onChange={handleBrowseHover} />
+                  </label>
+                  {hoverImagePreview && (
+                    <label className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/15 rounded-lg cursor-pointer text-xs font-medium transition-colors">
+                      <RefreshCcw size={12} />
+                      <input type="file" accept="image/*" className="hidden" onChange={handleBrowseHover} />
+                    </label>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Thumbnails */}
-          <div className="space-y-1">
-            <Label className="text-sm font-semibold text-gray-700">
-              Thumbnails ({baseProduct.thumbnails.length}/{MAX_THUMBNAILS}) <span className="text-red-500">*</span>
-            </Label>
-            <div className="flex items-center gap-3">
-              {thumbnailPreviews.map((preview, idx) => (
+          {/* ── Product Gallery Images (Upload More Than 1 Option) ── */}
+          <div className="space-y-2 pt-2 border-t border-gray-100 dark:border-white/5">
+            <div className="flex items-center justify-between">
+              <Label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                Product Gallery Images ({baseProduct.thumbnails.length}/{MAX_GALLERY_IMAGES})
+              </Label>
+              <span className="text-[11px] text-gray-400">Multiple image uploads allowed</span>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              {galleryPreviews.map((preview, idx) => (
                 <div
-                  className="relative w-16 h-16 border rounded-md overflow-hidden bg-gray-50 flex items-center justify-center"
+                  className="relative size-18 border border-gray-200 dark:border-white/10 rounded-xl overflow-hidden bg-gray-50 dark:bg-white/5 flex items-center justify-center shadow-xs"
                   key={idx}
                 >
                   <Image
                     src={preview}
-                    alt={`Product ${idx + 1}`}
-                    width={64}
-                    height={64}
+                    alt={`Gallery ${idx + 1}`}
+                    width={72}
+                    height={72}
                     unoptimized
-                    className="w-full h-full object-cover rounded"
+                    className="size-full object-cover rounded-xl"
                   />
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute top-0.5 right-0.5 h-4 w-4 p-0.5 bg-white/70 hover:bg-white z-10"
-                    onClick={() => removeThumbnail(idx)}
+                    className="absolute top-1 right-1 size-5 p-0.5 bg-white/80 dark:bg-black/80 hover:bg-white rounded-full z-10"
+                    onClick={() => removeGalleryImage(idx)}
                   >
-                    <X size={10} className="text-gray-600" />
+                    <X size={12} className="text-gray-700 dark:text-gray-200" />
                   </Button>
                 </div>
               ))}
-              {baseProduct.thumbnails.length < MAX_THUMBNAILS && (
-                <label className="w-16 h-16 border-2 border-dashed rounded-md flex flex-col items-center justify-center cursor-pointer bg-gray-50 hover:bg-gray-100 text-center">
-                  <Plus size={18} className="text-green-600" />
-                  <span className="text-xs text-gray-500">Add</span>
-                  <input type="file" accept="image/*" multiple className="hidden" onChange={handleAddImage} />
+
+              {baseProduct.thumbnails.length < MAX_GALLERY_IMAGES && (
+                <label className="size-18 border-2 border-dashed border-gray-300 dark:border-white/20 rounded-xl flex flex-col items-center justify-center cursor-pointer bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors text-center">
+                  <Plus size={18} className="text-indigo-600 dark:text-indigo-400" />
+                  <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 mt-0.5">+ Add Image</span>
+                  <input type="file" accept="image/*" multiple className="hidden" onChange={handleAddGalleryImages} />
                 </label>
               )}
             </div>
-            {errors.thumbnails && <p className="text-xs text-red-500">At least one thumbnail is required</p>}
           </div>
         </CardContent>
       </Card>
 
-      {/* Product Info */}
+      {/* ── Product Info & Single Category ── */}
       <Card className="shadow-none border-none">
-        <CardHeader className="py-4">
-          <CardTitle>Product Information</CardTitle>
+        <CardHeader className="py-2">
+          <CardTitle className="text-base font-semibold">Classification & Tags</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 pt-0">
+        <CardContent className="space-y-4 pt-1">
           {/* Brand */}
-          <div className="space-y-1">
-            <Label>
+          <div className="space-y-1.5">
+            <Label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
               Brand <span className="text-red-500">*</span>
             </Label>
             <Select
@@ -308,7 +405,7 @@ function ProductImageAndCategories() {
                 setErrors((prev) => ({ ...prev, brandId: false }));
               }}
             >
-              <SelectTrigger className={`h-9 w-full ${errors.brandId ? 'border-red-500' : ''}`}>
+              <SelectTrigger className={`h-10 w-full rounded-xl text-sm ${errors.brandId ? 'border-red-500' : ''}`}>
                 <SelectValue placeholder="Select brand" />
               </SelectTrigger>
               <SelectContent>
@@ -322,61 +419,37 @@ function ProductImageAndCategories() {
             {errors.brandId && <p className="text-xs text-red-500">Brand is required</p>}
           </div>
 
-          {/* Category / SubCategory */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <Label>
-                Main Category <span className="text-red-500">*</span>
+          {/* ── SINGLE UNIFIED CATEGORY SELECTOR ── */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <Label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                Category <span className="text-red-500">*</span>
               </Label>
-              <Select
-                value={baseProduct.categoryId}
-                onValueChange={(value) => {
-                  updateBaseProduct({ categoryId: value, subCategoryId: '' });
-                  setErrors((prev) => ({ ...prev, categoryId: false }));
-                }}
-              >
-                <SelectTrigger className={`h-9 w-full ${errors.categoryId ? 'border-red-500' : ''}`}>
-                  <SelectValue placeholder="Select main category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.categoryId && <p className="text-xs text-red-500">Category is required</p>}
+              <span className="text-[11px] text-muted-foreground">Select main or subcategory</span>
             </div>
-
-            <div className="space-y-1">
-              <Label>
-                Sub Category <span className="text-red-500">*</span>
-              </Label>
-              <Select
-                value={baseProduct.subCategoryId}
-                onValueChange={(value) => {
-                  updateBaseProduct({ subCategoryId: value });
-                  setErrors((prev) => ({ ...prev, subCategoryId: false }));
-                }}
-                disabled={!baseProduct.categoryId}
-              >
-                <SelectTrigger className={`h-9 w-full ${errors.subCategoryId ? 'border-red-500' : ''}`}>
-                  <SelectValue placeholder="Select sub category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {subCategories.map((subCategory) => (
-                    <SelectItem key={subCategory.id} value={subCategory.id}>
-                      {subCategory.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.subCategoryId && <p className="text-xs text-red-500">Sub category is required</p>}
-            </div>
+            <Select
+              value={selectedCategoryValue}
+              onValueChange={handleCategoryChange}
+            >
+              <SelectTrigger className={`h-10 w-full rounded-xl text-sm ${errors.categoryId ? 'border-red-500' : ''}`}>
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent className="max-h-72">
+                {categoryOptions.map((opt) => (
+                  <SelectItem
+                    key={opt.id}
+                    value={opt.id}
+                    className={opt.isParent ? "font-semibold text-gray-900 dark:text-gray-100" : "pl-6 text-sm text-gray-600 dark:text-gray-300"}
+                  >
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {errors.categoryId && <p className="text-xs text-red-500">Category is required</p>}
           </div>
 
-          {/* Product Tags Checklist */}
+          {/* Product Flags */}
           <div className="flex flex-wrap gap-6 pt-2">
             <div className="flex items-center space-x-2">
               <Checkbox 
@@ -388,7 +461,7 @@ function ProductImageAndCategories() {
               />
               <Label 
                 htmlFor="customer-favorites"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                className="text-xs font-medium leading-none cursor-pointer text-gray-700 dark:text-gray-300"
               >
                 Customer Favorites
               </Label>
@@ -403,7 +476,7 @@ function ProductImageAndCategories() {
               />
               <Label 
                 htmlFor="new-arrivals"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                className="text-xs font-medium leading-none cursor-pointer text-gray-700 dark:text-gray-300"
               >
                 New Arrivals
               </Label>

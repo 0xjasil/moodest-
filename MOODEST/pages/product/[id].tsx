@@ -18,7 +18,8 @@ export default function ProductDetail() {
   const [qty, setQty] = useState(1);
   const [flash, setFlash] = useState(false);
   const [liveProduct, setLiveProduct] = useState<Product | null>(null);
-  const [selectedVariantId, setSelectedVariantId] = useState<number | undefined>(undefined);
+  const [selectedVariantId, setSelectedVariantId] = useState<any>(undefined);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
@@ -133,23 +134,53 @@ export default function ProductDetail() {
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-[460px_1fr]">
 
-            {/* ── Image ───────────────────────────────────── */}
-            <div className="bg-mb-surface rounded-[6px] md:rounded-[8px] border border-mb-border shadow-card p-8 flex items-center justify-center aspect-square md:aspect-auto md:min-h-[440px]">
-              <img
-                src={product.image}
-                alt={product.name}
-                width={440}
-                height={440}
-                loading="eager"
-                fetchPriority="high"
-                onError={(e) => {
-                  const target = e.currentTarget;
-                  if (!target.src.includes("/abaya/products/abaya-1.jpg")) {
-                    target.src = "/abaya/products/abaya-1.jpg";
-                  }
-                }}
-                className="max-h-[400px] w-auto object-contain transition-transform duration-500 hover:scale-105"
-              />
+            {/* ── Image & Gallery ───────────────────────────── */}
+            <div className="flex flex-col gap-3">
+              <div className="bg-mb-surface rounded-[6px] md:rounded-[8px] border border-mb-border shadow-card p-8 flex items-center justify-center aspect-square md:aspect-auto md:min-h-[440px]">
+                <img
+                  src={selectedImage || product.image}
+                  alt={product.name}
+                  width={440}
+                  height={440}
+                  loading="eager"
+                  fetchPriority="high"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (!target.src.includes("/abaya/products/abaya-1.jpg")) {
+                      target.src = "/abaya/products/abaya-1.jpg";
+                    }
+                  }}
+                  className="max-h-[400px] w-auto object-contain transition-transform duration-500 hover:scale-105"
+                />
+              </div>
+
+              {/* Gallery Thumbnails (Thumbnail 1, Thumbnail 2, and Gallery Views) */}
+              {product.images && product.images.length > 1 && (
+                <div className="flex items-center gap-2 overflow-x-auto pb-1" role="tablist" aria-label="Product image gallery">
+                  {product.images.map((imgUrl, idx) => {
+                    const isSelected = (selectedImage || product.image) === imgUrl;
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setSelectedImage(imgUrl)}
+                        aria-label={`View photo ${idx + 1}`}
+                        className={`size-16 rounded-md border p-1 shrink-0 overflow-hidden bg-mb-surface transition-all ${
+                          isSelected
+                            ? "border-mb-primary ring-2 ring-mb-primary/30"
+                            : "border-mb-border hover:border-mb-accent opacity-80 hover:opacity-100"
+                        }`}
+                      >
+                        <img
+                          src={imgUrl}
+                          alt={`${product.name} thumbnail ${idx + 1}`}
+                          className="size-full object-contain"
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* ── Details ─────────────────────────────────── */}
@@ -188,22 +219,30 @@ export default function ProductDetail() {
                   </span>
                 </div>
 
-                {/* Price */}
-                <div className="flex items-baseline gap-3 border-t border-mb-border-lite pt-4 mb-4">
-                  <span className="text-3xl font-bold text-mb-text">
-                    ₹{product.price.toLocaleString()}
-                  </span>
-                  {product.originalPrice && (
-                    <span className="text-sm text-mb-muted line-through">
-                      ₹{product.originalPrice.toLocaleString()}
-                    </span>
-                  )}
-                  {product.discount && (
-                    <span className="text-sm font-bold text-mb-accent-deep">
-                      {product.discount}% Off
-                    </span>
-                  )}
-                </div>
+                {/* Variation-Aware Price */}
+                {(() => {
+                  const activeVariant = product.variants?.find((v: any) => String(v.id) === String(selectedVariantId));
+                  const displayPrice = activeVariant?.offerPrice ?? activeVariant?.price ?? product.price;
+                  const displayOriginalPrice = activeVariant?.offerPrice ? activeVariant.price : product.originalPrice;
+
+                  return (
+                    <div className="flex items-baseline gap-3 border-t border-mb-border-lite pt-4 mb-4">
+                      <span className="text-3xl font-bold text-mb-text">
+                        ₹{Number(displayPrice).toLocaleString()}
+                      </span>
+                      {displayOriginalPrice && (
+                        <span className="text-sm text-mb-muted line-through">
+                          ₹{Number(displayOriginalPrice).toLocaleString()}
+                        </span>
+                      )}
+                      {product.discount && (
+                        <span className="text-sm font-bold text-mb-accent-deep">
+                          {product.discount}% Off
+                        </span>
+                      )}
+                    </div>
+                  );
+                })()}
 
                 {/* Variants Selection (if variants exist) */}
                 {product.variants && product.variants.length > 1 && (

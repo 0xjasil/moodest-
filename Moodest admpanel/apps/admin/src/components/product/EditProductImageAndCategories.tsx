@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Plus, RefreshCcw, X, Image as ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import { Label } from '@/components/ui/label';
@@ -124,6 +124,52 @@ export default function EditProductImageAndCategories() {
         .catch(() => {});
     }
   }, [baseProduct.categoryId, categories]);
+
+  // Unified Category Options
+  const categoryOptions = useMemo(() => {
+    const list: { id: string; label: string; categoryId: string; subCategoryId?: string; isParent: boolean }[] = [];
+    categories.forEach((cat) => {
+      list.push({
+        id: `cat-${cat.id}`,
+        label: cat.name,
+        categoryId: cat.id,
+        isParent: true,
+      });
+      if (cat.children && cat.children.length > 0) {
+        cat.children.forEach((sub) => {
+          list.push({
+            id: `sub-${sub.id}`,
+            label: `${cat.name} › ${sub.name}`,
+            categoryId: cat.id,
+            subCategoryId: sub.id,
+            isParent: false,
+          });
+        });
+      }
+    });
+    return list;
+  }, [categories]);
+
+  const selectedCategoryValue = useMemo(() => {
+    if (baseProduct.subCategoryId) {
+      return `sub-${baseProduct.subCategoryId}`;
+    }
+    if (baseProduct.categoryId) {
+      return `cat-${baseProduct.categoryId}`;
+    }
+    return '';
+  }, [baseProduct.categoryId, baseProduct.subCategoryId]);
+
+  const handleCategoryChange = (val: string) => {
+    const opt = categoryOptions.find((o) => o.id === val);
+    if (opt) {
+      updateBaseProduct({
+        categoryId: opt.categoryId,
+        subCategoryId: opt.subCategoryId || '',
+      });
+      setErrors((prev) => ({ ...prev, categoryId: false }));
+    }
+  };
 
   // Handle main image browse
   const handleBrowseMain = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -327,62 +373,36 @@ export default function EditProductImageAndCategories() {
             {errors.brandId && <p className="text-xs text-red-500">Brand is required</p>}
           </div>
 
-          {/* Category / SubCategory */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <Label>
-                Main Category <span className="text-red-500">*</span>
+          {/* Single Unified Category Selector */}
+          <div className="space-y-1">
+            <div className="flex items-center justify-between">
+              <Label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                Category <span className="text-red-500">*</span>
               </Label>
-              <Select
-                value={baseProduct.categoryId}
-                onValueChange={(value) => {
-                  updateBaseProduct({ categoryId: value, subCategoryId: '' });
-                  setErrors((prev) => ({ ...prev, categoryId: false }));
-                }}
-              >
-                <SelectTrigger className={`h-9 w-full ${errors.categoryId ? 'border-red-500' : ''}`}>
-                  <SelectValue placeholder="Select main category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.categoryId && (
-                <p className="text-xs text-red-500">Category is required</p>
-              )}
+              <span className="text-[11px] text-muted-foreground">Select main or subcategory</span>
             </div>
-
-            <div className="space-y-1">
-              <Label>
-                Sub Category <span className="text-red-500">*</span>
-              </Label>
-              <Select
-                value={baseProduct.subCategoryId}
-                onValueChange={(value) => {
-                  updateBaseProduct({ subCategoryId: value });
-                  setErrors((prev) => ({ ...prev, subCategoryId: false }));
-                }}
-                disabled={!baseProduct.categoryId}
-              >
-                <SelectTrigger className={`h-9 w-full ${errors.subCategoryId ? 'border-red-500' : ''}`}>
-                  <SelectValue placeholder="Select sub category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {subCategories.map((subCategory) => (
-                    <SelectItem key={subCategory.id} value={subCategory.id}>
-                      {subCategory.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.subCategoryId && (
-                <p className="text-xs text-red-500">Sub category is required</p>
-              )}
-            </div>
+            <Select
+              value={selectedCategoryValue}
+              onValueChange={handleCategoryChange}
+            >
+              <SelectTrigger className={`h-9 w-full ${errors.categoryId ? 'border-red-500' : ''}`}>
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent className="max-h-72">
+                {categoryOptions.map((opt) => (
+                  <SelectItem
+                    key={opt.id}
+                    value={opt.id}
+                    className={opt.isParent ? "font-semibold text-gray-900 dark:text-gray-100" : "pl-6 text-sm text-gray-600 dark:text-gray-300"}
+                  >
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {errors.categoryId && (
+              <p className="text-xs text-red-500">Category is required</p>
+            )}
           </div>
 
           {/* Product Tags Checklist */}

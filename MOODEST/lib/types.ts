@@ -51,6 +51,8 @@ export interface Variant {
   color: string;
   stock: number;
   sku: string;
+  price?: number;
+  offerPrice?: number | null;
   product?: Product;
 }
 

@@ -5,11 +5,12 @@ export interface BaseProductData {
   description: string;
   fabric?: string;
   careInstructions?: string;
-  mainImage: File | null;
+  mainImage: File | string | null;
+  hoverImage?: File | string | null;
   basePrice: number;
   baseQuantity: number;
   baseDiscountPrice: number;
-  thumbnails: File[];
+  thumbnails: (File | string)[];
   brandId: string | null;
   categoryId: string;
   subCategoryId: string;
@@ -62,6 +63,7 @@ export function ConfigurableProductProvider({
     name: "",
     description: "",
     mainImage: null,
+    hoverImage: null,
     basePrice: 0,
     baseQuantity: 0,
     baseDiscountPrice: 0,
@@ -92,6 +94,7 @@ export function ConfigurableProductProvider({
       name: "",
       description: "",
       mainImage: null,
+      hoverImage: null,
       basePrice: 0,
       baseQuantity: 0,
       baseDiscountPrice: 0,
