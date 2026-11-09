@@ -118,7 +118,7 @@ export default function DiscoverCategories() {
             Shop by Category
           </h2>
           <p className="text-xs sm:text-sm text-mb-muted mt-0.5">
-            Signature Silhouettes — Syrian Collection, The Classics, Luxe Edit &amp; Occasion Wear
+            Signature Silhouettes Syrian Collection, The Classics, Luxe Edit &amp; Occasion Wear
           </p>
         </div>
         <div className="flex items-center gap-3">
