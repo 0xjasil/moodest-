@@ -13,7 +13,6 @@ import {
   Home,
   ChevronRight,
   ChevronLeft,
-  X,
   Upload,
   Check,
   Loader2,
@@ -40,7 +39,6 @@ import {
   SheetHeader,
   SheetTitle,
   SheetDescription,
-  SheetClose,
 } from "@/components/ui/sheet";
 import {
   AlertDialog,
@@ -702,7 +700,7 @@ export function CommerceoCategoryList() {
           className="w-full sm:max-w-md p-0 flex flex-col gap-0 bg-white dark:bg-[#141414] border-l border-gray-200 dark:border-white/10"
         >
           {/* Drawer Header */}
-          <SheetHeader className="p-5 border-b border-gray-200/80 dark:border-white/10 flex flex-row items-center justify-between space-y-0">
+          <SheetHeader className="p-5 border-b border-gray-200/80 dark:border-white/10 pr-12">
             <div>
               <SheetTitle className="text-base font-bold text-gray-900 dark:text-white">
                 {editingCategory ? "Edit Category" : "Add Category"}
@@ -713,16 +711,6 @@ export function CommerceoCategoryList() {
                   : "Create a new product category in your catalog"}
               </SheetDescription>
             </div>
-            <SheetClose asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="size-8 rounded-lg text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white border-gray-200 dark:border-white/10"
-              >
-                <X className="size-4" />
-                <span className="sr-only">Close</span>
-              </Button>
-            </SheetClose>
           </SheetHeader>
 
           {/* Form Body */}
