@@ -53,6 +53,9 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
           if (mapped.variantId) {
             setSelectedVariantId(mapped.variantId);
           }
+          if (mapped.image) {
+            setSelectedImage(mapped.image);
+          }
         }
       } catch {
         // Fallback to local item
@@ -158,43 +161,49 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                   height={440}
                   loading="eager"
                   fetchPriority="high"
-                  onError={(e) => {
-                    const target = e.currentTarget;
-                    if (!target.src.includes("/abaya/products/abaya-1.jpg")) {
-                      target.src = "/abaya/products/abaya-1.jpg";
-                    }
-                  }}
                   className="max-h-[400px] w-auto object-contain transition-transform duration-500 hover:scale-105"
                 />
               </div>
 
-              {/* Gallery Thumbnails (Thumbnail 1, Thumbnail 2, and Gallery Views) */}
-              {product.images && product.images.length > 1 && (
-                <div className="flex items-center gap-2 overflow-x-auto pb-1" role="tablist" aria-label="Product image gallery">
-                  {product.images.map((imgUrl, idx) => {
-                    const isSelected = (selectedImage || product.image) === imgUrl;
-                    return (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => setSelectedImage(imgUrl)}
-                        aria-label={`View photo ${idx + 1}`}
-                        className={`size-16 rounded-md border p-1 shrink-0 overflow-hidden bg-mb-surface transition-all ${
-                          isSelected
-                            ? "border-mb-primary ring-2 ring-mb-primary/30"
-                            : "border-mb-border hover:border-mb-accent opacity-80 hover:opacity-100"
-                        }`}
-                      >
-                        <img
-                          src={imgUrl}
-                          alt={`${product.name} thumbnail ${idx + 1}`}
-                          className="size-full object-contain"
-                        />
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
+              {/* Gallery Thumbnails (De-duplicated valid photos) */}
+              {(() => {
+                const uniqueImages = Array.from(
+                  new Set(
+                    [product.image, ...(product.images || [])].filter(
+                      (url): url is string => Boolean(url && typeof url === "string" && !url.includes("placeholder.png"))
+                    )
+                  )
+                );
+
+                if (uniqueImages.length <= 1) return null;
+
+                return (
+                  <div className="flex items-center gap-2 overflow-x-auto pb-1" role="tablist" aria-label="Product image gallery">
+                    {uniqueImages.map((imgUrl, idx) => {
+                      const isSelected = (selectedImage || product.image) === imgUrl;
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setSelectedImage(imgUrl)}
+                          aria-label={`View photo ${idx + 1}`}
+                          className={`size-16 rounded-md border p-1 shrink-0 overflow-hidden bg-mb-surface transition-all ${
+                            isSelected
+                              ? "border-mb-primary ring-2 ring-mb-primary/30"
+                              : "border-mb-border hover:border-mb-accent opacity-80 hover:opacity-100"
+                          }`}
+                        >
+                          <img
+                            src={imgUrl}
+                            alt={`${product.name} thumbnail ${idx + 1}`}
+                            className="size-full object-contain"
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
             </div>
 
             {/* ── Details ─────────────────────────────────── */}
@@ -258,32 +267,60 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                   );
                 })()}
 
-                {/* Variants Selection (if variants exist) */}
-                {product.variants && product.variants.length > 1 && (
-                  <div className="mb-4">
-                    <span className="text-xs font-semibold text-mb-body uppercase tracking-wider block mb-2">
-                      Options:
-                    </span>
+                {/* Variants Selection (Size & Color options) */}
+                {product.variants && product.variants.length > 0 && (
+                  <div className="mb-5 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-mb-body uppercase tracking-wider block">
+                        Select Variation / Size:
+                      </span>
+                      {(() => {
+                        const activeVariant = product.variants?.find((v: any) => String(v.id) === String(selectedVariantId));
+                        return activeVariant ? (
+                          <span className="text-xs text-mb-muted">
+                            Selected:{" "}
+                            <strong className="text-mb-text font-semibold">
+                              {[activeVariant.size ? `Size ${activeVariant.size}` : null, activeVariant.color].filter(Boolean).join(" • ") || "Default"}
+                            </strong>
+                          </span>
+                        ) : null;
+                      })()}
+                    </div>
                     <div className="flex flex-wrap gap-2">
-                      {product.variants.map((v) => (
-                        <button
-                          key={v.id}
-                          type="button"
-                          onClick={() => {
-                            setSelectedVariantId(v.id);
-                            if (v.image) {
-                              setSelectedImage(v.image);
-                            }
-                          }}
-                          className={`px-3 py-1.5 text-xs font-medium rounded-md border transition-all ${
-                            selectedVariantId === v.id
-                              ? "border-mb-primary bg-mb-primary text-white"
-                              : "border-mb-border bg-mb-bg text-mb-text hover:border-mb-accent"
-                          }`}
-                        >
-                          {v.size || v.color || `Option ${v.id}`}
-                        </button>
-                      ))}
+                      {product.variants.map((v) => {
+                        const isSelected = String(selectedVariantId) === String(v.id);
+                        const label = [v.size ? `Size ${v.size}` : null, v.color].filter(Boolean).join(" • ") || `Option ${v.id}`;
+                        return (
+                          <button
+                            key={v.id}
+                            type="button"
+                            onClick={() => {
+                              setSelectedVariantId(v.id);
+                              if (v.image) {
+                                setSelectedImage(v.image);
+                              }
+                            }}
+                            className={`flex items-center gap-2 px-3.5 py-2 text-xs font-medium rounded-lg border transition-all ${
+                              isSelected
+                                ? "border-[#5C1A24] bg-[#5C1A24] text-white shadow-sm ring-1 ring-[#5C1A24]"
+                                : "border-mb-border bg-white hover:border-[#5C1A24]/60 text-mb-text hover:bg-[#5C1A24]/5"
+                            }`}
+                          >
+                            {v.colorHex && (
+                              <span
+                                className="size-3 rounded-full border border-black/20 shrink-0"
+                                style={{ backgroundColor: v.colorHex }}
+                              />
+                            )}
+                            <span>{label}</span>
+                            {v.offerPrice && v.price && Number(v.offerPrice) < Number(v.price) && (
+                              <span className={`text-[10px] ${isSelected ? "text-amber-200" : "text-emerald-600 font-semibold"}`}>
+                                ₹{Number(v.offerPrice).toLocaleString()}
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -292,9 +329,9 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                 <p className="text-sm sm:text-base text-mb-body leading-relaxed mb-6">
                   {product.description || (
                     <>
-                      Experience authentic luxury with{" "}
+                      Experience authentic elegance with{" "}
                       <strong className="text-mb-text font-semibold">{product.brand}</strong>.
-                      Formulated with rare botanical actives and couture pigments, exclusively presented by Modest Studio.
+                      Exquisitely tailored for modest luxury, comfort, and everyday sophistication.
                     </>
                   )}
                 </p>

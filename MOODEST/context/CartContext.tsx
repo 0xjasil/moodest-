@@ -191,8 +191,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 item.product.variantId ||
                 item.product.variants?.[0]?.id ||
                 Number(item.product.id);
-              if (variantId && !isNaN(variantId)) {
-                await cartAPI.addItem(variantId, item.qty).catch(() => {});
+              if (variantId && !isNaN(Number(variantId))) {
+                await cartAPI.addItem(Number(variantId), item.qty).catch(() => {});
               }
             }
           }
@@ -222,8 +222,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
           product.variantId ||
           product.variants?.[0]?.id ||
           Number(product.id);
-        if (variantId && !isNaN(variantId)) {
-          await cartAPI.addItem(variantId, 1).catch(() => {});
+        if (variantId && !isNaN(Number(variantId))) {
+          await cartAPI.addItem(Number(variantId), 1).catch(() => {});
           await refreshCart();
         }
       }

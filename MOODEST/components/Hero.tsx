@@ -38,7 +38,7 @@ export default function Hero() {
     let isMounted = true;
     async function fetchCmsBanners() {
       try {
-        const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000").replace(/\/$/, "");
+        const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "https://bkndmoodest.vercel.app").replace(/\/$/, "");
         const prefix = process.env.NEXT_PUBLIC_API_PREFIX || "/api";
         const res = await fetch(`${apiUrl}${prefix}/banners`);
         if (res.ok) {

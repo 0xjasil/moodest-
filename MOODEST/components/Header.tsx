@@ -10,9 +10,9 @@ import { useRouter } from "next/router";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
-import { products } from "@/components/ProductGrid";
 import BrandLogo from "@/components/BrandLogo";
-import { categoryAPI } from "@/lib/api";
+import { categoryAPI, productAPI, mapBackendProductToProduct } from "@/lib/api";
+import type { Product } from "@/components/ProductCard";
 
 /* ── SVG icons ────────────────────────────────────────────────── */
 const MobileIcon = () => (
@@ -61,36 +61,6 @@ export interface NavCategoryItem {
 }
 
 const DEFAULT_CATEGORY_NAV: NavCategoryItem[] = [
-  {
-    label: "Everyday Abayas",
-    href: "/category/everyday-abayas",
-    children: [
-      { label: "Front Open Abayas", href: "/category/front-open-abayas" },
-      { label: "Pull-over Closed Abayas", href: "/category/pull-over-closed-abayas" },
-    ],
-  },
-  {
-    label: "Occasion & Luxury Abayas",
-    href: "/category/occasion-luxury-abayas",
-    children: [
-      { label: "Hand-Embroidered Luxury", href: "/category/hand-embroidered-luxury" },
-      { label: "Bridal Velvet Abayas", href: "/category/bridal-velvet-abayas" },
-    ],
-  },
-  {
-    label: "Jilbabs & Khimars",
-    href: "/category/jilbabs-khimars",
-    children: [
-      { label: "French Khimars", href: "/category/french-khimars" },
-    ],
-  },
-  {
-    label: "Hijabs & Stoles",
-    href: "/category/hijabs-stoles",
-    children: [
-      { label: "Malaysian Instant Stoles", href: "/category/malaysian-instant-stoles" },
-    ],
-  },
   {
     label: "All Collections",
     href: "/category/all",
@@ -180,15 +150,28 @@ export default function Header() {
     };
   }, []);
 
-  // Search results
-  const searchResults = React.useMemo(() => {
-    const q = searchVal.trim().toLowerCase();
-    if (!q) return [];
-    return products.filter(p =>
-      p.name.toLowerCase().includes(q) ||
-      p.brand.toLowerCase().includes(q) ||
-      p.category.toLowerCase().includes(q)
-    ).slice(0, 6);
+  // Live search results from backend API
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const q = searchVal.trim();
+    if (!q) {
+      setSearchResults([]);
+      return;
+    }
+    let isSubscribed = true;
+    const timer = setTimeout(async () => {
+      try {
+        const res = await productAPI.getAll({ search: q, limit: 6 });
+        if (isSubscribed && Array.isArray(res?.items)) {
+          setSearchResults(res.items.map(mapBackendProductToProduct));
+        }
+      } catch {}
+    }, 250);
+    return () => {
+      isSubscribed = false;
+      clearTimeout(timer);
+    };
   }, [searchVal]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {

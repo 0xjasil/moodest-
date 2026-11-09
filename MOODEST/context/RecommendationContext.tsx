@@ -143,7 +143,7 @@ function recommendationReducer(
 function backendToRecProduct(p: any): Product {
   const mapped = mapBackendProductToProduct(p);
   return {
-    id: typeof mapped.id === "number" ? mapped.id : (mapped.backendId || Number(mapped.id) || 1),
+    id: Number(mapped.backendId || Number(mapped.id) || 1),
     name: mapped.name,
     price: mapped.price,
     rating: mapped.rating || 5,

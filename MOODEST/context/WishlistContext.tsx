@@ -153,12 +153,12 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
 
       if (isAuthenticated) {
         const productId = product.backendId || Number(product.id);
-        if (productId && !isNaN(productId)) {
+        if (productId && !isNaN(Number(productId))) {
           try {
             if (isCurrentlyWishlisted) {
-              await wishlistAPI.remove(productId);
+              await wishlistAPI.remove(Number(productId));
             } else {
-              await wishlistAPI.add(productId);
+              await wishlistAPI.add(Number(productId));
             }
           } catch {
             // Revert on error

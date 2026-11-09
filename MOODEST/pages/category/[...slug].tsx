@@ -8,42 +8,14 @@ import type { GetServerSideProps } from "next";
 import ProductCard, { type Product } from "@/components/ProductCard";
 import { productAPI, categoryAPI, mapBackendProductToProduct } from "@/lib/api";
 
-const DEFAULT_CATEGORIES = [
-  {
-    id: "everyday-abayas",
-    name: "Everyday Abayas",
-    slug: "everyday-abayas",
-    subcategories: [
-      { id: "front-open", name: "Front Open Abayas", slug: "front-open-abayas" },
-      { id: "pull-over", name: "Pull-over Closed Abayas", slug: "pull-over-closed-abayas" },
-    ],
-  },
-  {
-    id: "occasion-luxury",
-    name: "Occasion & Luxury Abayas",
-    slug: "occasion-luxury-abayas",
-    subcategories: [
-      { id: "hand-embroidered", name: "Hand-Embroidered Luxury", slug: "hand-embroidered-luxury" },
-      { id: "bridal-velvet", name: "Bridal Velvet Abayas", slug: "bridal-velvet-abayas" },
-    ],
-  },
-  {
-    id: "jilbabs-khimars",
-    name: "Jilbabs & Khimars",
-    slug: "jilbabs-khimars",
-    subcategories: [
-      { id: "french-khimars", name: "French Khimars", slug: "french-khimars" },
-    ],
-  },
-  {
-    id: "hijabs-stoles",
-    name: "Hijabs & Stoles",
-    slug: "hijabs-stoles",
-    subcategories: [
-      { id: "malaysian-stoles", name: "Malaysian Instant Stoles", slug: "malaysian-instant-stoles" },
-    ],
-  },
-];
+export interface CategoryItem {
+  id: string;
+  name: string;
+  slug: string;
+  subcategories: Array<{ id: string; name: string; slug: string }>;
+}
+
+const DEFAULT_CATEGORIES: CategoryItem[] = [];
 
 const PRICE_RANGES = [
   { label: "All Prices", min: 0, max: Infinity },
