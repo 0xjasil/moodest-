@@ -3,12 +3,12 @@ import Link from "next/link";
 
 export default function EditorialGalleryBanner() {
   return (
-    <section className="w-full px-3 sm:px-6 mt-16 sm:mt-24 mb-20 sm:mb-28" aria-label="Signature Visual Gallery">
+    <section className="w-full px-3 sm:px-6 my-16 sm:my-24 relative block clear-both" aria-label="Signature Visual Gallery">
       {/* Full Viewport Height & Width Reference Mosaic Gallery */}
-      <div className="w-full h-auto md:h-[85vh] lg:h-[88vh] md:max-h-[920px] grid grid-cols-1 md:grid-cols-12 gap-3.5 sm:gap-4.5">
+      <div className="w-full h-auto grid grid-cols-1 md:grid-cols-12 gap-3.5 sm:gap-4.5">
         
         {/* Column 1: Left Tall Vertical Card (Reference: Two women by doorway with circular arrow button) */}
-        <div className="md:col-span-4 h-[380px] sm:h-[440px] md:h-full">
+        <div className="md:col-span-4 h-[420px] sm:h-[480px] md:h-[620px] lg:h-[680px]">
           <Link
             href="/category/syrian-collection"
             className="group relative block w-full h-full overflow-hidden rounded-[20px] sm:rounded-[24px] bg-neutral-100 shadow-sm hover:shadow-xl transition-all"
@@ -40,11 +40,11 @@ export default function EditorialGalleryBanner() {
         </div>
 
         {/* Column 2: Center 2 Stacked Cards (Reference: Top silk abayas, Bottom terracotta arch) */}
-        <div className="md:col-span-4 flex flex-col gap-3.5 sm:gap-4.5 h-[480px] sm:h-[540px] md:h-full">
+        <div className="md:col-span-4 flex flex-col gap-3.5 sm:gap-4.5 h-[500px] sm:h-[580px] md:h-[620px] lg:h-[680px]">
           {/* Top Card */}
           <Link
             href="/category/the-classics"
-            className="group flex-1 relative block w-full overflow-hidden rounded-[20px] sm:rounded-[24px] bg-neutral-100 shadow-sm hover:shadow-xl transition-all"
+            className="group flex-1 relative block w-full h-full overflow-hidden rounded-[20px] sm:rounded-[24px] bg-neutral-100 shadow-sm hover:shadow-xl transition-all"
             aria-label="Explore The Classics Collection"
           >
             <img
@@ -73,7 +73,7 @@ export default function EditorialGalleryBanner() {
           {/* Bottom Card */}
           <Link
             href="/category/the-luxe-edit"
-            className="group flex-1 relative block w-full overflow-hidden rounded-[20px] sm:rounded-[24px] bg-neutral-100 shadow-sm hover:shadow-xl transition-all"
+            className="group flex-1 relative block w-full h-full overflow-hidden rounded-[20px] sm:rounded-[24px] bg-neutral-100 shadow-sm hover:shadow-xl transition-all"
             aria-label="Explore The Luxe Edit"
           >
             <img
@@ -101,7 +101,7 @@ export default function EditorialGalleryBanner() {
         </div>
 
         {/* Column 3: Right Tall Vertical Card (Reference: Woman in red gingham with floating circular button) */}
-        <div className="md:col-span-4 h-[380px] sm:h-[440px] md:h-full">
+        <div className="md:col-span-4 h-[420px] sm:h-[480px] md:h-[620px] lg:h-[680px]">
           <Link
             href="/category/occasion-wear"
             className="group relative block w-full h-full overflow-hidden rounded-[20px] sm:rounded-[24px] bg-neutral-100 shadow-sm hover:shadow-xl transition-all"

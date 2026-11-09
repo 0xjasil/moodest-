@@ -120,7 +120,7 @@ export default function TrendingNowSection() {
   const totalItemsCount = products.length + EDITORIAL_CARDS.length;
 
   return (
-    <section className="w-full px-3 sm:px-6 pt-4 sm:pt-6 mt-16 sm:mt-24 mb-20 sm:mb-28 relative" aria-label="Trending Now">
+    <section className="w-full px-3 sm:px-6 my-16 sm:my-24 relative block clear-both" aria-label="Trending Now">
       {/* Section Header */}
       <div className="flex items-center justify-between mb-5">
         <div>
