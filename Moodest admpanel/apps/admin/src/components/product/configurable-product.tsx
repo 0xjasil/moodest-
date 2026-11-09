@@ -433,21 +433,6 @@ function ProductImageAndCategories() {
           <div className="flex flex-wrap gap-6 pt-2">
             <div className="flex items-center space-x-2">
               <Checkbox 
-                id="customer-favorites" 
-                checked={baseProduct.isCustomerFavorite}
-                onCheckedChange={(checked) => {
-                  updateBaseProduct({ isCustomerFavorite: !!checked });
-                }}
-              />
-              <Label 
-                htmlFor="customer-favorites"
-                className="text-xs font-medium leading-none cursor-pointer text-gray-700 dark:text-gray-300"
-              >
-                Customer Favorites
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox 
                 id="new-arrivals" 
                 checked={baseProduct.isNewArrival}
                 onCheckedChange={(checked) => {
@@ -459,6 +444,21 @@ function ProductImageAndCategories() {
                 className="text-xs font-medium leading-none cursor-pointer text-gray-700 dark:text-gray-300"
               >
                 New Arrivals
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="trending-now" 
+                checked={baseProduct.isCustomerFavorite}
+                onCheckedChange={(checked) => {
+                  updateBaseProduct({ isCustomerFavorite: !!checked });
+                }}
+              />
+              <Label 
+                htmlFor="trending-now"
+                className="text-xs font-medium leading-none cursor-pointer text-gray-700 dark:text-gray-300"
+              >
+                Trending Now
               </Label>
             </div>
           </div>

@@ -101,7 +101,7 @@ export default function HeroCarousel() {
 
   return (
     <div
-      className="relative w-full px-3 sm:px-6 my-4 select-none"
+      className="relative w-full px-3 sm:px-6 pt-3 pb-2 select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       role="region"

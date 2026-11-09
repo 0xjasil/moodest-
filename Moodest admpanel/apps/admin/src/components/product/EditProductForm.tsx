@@ -82,21 +82,6 @@ export default function EditProductFormSection() {
             <div 
               className={cn(
                 "flex items-center space-x-2 border rounded-md p-3 cursor-pointer transition-colors",
-                baseProduct.isCustomerFavorite ? "bg-stone-50 border-stone-300" : "bg-white border-gray-200"
-              )}
-              onClick={() => updateBaseProduct({ isCustomerFavorite: !baseProduct.isCustomerFavorite })}
-            >
-              <input 
-                type="checkbox" 
-                checked={baseProduct.isCustomerFavorite}
-                onChange={() => {}}
-                className="w-4 h-4 rounded border-gray-300 text-stone-800"
-              />
-              <span className="text-sm font-medium text-gray-700">Customer Favorite</span>
-            </div>
-            <div 
-              className={cn(
-                "flex items-center space-x-2 border rounded-md p-3 cursor-pointer transition-colors",
                 baseProduct.isNewArrival ? "bg-stone-50 border-stone-300" : "bg-white border-gray-200"
               )}
               onClick={() => updateBaseProduct({ isNewArrival: !baseProduct.isNewArrival })}
@@ -107,7 +92,22 @@ export default function EditProductFormSection() {
                 onChange={() => {}}
                 className="w-4 h-4 rounded border-gray-300 text-stone-800"
               />
-              <span className="text-sm font-medium text-gray-700">New Arrival</span>
+              <span className="text-sm font-medium text-gray-700">New Arrivals</span>
+            </div>
+            <div 
+              className={cn(
+                "flex items-center space-x-2 border rounded-md p-3 cursor-pointer transition-colors",
+                baseProduct.isCustomerFavorite ? "bg-stone-50 border-stone-300" : "bg-white border-gray-200"
+              )}
+              onClick={() => updateBaseProduct({ isCustomerFavorite: !baseProduct.isCustomerFavorite })}
+            >
+              <input 
+                type="checkbox" 
+                checked={baseProduct.isCustomerFavorite}
+                onChange={() => {}}
+                className="w-4 h-4 rounded border-gray-300 text-stone-800"
+              />
+              <span className="text-sm font-medium text-gray-700">Trending Now</span>
             </div>
           </div>
         </div>

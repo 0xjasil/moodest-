@@ -69,8 +69,8 @@ export default function ProductCard({ product }: { product: Product }) {
         aria-label={`${product.brand} ${product.name}, ₹${product.price.toLocaleString()}`}
         className="flex flex-col flex-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-mb-accent">
 
-        {/* Product image (Primary + Hover Thumbnail) */}
-        <div className="relative bg-mb-surface overflow-hidden aspect-square flex items-center justify-center p-3">
+        {/* Product image (Primary + Hover Thumbnail) — tall fashion aspect ratio */}
+        <div className="relative bg-mb-surface overflow-hidden aspect-[3/4] sm:aspect-[4/5] w-full flex items-center justify-center p-2">
           <img src={product.image} alt={product.name}
             loading="lazy"
             onError={(e) => {
@@ -79,7 +79,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 target.src = "/abaya/products/abaya-1.jpg";
               }
             }}
-            className={`w-full h-full object-contain transition-all duration-500 ${
+            className={`w-full h-full object-cover object-top rounded-[2px] transition-all duration-500 ${
               product.images && product.images[1] ? "group-hover:opacity-0" : "group-hover:scale-105"
             }`}
           />
@@ -92,7 +92,7 @@ export default function ProductCard({ product }: { product: Product }) {
                   target.src = "/abaya/products/abaya-1.jpg";
                 }
               }}
-              className="absolute inset-0 w-full h-full object-contain p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              className="absolute inset-0 w-full h-full object-cover object-top p-2 rounded-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
             />
           )}
         </div>

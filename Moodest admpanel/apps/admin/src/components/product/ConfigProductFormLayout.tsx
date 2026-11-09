@@ -228,6 +228,7 @@ function ProductFormContent({}: ProductFormContentProps) {
         basePrice: minPrice,
         image: mainImageUrl || allImages[0],
         images: allImages,
+        isFeatured: Boolean(baseProduct.isCustomerFavorite),
         isCustomerFavorite: Boolean(baseProduct.isCustomerFavorite),
         isNewArrival: Boolean(baseProduct.isNewArrival),
         variants: processedVariants,

@@ -78,13 +78,13 @@ export default function DiscoverCategories() {
         </div>
         <Link
           href="/category/all"
-          className="text-xs sm:text-sm font-semibold text-mb-primary hover:text-mb-primary-hover flex items-center gap-1 transition-colors"
+          className="text-xs sm:text-sm font-semibold text-mb-primary hover:text-mb-primary-hover flex items-center gap-1 transition-colors group"
         >
-          View All <span>→</span>
+          <span>Discover More</span> <span className="transition-transform group-hover:translate-x-1">→</span>
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4">
         {categories.map((cat) => {
           const href = `/category/${cat.slug || cat.id}`;
           return (
@@ -93,11 +93,11 @@ export default function DiscoverCategories() {
               href={href}
               className="group block overflow-hidden rounded-[8px] bg-mb-surface border border-mb-border shadow-card hover:shadow-dropdown hover:-translate-y-1 transition-all duration-300"
             >
-              <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#EEE4D8]">
+              <div className="relative aspect-[2/3] w-full overflow-hidden bg-[#EEE4D8]">
                 <img
                   src={cat.image}
                   alt={cat.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                   onError={(e) => {
                     const target = e.currentTarget;
                     if (!target.src.includes("unsplash.com")) {
@@ -105,11 +105,11 @@ export default function DiscoverCategories() {
                     }
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-3.5">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-3.5">
                   <span className="text-white font-serif text-sm sm:text-base font-semibold group-hover:text-[#D29A90] transition-colors drop-shadow-sm">
                     {cat.name}
                   </span>
-                  <span className="text-[11px] text-white/80 font-sans mt-0.5 inline-flex items-center gap-1">
+                  <span className="text-[11px] text-white/80 font-sans mt-0.5 inline-flex items-center gap-1 group-hover:underline">
                     Explore Collection →
                   </span>
                 </div>

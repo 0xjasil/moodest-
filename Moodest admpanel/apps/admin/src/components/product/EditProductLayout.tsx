@@ -306,6 +306,7 @@ function EditProductFormContent({ productId }: { productId: string }) {
         categoryId: baseProduct.categoryId ? String(baseProduct.categoryId) : null,
         subCategoryId: baseProduct.subCategoryId ? String(baseProduct.subCategoryId) : null,
         basePrice: minPrice,
+        isFeatured: Boolean(baseProduct.isCustomerFavorite),
         isCustomerFavorite: Boolean(baseProduct.isCustomerFavorite),
         isNewArrival: Boolean(baseProduct.isNewArrival),
         variants: processedVariants,
