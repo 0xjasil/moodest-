@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import {
   DollarSign,
@@ -59,40 +59,18 @@ interface PremiumDashboardProps {
   lowStockItems: LowStockItem[];
 }
 
-// Chart dataset for 7D / 30D / 90D
-const chartDataByRange: Record<
-  string,
-  { label: string; revenue: number; orders: number }[]
-> = {
-  "7D": [
-    { label: "Mon", revenue: 14200, orders: 38 },
-    { label: "Tue", revenue: 18500, orders: 49 },
-    { label: "Wed", revenue: 16800, orders: 42 },
-    { label: "Thu", revenue: 22100, orders: 58 },
-    { label: "Fri", revenue: 26400, orders: 69 },
-    { label: "Sat", revenue: 31200, orders: 84 },
-    { label: "Sun", revenue: 28900, orders: 76 },
-  ],
-  "30D": [
-    { label: "W1", revenue: 84000, orders: 210 },
-    { label: "W2", revenue: 98000, orders: 254 },
-    { label: "W3", revenue: 112000, orders: 290 },
-    { label: "W4", revenue: 124580, orders: 342 },
-  ],
-  "90D": [
-    { label: "Aug", revenue: 294000, orders: 780 },
-    { label: "Sep", revenue: 326000, orders: 890 },
-    { label: "Oct", revenue: 372000, orders: 984 },
-  ],
-};
+interface ChartDataItem {
+  label: string;
+  revenue: number;
+  orders: number;
+}
 
-// Cohesive monochromatic & indigo tonal scale
-const categoryBreakdown = [
-  { name: "Apparel & Outerwear", percentage: 46, revenue: 57306, color: "bg-indigo-600 dark:bg-indigo-500" },
-  { name: "Footwear & Sneakers", percentage: 28, revenue: 34882, color: "bg-indigo-400 dark:bg-indigo-400" },
-  { name: "Leather Accessories", percentage: 18, revenue: 22424, color: "bg-slate-400 dark:bg-slate-500" },
-  { name: "Essentials & Other", percentage: 8, revenue: 9966, color: "bg-slate-200 dark:bg-slate-700" },
-];
+// Dynamic chart data derived from actual telemetry / empty by default
+const emptyChartDataByRange: Record<string, ChartDataItem[]> = {
+  "7D": [],
+  "30D": [],
+  "90D": [],
+};
 
 export function PremiumDashboard({
   metrics,
@@ -102,9 +80,25 @@ export function PremiumDashboard({
   const [dateRange, setDateRange] = useState<"7D" | "30D" | "90D">("30D");
   const [metricView, setMetricView] = useState<"revenue" | "orders">("revenue");
 
-  const currentChartData = chartDataByRange[dateRange] || chartDataByRange["30D"];
+  const currentChartData: ChartDataItem[] = useMemo(() => {
+    if (!recentOrders || recentOrders.length === 0) {
+      return emptyChartDataByRange[dateRange] || [];
+    }
+    const grouped: Record<string, ChartDataItem> = {};
+    recentOrders.forEach((o) => {
+      const d = new Date(o.createdAt);
+      const label = d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      if (!grouped[label]) {
+        grouped[label] = { label, revenue: 0, orders: 0 };
+      }
+      grouped[label].revenue += Number(o.totalAmount || 0);
+      grouped[label].orders += 1;
+    });
+    return Object.values(grouped);
+  }, [recentOrders, dateRange]);
+
   const maxVal = Math.max(
-    ...currentChartData.map((d) => (metricView === "revenue" ? d.revenue : d.orders)),
+    ...currentChartData.map((d: ChartDataItem) => (metricView === "revenue" ? d.revenue : d.orders)),
     1
   );
 
@@ -316,7 +310,7 @@ export function PremiumDashboard({
                 </p>
               </div>
             ) : (
-              currentChartData.map((item) => {
+              currentChartData.map((item: ChartDataItem) => {
                 const value =
                   metricView === "revenue" ? item.revenue : item.orders;
                 const heightPercent = Math.max(
@@ -376,33 +370,17 @@ export function PremiumDashboard({
             </p>
 
             <div className="space-y-4 mt-6">
-              {categoryBreakdown.map((cat) => (
-                <div key={cat.name} className="space-y-1.5">
-                  <div className="flex items-center justify-between text-xs font-medium">
-                    <span className="text-gray-700 dark:text-gray-300">
-                      {cat.name}
-                    </span>
-                    <span className="text-gray-900 dark:text-white font-semibold">
-                      {rupee} {cat.revenue.toLocaleString()}{" "}
-                      <span className="text-gray-400 font-normal">
-                        ({cat.percentage}%)
-                      </span>
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-100 dark:bg-white/5 rounded-full h-2 overflow-hidden">
-                    <div
-                      style={{ width: `${cat.percentage}%` }}
-                      className={cn("h-full rounded-full", cat.color)}
-                    />
-                  </div>
-                </div>
-              ))}
+              <div className="py-8 text-center text-xs text-gray-500 dark:text-gray-400">
+                {metrics.totalRevenue > 0
+                  ? `Revenue aggregated across ${metrics.totalOrders} order(s)`
+                  : "No category sales recorded for this timeframe"}
+              </div>
             </div>
           </div>
 
           <div className="mt-6 pt-4 border-t border-gray-100 dark:border-white/10 flex items-center justify-between">
             <span className="text-xs text-gray-500 dark:text-gray-400">
-              4 Product Categories
+              {metrics.categoriesCount > 0 ? `${metrics.categoriesCount} Product Categories` : "Product Catalog"}
             </span>
             <Link
               href="/category"

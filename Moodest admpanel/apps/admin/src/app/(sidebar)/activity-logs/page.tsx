@@ -51,39 +51,9 @@ interface ActivityLog {
   createdAt: string;
 }
 
-const DEFAULT_LOGS: ActivityLog[] = [
-  {
-    id: "1",
-    action: "PRODUCT_VARIANT_UPDATED",
-    details: '{"sku":"MOD-CL-54-BLK","stock":45,"action":"Stock adjusted"}',
-    userId: "1",
-    userEmail: "admin@moodest.com",
-    ipAddress: "192.168.1.1",
-    createdAt: "2026-05-10T14:00:00.000Z",
-  },
-  {
-    id: "2",
-    action: "ORDER_STATUS_CHANGED",
-    details: '{"orderId":1024,"from":"CONFIRMED","to":"DISPATCHED"}',
-    userId: "1",
-    userEmail: "admin@moodest.com",
-    ipAddress: "192.168.1.1",
-    createdAt: "2026-05-10T12:30:00.000Z",
-  },
-  {
-    id: "3",
-    action: "CATEGORY_UPDATED",
-    details: '{"category":"Embroidered Abayas","slug":"embroidered"}',
-    userId: "1",
-    userEmail: "admin@moodest.com",
-    ipAddress: "192.168.1.1",
-    createdAt: "2026-05-10T08:15:00.000Z",
-  },
-];
-
 export default function ActivityLogsPage() {
-  const [logs, setLogs] = useState<ActivityLog[]>(DEFAULT_LOGS);
-  const [loading, setLoading] = useState(false);
+  const [logs, setLogs] = useState<ActivityLog[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedActionType, setSelectedActionType] = useState("ALL");
   const [selectedLog, setSelectedLog] = useState<ActivityLog | null>(null);
@@ -118,12 +88,15 @@ export default function ActivityLogsPage() {
             createdAt: log.createdAt,
           })));
           return;
+        } else {
+          setLogs([]);
+          return;
         }
       }
-      setLogs(DEFAULT_LOGS);
+      setLogs([]);
     } catch (error) {
-      console.warn("Could not fetch audit logs from backend, using fallback:", error);
-      setLogs(DEFAULT_LOGS);
+      console.warn("Could not fetch audit logs from backend:", error);
+      setLogs([]);
     } finally {
       setLoading(false);
     }

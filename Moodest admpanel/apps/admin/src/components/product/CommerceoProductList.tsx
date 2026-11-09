@@ -93,78 +93,11 @@ function ProductIcon({ type, name }: { type: CommerceoProductItem["iconType"]; n
   }
 }
 
-const DEFAULT_ABAYA_PRODUCTS: CommerceoProductItem[] = [
-  {
-    id: "demo-abaya-1",
-    name: "Noor Embroidered Abaya",
-    description: "Premium black Nida abaya with intricate hand-stitched cuffs",
-    category: "Embroidered Abayas",
-    stock: true,
-    sku: "MDS-NOOR-BLK-54",
-    price: 4999,
-    priceDisplay: "₹4,499.00 - ₹4,999.00",
-    qty: 45,
-    variantCount: 7,
-    availableSizes: ["50", "52", "54", "56", "58", "60", "62"],
-    status: "Publish",
-    image: "/images/products/1.webp",
-    iconType: "package",
-  },
-  {
-    id: "demo-abaya-2",
-    name: "Medina Classic Front-Open Abaya",
-    description: "Minimalist flowy front-open design in breathable Korean crepe",
-    category: "Classic Abayas",
-    stock: true,
-    sku: "MDS-MED-NVY-56",
-    price: 3899,
-    priceDisplay: "₹3,899.00",
-    qty: 32,
-    variantCount: 5,
-    availableSizes: ["52", "54", "56", "58", "60"],
-    status: "Publish",
-    image: "/images/products/2.webp",
-    iconType: "package",
-  },
-  {
-    id: "demo-abaya-3",
-    name: "Layla Luxury Georgette Kimono",
-    description: "Wide-sleeve layered kimono abaya with subtle shimmer border",
-    category: "Luxury Abayas",
-    stock: true,
-    sku: "MDS-LAYLA-OLV-54",
-    price: 5499,
-    priceDisplay: "₹5,499.00 - ₹5,999.00",
-    qty: 18,
-    variantCount: 5,
-    availableSizes: ["52", "54", "56", "58", "Free Size"],
-    status: "Scheduled",
-    image: "/images/products/3.webp",
-    iconType: "package",
-  },
-  {
-    id: "demo-abaya-4",
-    name: "Zahra Everyday Linen Abaya",
-    description: "Casual relaxed-fit silhouette with discreet side pockets",
-    category: "Daily Wear",
-    stock: false,
-    sku: "MDS-ZAHRA-BGE-52",
-    price: 2999,
-    priceDisplay: "₹2,999.00",
-    qty: 0,
-    variantCount: 4,
-    availableSizes: ["52", "54", "56", "Custom Size"],
-    status: "Inactive",
-    image: "/images/products/4.webp",
-    iconType: "package",
-  },
-];
-
 export default function CommerceoProductList() {
   const router = useRouter();
 
   // Data & loading states
-  const [products, setProducts] = useState<CommerceoProductItem[]>(DEFAULT_ABAYA_PRODUCTS);
+  const [products, setProducts] = useState<CommerceoProductItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Filter states
@@ -257,12 +190,15 @@ export default function CommerceoProductList() {
             };
           });
 
-          // Real products loaded from backend replace reference mock items
           setProducts(mapped);
+        } else {
+          setProducts([]);
         }
+      } else {
+        setProducts([]);
       }
     } catch {
-      // Keep default reference products on error or offline
+      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -601,7 +537,21 @@ export default function CommerceoProductList() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200/70 dark:divide-white/5">
-              {paginatedProducts.length > 0 ? (
+              {loading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <tr key={`skel-${i}`} className="animate-pulse">
+                    <td className="py-4 pl-6 pr-3"><div className="size-4 bg-gray-200 dark:bg-white/10 rounded" /></td>
+                    <td className="py-4 px-3"><div className="h-10 w-48 bg-gray-200 dark:bg-white/10 rounded-lg" /></td>
+                    <td className="py-4 px-3"><div className="h-4 w-20 bg-gray-200 dark:bg-white/10 rounded" /></td>
+                    <td className="py-4 px-3"><div className="h-4 w-14 bg-gray-200 dark:bg-white/10 rounded" /></td>
+                    <td className="py-4 px-3"><div className="h-4 w-16 bg-gray-200 dark:bg-white/10 rounded" /></td>
+                    <td className="py-4 px-3"><div className="h-4 w-16 bg-gray-200 dark:bg-white/10 rounded" /></td>
+                    <td className="py-4 px-3"><div className="h-4 w-12 bg-gray-200 dark:bg-white/10 rounded" /></td>
+                    <td className="py-4 px-3"><div className="h-6 w-16 bg-gray-200 dark:bg-white/10 rounded-full" /></td>
+                    <td className="py-4 pl-3 pr-6 text-right"><div className="h-8 w-8 ml-auto bg-gray-200 dark:bg-white/10 rounded" /></td>
+                  </tr>
+                ))
+              ) : paginatedProducts.length > 0 ? (
                 paginatedProducts.map((item) => {
                   const isSelected = selectedIds.includes(item.id);
 

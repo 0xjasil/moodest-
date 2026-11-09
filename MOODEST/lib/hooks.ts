@@ -7,7 +7,6 @@ import {
   mapBackendProductToProduct,
 } from "./api";
 import type { Category, Brand } from "./types";
-import localProductsData from "@/products.json";
 
 export type { Category, Brand };
 
@@ -21,22 +20,8 @@ export interface Banner {
   status?: string;
 }
 
-const fallbackProducts: Product[] = (localProductsData as any[]).map((p: any, i: number) => ({
-  id: String(p.id ?? i + 1),
-  name: p.name,
-  price: p.price ?? 2999,
-  originalPrice: p.originalPrice ?? undefined,
-  discount: p.discount ?? undefined,
-  rating: p.rating ?? 4.8,
-  reviewCount: p.reviewCount ?? 50,
-  image: p.image || "/abaya/products/abaya-1.jpg",
-  badge: p.badge ?? undefined,
-  category: p.category ?? "front-open",
-  brand: p.brand ?? "Modest Studio",
-}));
-
 /**
- * Fetch products with pagination and filtering using NestJS productAPI with local Abaya fallback
+ * Fetch products with pagination and filtering using NestJS productAPI
  */
 export function useProducts(
   page: number = 1,
@@ -62,24 +47,13 @@ export function useProducts(
       const items = response?.items || [];
       const transformed = items.map(mapBackendProductToProduct);
 
-      if (transformed.length > 0) {
-        setProducts(transformed);
-        setHasMore(response ? response.page < response.totalPages : false);
-      } else {
-        // Fallback to local Abaya products
-        const filtered = category
-          ? fallbackProducts.filter((p) => p.category === category)
-          : fallbackProducts;
-        setProducts(filtered.slice((page - 1) * limit, page * limit));
-        setHasMore(filtered.length > page * limit);
-      }
-    } catch (err) {
-      // Fallback on network or server offline
-      const filtered = category
-        ? fallbackProducts.filter((p) => p.category === category)
-        : fallbackProducts;
-      setProducts(filtered.slice((page - 1) * limit, page * limit));
-      setHasMore(filtered.length > page * limit);
+      setProducts(transformed);
+      setHasMore(response ? response.page < response.totalPages : false);
+    } catch (err: any) {
+      console.error("[useProducts] Failed to fetch products:", err);
+      setError(err?.message || "Failed to load products");
+      setProducts([]);
+      setHasMore(false);
     } finally {
       setIsLoading(false);
     }

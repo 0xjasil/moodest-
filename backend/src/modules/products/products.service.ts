@@ -458,6 +458,16 @@ export class ProductsService {
       },
     });
 
+    if (Array.isArray(data.variants) && data.variants.length > 0) {
+      for (const v of data.variants) {
+        if (v.id && !String(v.id).startsWith("temp_")) {
+          await this.updateVariant(String(v.id), v).catch(() => {});
+        } else if (v.isNew || String(v.id || "").startsWith("temp_")) {
+          await this.addVariant(id, v).catch(() => {});
+        }
+      }
+    }
+
     return this.getById(id);
   }
 

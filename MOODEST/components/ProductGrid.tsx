@@ -1,23 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import ProductCard, { type Product } from "@/components/ProductCard";
-import productsData from "@/products.json";
 import { productAPI, mapBackendProductToProduct } from "@/lib/api";
-
-/* ── Products from JSON ───────────────────────────────────────── */
-export const products: Product[] = (productsData as any[]).map((p: any, i: number) => ({
-  id:            String(p.id ?? i + 1),
-  name:          p.name,
-  price:         p.price ?? 499,
-  originalPrice: p.originalPrice ?? undefined,
-  discount:      p.discount ?? undefined,
-  rating:        p.rating ?? 4.2,
-  reviewCount:   p.reviewCount ?? 120,
-  image:         p.image,
-  badge:         p.badge ?? undefined,
-  category:      (p.category as Product["category"]) ?? "front-open",
-  brand:         p.brand ?? "Modest Studio",
-}));
 
 /* ── Section header ───────────────────────────────────────────── */
 export function SectionHeader({ title, subtitle, viewAllHref }: {
@@ -41,36 +25,49 @@ export function SectionHeader({ title, subtitle, viewAllHref }: {
 
 /* ── Category filter tabs ─────────────────────────────────────── */
 const CATS = [
-  { key: "all",       label: "All Products" },
-  { key: "makeup",    label: "Makeup" },
-  { key: "skincare",  label: "Skincare" },
-  { key: "fragrance", label: "Fragrance" },
-  { key: "haircare",  label: "Hair" },
+  { key: "all",               label: "All Products" },
+  { key: "syrian",            label: "Syrian Collection" },
+  { key: "classics",          label: "The Classics" },
+  { key: "luxe",              label: "The Luxe Edit" },
+  { key: "occasion",          label: "Occasion Wear" },
+  { key: "kimono",            label: "Kimono & Kaftan" },
+  { key: "open",              label: "Open Abaya Edit" },
 ];
 
 /* ── ProductGrid ──────────────────────────────────────────────── */
 export default function ProductGrid() {
   const [cat, setCat] = useState("all");
-  const [items, setItems] = useState<Product[]>(products);
+  const [items, setItems] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    let isSubscribed = true;
-    (async () => {
-      try {
-        const res = await productAPI.getAll({ limit: 40 });
-        if (isSubscribed && res?.items && res.items.length > 0) {
-          setItems(res.items.map(mapBackendProductToProduct));
-        }
-      } catch {
-        // Fallback to static products
+  const fetchProducts = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await productAPI.getAll({ limit: 40 });
+      if (res?.items && Array.isArray(res.items)) {
+        setItems(res.items.map(mapBackendProductToProduct));
+      } else {
+        setItems([]);
       }
-    })();
-    return () => {
-      isSubscribed = false;
-    };
+    } catch (err: any) {
+      console.error("[ProductGrid] Failed to fetch products:", err);
+      setError("Unable to load products. Please check your connection and retry.");
+      setItems([]);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  const filtered = cat === "all" ? items : items.filter(p => p.category === cat);
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  const filtered = cat === "all" ? items : items.filter(p => {
+    const pCat = (p.category || "").toLowerCase();
+    return pCat.includes(cat) || cat.includes(pCat);
+  });
 
   return (
     <section className="bg-mb-bg py-8 px-4 md:px-6 border-t border-mb-border-lite" aria-labelledby="pg-heading">
@@ -80,7 +77,7 @@ export default function ProductGrid() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
             <h2 id="pg-heading" className="font-serif text-2xl sm:text-3xl font-semibold text-mb-text">Featured Curations</h2>
-            <p className="text-sm text-mb-muted mt-1">Authentic luxury beauty, curated by Moryelle Beauté</p>
+            <p className="text-sm text-mb-muted mt-1">Authentic luxury abayas and modest wears</p>
           </div>
           {/* Filter pills */}
           <div role="group" aria-label="Filter by category" className="flex gap-2 flex-wrap">
@@ -98,14 +95,48 @@ export default function ProductGrid() {
           </div>
         </div>
 
-        {/* Grid — generous spacing, luxury cards */}
-        <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
-          aria-label="Product listing">
-          {filtered.map(p => <ProductCard key={p.id} product={p} />)}
-        </div>
+        {/* Loading Skeletons */}
+        {isLoading && (
+          <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6" aria-label="Loading products">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="bg-mb-surface border border-mb-border rounded-lg p-3 space-y-3 animate-pulse">
+                <div className="aspect-square bg-mb-border/40 rounded-md" />
+                <div className="h-4 bg-mb-border/40 rounded w-3/4" />
+                <div className="h-3 bg-mb-border/30 rounded w-1/2" />
+                <div className="h-4 bg-mb-border/40 rounded w-1/3" />
+              </div>
+            ))}
+          </div>
+        )}
 
-        {filtered.length === 0 && (
-          <p className="py-12 text-center text-sm text-mb-muted">No products found in this category.</p>
+        {/* Error State */}
+        {!isLoading && error && (
+          <div className="py-12 text-center flex flex-col items-center justify-center gap-3">
+            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+            <button
+              type="button"
+              onClick={fetchProducts}
+              className="px-4 py-2 bg-mb-primary text-mb-bg text-xs font-semibold rounded-md hover:bg-mb-primary-hover transition-colors"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
+        {/* Genuine Empty State */}
+        {!isLoading && !error && filtered.length === 0 && (
+          <div className="py-16 text-center">
+            <p className="text-base font-serif text-mb-text font-medium">No products found</p>
+            <p className="text-xs text-mb-muted mt-1">There are currently no items in this category.</p>
+          </div>
+        )}
+
+        {/* Product Grid */}
+        {!isLoading && !error && filtered.length > 0 && (
+          <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
+            aria-label="Product listing">
+            {filtered.map(p => <ProductCard key={p.id} product={p} />)}
+          </div>
         )}
       </div>
     </section>

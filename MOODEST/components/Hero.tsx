@@ -1,16 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import bannersData from "@/banners.json";
 
-/* ── Data ─────────────────────────────────────────────────────── */
-const defaultBanners = (bannersData as any[])
-  .filter((b: any) => b.image)
-  .slice(0, 6)
-  .map((b: any) => ({
-    image: b.image as string,
-    title: ((b.callout || b.alt || b.title || "") as string).split("|")[0].trim() || "Modest Studio",
-    subtitle: (b.title || "") as string,
-    link: (b.link || "#") as string,
-  }));
+export interface HeroBanner {
+  image: string;
+  title: string;
+  subtitle: string;
+  link: string;
+}
 
 /* ── Icons ────────────────────────────────────────────────────── */
 const ChevronLeft = () => (
@@ -28,7 +23,8 @@ const ChevronRight = () => (
 
 /* ── Component ────────────────────────────────────────────────── */
 export default function Hero() {
-  const [banners, setBanners] = useState(defaultBanners);
+  const [banners, setBanners] = useState<HeroBanner[]>([]);
+  const [loading, setLoading] = useState(true);
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const total = banners.length;
@@ -38,6 +34,7 @@ export default function Hero() {
     let isMounted = true;
     async function fetchCmsBanners() {
       try {
+        setLoading(true);
         const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "https://bkndmoodest.vercel.app").replace(/\/$/, "");
         const prefix = process.env.NEXT_PUBLIC_API_PREFIX || "/api";
         const res = await fetch(`${apiUrl}${prefix}/banners`);
@@ -53,10 +50,17 @@ export default function Hero() {
                 link: b.linkUrl || b.buttonLink || b.link || "#",
               }))
             );
+          } else if (isMounted) {
+            setBanners([]);
           }
+        } else if (isMounted) {
+          setBanners([]);
         }
-      } catch {
-        // Fallback to static default banners
+      } catch (err) {
+        console.warn("[Hero] Could not load banners from backend:", err);
+        if (isMounted) setBanners([]);
+      } finally {
+        if (isMounted) setLoading(false);
       }
     }
     fetchCmsBanners();
@@ -73,6 +77,20 @@ export default function Hero() {
     const id = setInterval(next, 4500);
     return () => clearInterval(id);
   }, [paused, next, total]);
+
+  if (loading) {
+    return (
+      <section
+        aria-label="Loading featured promotions"
+        className="w-full bg-mb-surface border-b border-mb-border animate-pulse"
+        style={{ height: "clamp(220px, 36vw, 440px)" }}
+      >
+        <div className="w-full h-full bg-mb-border/20 flex items-center justify-center">
+          <div className="w-1/3 h-6 bg-mb-border/40 rounded" />
+        </div>
+      </section>
+    );
+  }
 
   if (total === 0) return null;
 

@@ -34,40 +34,6 @@ interface Brand {
   name: string;
 }
 
-const DEFAULT_BRANDS: Brand[] = [
-  { id: "brand-1", name: "Moodest Studio" },
-  { id: "brand-2", name: "Noor Dubai" },
-  { id: "brand-3", name: "Al-Jawhara" },
-  { id: "brand-4", name: "Zahra Couture" },
-  { id: "brand-5", name: "Amani Kaftans" },
-];
-
-const DEFAULT_CATEGORIES: Category[] = [
-  {
-    id: "cat-1",
-    name: "Everyday Abayas",
-    children: [
-      { id: "sub-1", name: "Front Open Abayas" },
-      { id: "sub-2", name: "Pull-over Closed Abayas" },
-    ],
-  },
-  {
-    id: "cat-2",
-    name: "Hijabs & Stoles",
-    children: [
-      { id: "sub-3", name: "Malaysian Instant Stoles" },
-    ],
-  },
-  {
-    id: "cat-3",
-    name: "Occasion & Luxury Abayas",
-    children: [
-      { id: "sub-4", name: "Hand-Embroidered Luxury" },
-      { id: "sub-5", name: "Bridal Velvet Abayas" },
-    ],
-  },
-];
-
 const MAX_GALLERY_IMAGES = 10;
 
 function ProductImageAndCategories() {
@@ -75,8 +41,8 @@ function ProductImageAndCategories() {
   const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
   const [hoverImagePreview, setHoverImagePreview] = useState<string | null>(null);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
-  const [categories, setCategories] = useState<Category[]>(DEFAULT_CATEGORIES);
-  const [brands, setBrands] = useState<Brand[]>(DEFAULT_BRANDS);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
   const [errors, setErrors] = useState({
     mainImage: false,
     hoverImage: false,
@@ -114,9 +80,7 @@ function ProductImageAndCategories() {
           : Array.isArray(categoriesResponse?.data)
           ? categoriesResponse.data
           : [];
-        if (catList.length > 0) {
-          setCategories(catList);
-        }
+        setCategories(catList);
         const brandList: Brand[] = Array.isArray(brandsResponse)
           ? brandsResponse
           : Array.isArray(brandsResponse?.data)
@@ -124,11 +88,11 @@ function ProductImageAndCategories() {
           : brandsResponse?.id
           ? [brandsResponse]
           : [];
-        if (brandList.length > 0) {
-          setBrands(brandList);
-        }
+        setBrands(brandList);
       } catch (error) {
-        console.warn("[configurable-product] Using default categories and brands:", error);
+        console.warn("[configurable-product] Could not load categories or brands:", error);
+        setCategories([]);
+        setBrands([]);
       }
     };
     fetchDropdownData();

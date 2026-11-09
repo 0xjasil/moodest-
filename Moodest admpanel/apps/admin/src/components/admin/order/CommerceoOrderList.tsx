@@ -195,59 +195,10 @@ function FulfillmentBadge({ status }: { status: CommerceoOrderItem["status"] }) 
   }
 }
 
-// Default realistic sample orders for Moodest Abaya Store
-const DEFAULT_ORDERS: CommerceoOrderItem[] = [
-  {
-    id: "1",
-    orderNumber: "#1024",
-    date: "May 10, 2026, 2:30 PM",
-    timestamp: "2026-05-10T14:30:00.000Z",
-    customer: {
-      id: "1",
-      name: "Fatima Al-Zahra",
-      email: "fatima.alzahra@example.com",
-    },
-    totalAmount: 245.0,
-    payment: "Paid",
-    status: "Delivered",
-    method: { type: "visa", label: "Visa", last4: "4242" },
-  },
-  {
-    id: "2",
-    orderNumber: "#1025",
-    date: "May 11, 2026, 11:15 AM",
-    timestamp: "2026-05-11T11:15:00.000Z",
-    customer: {
-      id: "2",
-      name: "Mariam Noor",
-      email: "mariam.noor@example.com",
-    },
-    totalAmount: 180.0,
-    payment: "Paid",
-    status: "Dispatched",
-    method: { type: "mastercard", label: "MasterCard", last4: "8821" },
-  },
-  {
-    id: "3",
-    orderNumber: "#1026",
-    date: "May 12, 2026, 4:45 PM",
-    timestamp: "2026-05-12T16:45:00.000Z",
-    customer: {
-      id: "3",
-      name: "Aisha Rahman",
-      email: "aisha.rahman@example.com",
-    },
-    totalAmount: 320.0,
-    payment: "Pending",
-    status: "Out for Delivery",
-    method: { type: "cod", label: "Cash on Delivery" },
-  },
-];
-
 export function CommerceoOrderList() {
   const router = useRouter();
-  const [orders, setOrders] = useState<CommerceoOrderItem[]>(DEFAULT_ORDERS);
-  const [loading, setLoading] = useState(false);
+  const [orders, setOrders] = useState<CommerceoOrderItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   React.useEffect(() => {
     const fetchOrders = async () => {
@@ -306,12 +257,15 @@ export function CommerceoOrderList() {
             });
             setOrders(mapped);
             return;
+          } else {
+            setOrders([]);
+            return;
           }
         }
-        setOrders(DEFAULT_ORDERS);
+        setOrders([]);
       } catch (err) {
-        console.warn("Could not fetch orders from backend, using fallback:", err);
-        setOrders(DEFAULT_ORDERS);
+        console.warn("Could not fetch orders from backend:", err);
+        setOrders([]);
       } finally {
         setLoading(false);
       }
@@ -695,7 +649,20 @@ export function CommerceoOrderList() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-white/5">
-              {paginatedOrders.length === 0 ? (
+              {loading ? (
+                Array.from({ length: 4 }).map((_, i) => (
+                  <tr key={`skel-ord-${i}`} className="animate-pulse h-16">
+                    <td className="px-4 sm:px-6 align-middle"><div className="size-4 bg-gray-200 dark:bg-white/10 rounded" /></td>
+                    <td className="px-4 py-3 align-middle"><div className="h-4 w-16 bg-gray-200 dark:bg-white/10 rounded" /></td>
+                    <td className="px-4 py-3 align-middle"><div className="h-4 w-28 bg-gray-200 dark:bg-white/10 rounded" /></td>
+                    <td className="px-4 py-3 align-middle"><div className="h-8 w-40 bg-gray-200 dark:bg-white/10 rounded" /></td>
+                    <td className="px-4 py-3 align-middle"><div className="h-4 w-16 bg-gray-200 dark:bg-white/10 rounded" /></td>
+                    <td className="px-4 py-3 align-middle"><div className="h-6 w-20 bg-gray-200 dark:bg-white/10 rounded-full" /></td>
+                    <td className="px-4 py-3 align-middle"><div className="h-4 w-24 bg-gray-200 dark:bg-white/10 rounded" /></td>
+                    <td className="px-4 sm:px-6 py-3 align-middle text-right"><div className="h-8 w-8 ml-auto bg-gray-200 dark:bg-white/10 rounded" /></td>
+                  </tr>
+                ))
+              ) : paginatedOrders.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-12 text-center text-muted-foreground">
                     No orders found matching your search or filters.

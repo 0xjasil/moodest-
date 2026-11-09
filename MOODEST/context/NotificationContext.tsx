@@ -83,7 +83,7 @@ type NotificationAction =
   | { type: "MARK_AS_READ"; payload: string }
   | { type: "DELETE_NOTIFICATION"; payload: string }
   | { type: "CLEAR_ALL" }
-  | { type: "SET_PREFERENCES"; payload: NotificationPreferences }
+  | { type: "SET_PREFERENCES"; payload: NotificationPreferences | null }
   | { type: "SET_LOADING"; payload: boolean };
 
 function notificationReducer(
@@ -161,23 +161,15 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
   const fetchPreferences = useCallback(async () => {
     try {
-      // Mock data - replace with actual API call
-      const mockPreferences: NotificationPreferences = {
-        userId: 1,
-        emailNotifications: true,
-        pushNotifications: true,
-        smsNotifications: false,
-        inAppNotifications: true,
-        orderUpdates: true,
-        promoEmails: true,
-        reviewReminders: true,
-        wishlistDrops: true,
-        digestFrequency: "daily",
-      };
-
-      dispatch({ type: "SET_PREFERENCES", payload: mockPreferences });
+      const stored = typeof window !== "undefined" ? localStorage.getItem("moodest_notification_prefs") : null;
+      if (stored) {
+        dispatch({ type: "SET_PREFERENCES", payload: JSON.parse(stored) });
+      } else {
+        dispatch({ type: "SET_PREFERENCES", payload: null });
+      }
     } catch (error) {
       console.error("Failed to fetch preferences:", error);
+      dispatch({ type: "SET_PREFERENCES", payload: null });
     }
   }, []);
 

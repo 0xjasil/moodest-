@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRecommendation, Product } from "@/context/RecommendationContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function RecommendedProducts() {
+  const { user } = useAuth();
   const { recommendations, isLoading, fetchRecommendations } =
     useRecommendation();
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     loadRecommendations();
-  }, []);
+  }, [user]);
 
   const loadRecommendations = async () => {
     try {
-      await fetchRecommendations(1); // Mock user ID
+      const activeUserId = user?.id ? Number(user.id) || 0 : 0;
+      await fetchRecommendations(activeUserId);
     } catch (error) {
       console.error("Failed to load recommendations:", error);
     }

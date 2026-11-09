@@ -67,66 +67,7 @@ export interface MockCategory {
   updatedAt: Date;
 }
 
-export const DEFAULT_MOODEST_CATEGORIES: MockCategory[] = [
-  {
-    id: "cat-everyday",
-    name: "Everyday Abayas",
-    slug: "everyday-abayas",
-    description: "Effortless, breathable everyday modest wear crafted from premium Cey crepe and soft Nida fabrics.",
-    image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80",
-    totalProducts: 24,
-    totalEarnings: "₹1,18,500.00",
-    subcategories: ["Front Open Abayas", "Pull-over Closed Abayas"],
-    status: "Active",
-    createdAt: new Date("2024-01-15"),
-    updatedAt: new Date("2026-02-01"),
-  },
-  {
-    id: "cat-occasion",
-    name: "Occasion & Luxury Abayas",
-    slug: "occasion-luxury-abayas",
-    description: "Opulent embroidery, hand-beaded lace, and flowing silk georgette designed for weddings and special moments.",
-    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
-    totalProducts: 18,
-    totalEarnings: "₹1,84,200.00",
-    subcategories: ["Hand-Embroidered Luxury", "Bridal Velvet Abayas"],
-    status: "Active",
-    createdAt: new Date("2024-01-20"),
-    updatedAt: new Date("2026-02-01"),
-  },
-  {
-    id: "cat-jilbabs",
-    name: "Jilbabs & Khimars",
-    slug: "jilbabs-khimars",
-    description: "Full-coverage French jilbabs, overhead robes, and instant tie-back khimars.",
-    image: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=800&q=80",
-    totalProducts: 12,
-    totalEarnings: "₹72,400.00",
-    subcategories: ["French Khimars"],
-    status: "Active",
-    createdAt: new Date("2024-02-10"),
-    updatedAt: new Date("2026-02-01"),
-  },
-  {
-    id: "cat-hijabs",
-    name: "Hijabs & Stoles",
-    slug: "hijabs-stoles",
-    description: "Malaysian chiffon, modal cotton, and silk modal stoles in soothing neutral palettes.",
-    image: "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=800&q=80",
-    totalProducts: 32,
-    totalEarnings: "₹54,900.00",
-    subcategories: ["Malaysian Instant Stoles"],
-    status: "Active",
-    createdAt: new Date("2024-03-05"),
-    updatedAt: new Date("2026-02-01"),
-  },
-];
-
 const PRESET_IMAGES = [
-  "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=800&q=80",
   "/images/products/1.webp",
   "/images/products/2.webp",
   "/images/products/3.webp",
@@ -134,7 +75,8 @@ const PRESET_IMAGES = [
 ];
 
 export function CommerceoCategoryList() {
-  const [categories, setCategories] = useState<MockCategory[]>(DEFAULT_MOODEST_CATEGORIES);
+  const [categories, setCategories] = useState<MockCategory[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchCategories = React.useCallback(async () => {
     try {
@@ -165,10 +107,17 @@ export function CommerceoCategoryList() {
               };
             })
           );
+        } else {
+          setCategories([]);
         }
+      } else {
+        setCategories([]);
       }
     } catch (err) {
-      console.warn("[CommerceoCategoryList] Could not load categories from API, using fallback:", err);
+      console.warn("[CommerceoCategoryList] Could not load categories from API:", err);
+      setCategories([]);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -529,7 +478,17 @@ export function CommerceoCategoryList() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-white/5">
-              {paginatedCategories.length === 0 ? (
+              {loading ? (
+                Array.from({ length: 4 }).map((_, i) => (
+                  <tr key={`skel-cat-${i}`} className="animate-pulse h-16">
+                    <td className="px-4 sm:px-6 align-middle"><div className="size-4 bg-gray-200 dark:bg-white/10 rounded" /></td>
+                    <td className="px-4 py-3 align-middle"><div className="h-10 w-48 bg-gray-200 dark:bg-white/10 rounded-lg" /></td>
+                    <td className="px-4 py-3 align-middle"><div className="h-4 w-16 bg-gray-200 dark:bg-white/10 rounded" /></td>
+                    <td className="px-4 py-3 align-middle"><div className="h-4 w-20 bg-gray-200 dark:bg-white/10 rounded" /></td>
+                    <td className="px-4 sm:px-6 py-3 align-middle text-right"><div className="h-8 w-8 ml-auto bg-gray-200 dark:bg-white/10 rounded" /></td>
+                  </tr>
+                ))
+              ) : paginatedCategories.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="py-12 text-center text-muted-foreground">
                     No categories found matching &quot;{searchQuery}&quot;

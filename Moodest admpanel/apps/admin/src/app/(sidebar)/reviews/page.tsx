@@ -52,52 +52,21 @@ function Stars({ rating }: { rating: number }) {
   );
 }
 
-const DEFAULT_REVIEWS: Review[] = [
-  {
-    id: "1",
-    productName: "Classic Black Flare Abaya",
-    productImage: "/images/products/1.webp",
-    userName: "Fatima Al-Zahra",
-    rating: 5,
-    comment: "The fabric quality and drape are impeccable. The stitching on the sleeves is very elegant.",
-    status: "approved",
-    createdAt: "2026-05-02T10:00:00.000Z",
-  },
-  {
-    id: "2",
-    productName: "Embroidered Silk Abaya - Midnight Navy",
-    productImage: "/images/products/2.webp",
-    userName: "Mariam Noor",
-    rating: 5,
-    comment: "Beautiful embroidery work, looks even better in person. Fits true to size.",
-    status: "approved",
-    createdAt: "2026-05-05T14:20:00.000Z",
-  },
-  {
-    id: "3",
-    productName: "Linen Open Front Abaya - Sand Beige",
-    productImage: "/images/products/3.webp",
-    userName: "Aisha Rahman",
-    rating: 4,
-    comment: "Lightweight and breathable, perfect for summer days. Fast shipping to Dubai.",
-    status: "approved",
-    createdAt: "2026-05-08T09:15:00.000Z",
-  },
-];
-
 export default function ReviewsPage() {
-  const [reviews, setReviews] = useState<Review[]>(DEFAULT_REVIEWS);
-  const [loading, setLoading] = useState(false);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     const load = async () => {
       try {
+        setLoading(true);
         // Fetch products via same-origin proxy
         const productsRes = await fetch(`/api/products?limit=20`).catch(() =>
           fetch(`${API_URL}/products?limit=20`)
         );
         if (!productsRes.ok) {
+          setReviews([]);
           setLoading(false);
           return;
         }
@@ -138,14 +107,10 @@ export default function ReviewsPage() {
         });
 
         const allReviews = (await Promise.all(reviewPromises)).flat();
-        if (allReviews.length > 0) {
-          setReviews(allReviews);
-        } else {
-          setReviews(DEFAULT_REVIEWS);
-        }
+        setReviews(allReviews);
       } catch (err) {
-        console.warn("Could not fetch reviews from backend, using fallback:", err);
-        setReviews(DEFAULT_REVIEWS);
+        console.warn("Could not fetch reviews from backend:", err);
+        setReviews([]);
       } finally {
         setLoading(false);
       }

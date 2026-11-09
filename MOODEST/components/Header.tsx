@@ -61,11 +61,13 @@ export interface NavCategoryItem {
 }
 
 const DEFAULT_CATEGORY_NAV: NavCategoryItem[] = [
-  {
-    label: "All Collections",
-    href: "/category/all",
-    accent: true,
-  },
+  { label: "Syrian Collection", href: "/category/syrian-collection" },
+  { label: "The Classics", href: "/category/the-classics" },
+  { label: "The Luxe Edit", href: "/category/the-luxe-edit" },
+  { label: "Occasion Wear", href: "/category/occasion-wear" },
+  { label: "Kimono & Kaftan", href: "/category/kimono-kaftan" },
+  { label: "Open Abaya Edit", href: "/category/open-abaya-edit" },
+  { label: "All Collections", href: "/category/all", accent: true },
 ];
 const SearchIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -221,8 +223,8 @@ export default function Header() {
 
       <header className="sticky top-0 z-50 bg-mb-bg shadow-sm" role="banner">
 
-        {/* ══ TIER 1: Announcement + top utility links ═════════ */}
-        <div className="bg-mb-surface text-mb-primary border-b border-mb-border">
+        {/* ══ TIER 1: Announcement + top utility links (hidden on mobile) ═════════ */}
+        <div className="hidden sm:block bg-mb-surface text-mb-primary border-b border-mb-border">
           <div className="mx-auto max-w-content px-4 md:px-6 h-8 flex items-center justify-between">
             {/* Announcement — clickable like Modest Studio "BEAUTY BONANZA" */}
             <Link href="#"
@@ -251,9 +253,9 @@ export default function Header() {
           </div>
         </div>
 
-        {/* ══ TIER 2: Logo | Primary nav | Search | Actions ════ */}
+        {/* ══ TIER 2: Logo | Search | Actions ════ */}
         <div className="bg-mb-bg border-b border-mb-border">
-          <div className="mx-auto max-w-content px-4 md:px-6 h-14 flex items-center gap-3">
+          <div className="mx-auto max-w-content px-4 md:px-6 h-14 flex items-center gap-4">
 
             {/* Logo — brand sheet logo: 40px mobile / 44px desktop */}
             <Link href="/" aria-label="Modest Studio — homepage"
@@ -261,88 +263,8 @@ export default function Header() {
               <BrandLogo variant="secondary" className="h-10 md:h-12 w-auto min-w-[140px] max-w-[220px] md:max-w-[260px]" />
             </Link>
 
-            {/* Primary nav — Categories Mega Menu Button */}
-            <nav ref={navContainerRef} className="hidden lg:flex items-center relative" aria-label="Primary navigation">
-              <button
-                type="button"
-                onClick={() => setActiveMenu(activeMenu === "Categories" ? null : "Categories")}
-                onMouseEnter={() => setActiveMenu("Categories")}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-semibold transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded ${
-                  activeMenu === "Categories" ? "text-mb-primary border-b-2 border-mb-accent" : "text-mb-primary hover:text-mb-accent-deep"
-                }`}
-              >
-                <span>Categories</span>
-                <ChevronDown />
-              </button>
-
-              {/* Mega-menu / Dropdown for Categories */}
-              {activeMenu === "Categories" && (
-                <div
-                  onMouseLeave={() => setActiveMenu(null)}
-                  className="absolute top-full left-0 mt-2 w-[520px] max-h-[75vh] overflow-y-auto bg-mb-surface rounded-[6px] shadow-dropdown border border-mb-border p-4 z-50 grid grid-cols-2 gap-4"
-                >
-                  {mainCategories.map(cat => (
-                    <div key={cat.label} className="space-y-1.5">
-                      <Link
-                        href={cat.href}
-                        onClick={() => setActiveMenu(null)}
-                        className="font-semibold text-xs text-mb-primary hover:text-mb-accent-deep block"
-                      >
-                        {cat.label}
-                      </Link>
-                      {cat.children && cat.children.length > 0 && (
-                        <ul className="space-y-1 pl-2 border-l border-mb-border text-xs text-mb-muted">
-                          {cat.children.map(sub => (
-                            <li key={sub.label}>
-                              <Link
-                                href={sub.href}
-                                onClick={() => setActiveMenu(null)}
-                                className="hover:text-mb-primary block transition-colors"
-                              >
-                                {sub.label}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  ))}
-                  <div className="col-span-2 pt-3 border-t border-mb-border flex items-center justify-between text-xs">
-                    <span className="text-mb-muted">Modest Studio Boutique</span>
-                    <Link
-                      href="/category/all"
-                      onClick={() => setActiveMenu(null)}
-                      className="font-semibold text-mb-primary hover:underline"
-                    >
-                      View All Collections →
-                    </Link>
-                  </div>
-                </div>
-              )}
-
-              {/* Mega-menu / Dropdown for Brands */}
-              {activeMenu === "Brands" && (
-                <div
-                  onMouseLeave={() => setActiveMenu(null)}
-                  className="absolute top-full left-12 mt-2 w-[340px] bg-mb-bg rounded-md shadow-lg border border-mb-border p-4 z-50"
-                >
-                  <h3 className="text-xs font-bold text-mb-accent-deep uppercase tracking-wider mb-2">Featured Abaya Maisons</h3>
-                  <div className="grid grid-cols-2 gap-2 text-xs text-mb-text">
-                    <Link href="/category/modest-studio" onClick={() => setActiveMenu(null)} className="font-semibold text-mb-accent-deep hover:underline">Modest Studio</Link>
-                    <Link href="/category/nudra-dubai" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Nudra Dubai</Link>
-                    <Link href="/category/noor-dubai" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Noor Dubai</Link>
-                    <Link href="/category/zahra-couture" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Zahra Couture</Link>
-                    <Link href="/category/aura-modest" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Aura Modest</Link>
-                    <Link href="/category/amani-kaftans" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Amani Kaftans</Link>
-                    <Link href="/category/al-jawhara" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Al-Jawhara</Link>
-                    <Link href="/category/ruaa-luxury" onClick={() => setActiveMenu(null)} className="hover:text-mb-accent-deep">Ruaa Luxury</Link>
-                  </div>
-                </div>
-              )}
-            </nav>
-
             {/* Search — "Search on Modest Studio" placeholder from snapshot */}
-            <div ref={searchContainerRef} className="flex-1 hidden md:block relative">
+            <div ref={searchContainerRef} className="flex-1 hidden md:block max-w-2xl mx-auto relative">
               <form
                 onSubmit={handleSearchSubmit}
                 className="flex items-center bg-mb-surface border border-mb-border rounded h-9 focus-within:border-mb-accent focus-within:ring-2 focus-within:ring-mb-accent transition-colors"
@@ -619,6 +541,26 @@ export default function Header() {
                 <button type="submit" aria-label="Search" className="px-3 text-mb-placeholder hover:text-mb-accent-deep"><SearchIcon /></button>
               </div>
             </form>
+
+            {/* Abaya Collection Card — exact Image 1 visual */}
+            <div className="m-3 p-4 rounded-xl bg-[#0d0d0d] text-white border border-[#222] shadow-md">
+              <div className="text-center mb-3">
+                <h3 className="text-sm font-bold tracking-wider uppercase text-white">MODEST STUDIO</h3>
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest mt-0.5">THE ABAYA COLLECTION</p>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {mainCategories.map((cat) => (
+                  <Link
+                    key={cat.label}
+                    href={cat.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center justify-center text-center px-2 py-3 rounded-lg bg-[#222222] hover:bg-[#333333] active:bg-[#444444] text-xs font-medium text-white transition-all shadow-xs"
+                  >
+                    {cat.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
 
             <ul role="list">
               {navCategories.map(cat => (

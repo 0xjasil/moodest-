@@ -21,10 +21,12 @@ export default async function CategoriesPage() {
 
   if (topLevel.length === 0) {
     topLevel = [
-      { id: 1, name: "Everyday Abayas", slug: "everyday-abayas", description: "Effortless, breathable everyday modest wear crafted from premium Cey crepe and soft Nida fabrics.", image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80" },
-      { id: 2, name: "Occasion & Luxury Abayas", slug: "occasion-luxury-abayas", description: "Opulent embroidery, hand-beaded lace, and flowing silk georgette designed for weddings and special moments.", image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80" },
-      { id: 3, name: "Jilbabs & Khimars", slug: "jilbabs-khimars", description: "Full-coverage French jilbabs, overhead robes, and instant tie-back khimars.", image: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=800&q=80" },
-      { id: 4, name: "Hijabs & Stoles", slug: "hijabs-stoles", description: "Malaysian chiffon, modal cotton, and silk modal stoles in soothing neutral palettes.", image: "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=800&q=80" },
+      { id: 1, name: "Syrian Collection", slug: "syrian-collection", description: "Authentic Syrian artisanal embroidery and delicate handwoven details on breathable luxury fabrics.", image: "/abaya/categories/handwork-abaya.jpg" },
+      { id: 2, name: "The Classics", slug: "the-classics", description: "Timeless black abayas crafted from premium midnight Nida with clean, versatile cuts.", image: "/abaya/categories/classic-black.jpg" },
+      { id: 3, name: "The Luxe Edit", slug: "the-luxe-edit", description: "Opulent silk satin and textured organza edits tailored for unmatched elegance.", image: "/abaya/categories/silk-satin.jpg" },
+      { id: 4, name: "Occasion Wear", slug: "occasion-wear", description: "Statement celebratory silhouettes with intricate crystal beading and graceful drapes.", image: "/abaya/categories/bridal-occasion.jpg" },
+      { id: 5, name: "Kimono & Kaftan", slug: "kimono-kaftan", description: "Flowing bisht cuts and relaxed kaftans designed for effortless modest layering.", image: "/abaya/categories/kimono-abaya.jpg" },
+      { id: 6, name: "Open Abaya Edit", slug: "open-abaya-edit", description: "Front-open silhouettes with tailored lapels and coordinating inner slip options.", image: "/abaya/categories/front-open.jpg" },
     ];
   }
 

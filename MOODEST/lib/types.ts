@@ -51,6 +51,7 @@ export interface Variant {
   color: string;
   colorHex?: string | null;
   stock: number;
+  qty?: number;
   sku: string;
   price?: number;
   offerPrice?: number | null;
@@ -59,12 +60,14 @@ export interface Variant {
 }
 
 export interface BackendProduct {
-  id: number;
+  id: number | string;
   name: string;
   slug: string;
   description: string;
-  brandId: number;
-  categoryId: number;
+  fabric?: string;
+  careInstructions?: string;
+  brandId: number | string;
+  categoryId: number | string;
   basePrice: number;
   discountPct?: number | null;
   images: string[];
@@ -95,6 +98,8 @@ export interface Product {
   category: string;
   brand: string;
   description?: string;
+  fabric?: string;
+  careInstructions?: string;
   variants?: Variant[];
   variantId?: number | string;
 }

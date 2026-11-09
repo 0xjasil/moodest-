@@ -48,6 +48,7 @@ export function mapBackendProductToProduct(item: BackendProduct): Product {
       item.category?.slug || item.category?.name?.toLowerCase() || "front-open",
     brand: item.brand?.name || "Modest Studio",
     description: item.description || "",
+    fabric: item.fabric || undefined,
     variants: item.variants || [],
     variantId: item.variants?.[0]?.id,
   };

@@ -9,54 +9,34 @@ interface CategoryItem {
   image: string;
 }
 
-const FALLBACK_CATEGORIES: CategoryItem[] = [
-  {
-    id: "everyday-abayas",
-    name: "Everyday Abayas",
-    slug: "everyday-abayas",
-    image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: "occasion-luxury-abayas",
-    name: "Occasion & Luxury Abayas",
-    slug: "occasion-luxury-abayas",
-    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: "jilbabs-khimars",
-    name: "Jilbabs & Khimars",
-    slug: "jilbabs-khimars",
-    image: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: "hijabs-stoles",
-    name: "Hijabs & Stoles",
-    slug: "hijabs-stoles",
-    image: "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=800&q=80",
-  },
-];
-
 export default function DiscoverCategories() {
-  const [categories, setCategories] = useState<CategoryItem[]>(FALLBACK_CATEGORIES);
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isSubscribed = true;
     (async () => {
       try {
+        setLoading(true);
         const data = await categoryAPI.getAll();
-        if (!isSubscribed || !data) return;
+        if (!isSubscribed) return;
         const list = Array.isArray(data) ? data : Array.isArray((data as any)?.data) ? (data as any).data : [];
         if (list.length > 0) {
           const mapped: CategoryItem[] = list.map((cat: any) => ({
             id: String(cat.id),
             name: cat.name,
             slug: cat.slug || cat.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-            image: cat.image || "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80",
+            image: cat.image || "/banners/category-highlights-banner.jpg",
           }));
           setCategories(mapped);
+        } else {
+          setCategories([]);
         }
-      } catch {
-        // Retain fallback abaya categories on network failure
+      } catch (err) {
+        console.warn("[DiscoverCategories] Failed to load categories:", err);
+        if (isSubscribed) setCategories([]);
+      } finally {
+        if (isSubscribed) setLoading(false);
       }
     })();
 
@@ -64,6 +44,26 @@ export default function DiscoverCategories() {
       isSubscribed = false;
     };
   }, []);
+
+  if (loading) {
+    return (
+      <section className="w-full px-3 sm:px-6 my-8" aria-label="Loading Abaya Categories">
+        <div className="flex items-center justify-between mb-5">
+          <div className="space-y-1">
+            <div className="h-6 w-48 bg-mb-border/40 rounded animate-pulse" />
+            <div className="h-4 w-72 bg-mb-border/30 rounded animate-pulse" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3.5 sm:gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="aspect-[3/4] rounded-[8px] bg-mb-surface border border-mb-border animate-pulse" />
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (categories.length === 0) return null;
 
   return (
     <section className="w-full px-3 sm:px-6 my-8" aria-label="Explore Abaya Categories">
@@ -73,7 +73,7 @@ export default function DiscoverCategories() {
             Shop by Category
           </h2>
           <p className="text-xs sm:text-sm text-mb-muted mt-0.5">
-            Signature Silhouettes — Front Open, Double Shrug, Kaftans &amp; Bridal Edits
+            Signature Silhouettes — Syrian Collection, The Classics, Luxe Edit &amp; Occasion Wear
           </p>
         </div>
         <Link
@@ -84,7 +84,7 @@ export default function DiscoverCategories() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3.5 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4">
         {categories.map((cat) => {
           const href = `/category/${cat.slug || cat.id}`;
           return (
