@@ -67,12 +67,6 @@ export interface MockCategory {
   updatedAt: Date;
 }
 
-const PRESET_IMAGES = [
-  "/images/products/1.webp",
-  "/images/products/2.webp",
-  "/images/products/3.webp",
-  "/images/products/4.webp",
-];
 
 export function CommerceoCategoryList() {
   const [categories, setCategories] = useState<MockCategory[]>([]);
@@ -97,7 +91,7 @@ export function CommerceoCategoryList() {
                 name: c.name,
                 slug: c.slug || c.name.toLowerCase().replace(/\s+/g, "-"),
                 description: c.description || (c.parentId ? `Subcategory of #${c.parentId}` : "Moodest collection category"),
-                image: c.image || PRESET_IMAGES[idx % PRESET_IMAGES.length],
+                image: c.image || "",
                 totalEarnings: c.totalEarnings || "₹0.00",
                 totalProducts: c.totalProducts || c.productCount || 0,
                 subcategories: subNames,
@@ -140,7 +134,7 @@ export function CommerceoCategoryList() {
   // Form fields for Add / Edit
   const [formTitle, setFormTitle] = useState("");
   const [formSlug, setFormSlug] = useState("");
-  const [formImage, setFormImage] = useState<string>("/images/ecommerce-products/product-1.webp");
+  const [formImage, setFormImage] = useState<string>("");
   const [formFileName, setFormFileName] = useState("");
   const [formParent, setFormParent] = useState("none");
   const [formStatus, setFormStatus] = useState<"Active" | "Inactive" | "Scheduled">("Active");
@@ -151,7 +145,7 @@ export function CommerceoCategoryList() {
     setEditingCategory(null);
     setFormTitle("");
     setFormSlug("");
-    setFormImage("/images/ecommerce-products/product-1.webp");
+    setFormImage("");
     setFormFileName("");
     setFormParent("none");
     setFormStatus("Active");
@@ -164,7 +158,7 @@ export function CommerceoCategoryList() {
     setEditingCategory(cat);
     setFormTitle(cat.name);
     setFormSlug(cat.slug || cat.name.toLowerCase().replace(/\s+/g, "-"));
-    setFormImage(cat.image || "/images/ecommerce-products/product-1.webp");
+    setFormImage(cat.image || "");
     setFormFileName("");
     setFormParent("none");
     setFormStatus(cat.status || "Active");
@@ -219,7 +213,7 @@ export function CommerceoCategoryList() {
       return;
     }
 
-    let finalImageUrl = formImage || "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80";
+    let finalImageUrl = formImage.trim();
 
     // If still in base64 format, ensure uploaded to Cloudinary before saving
     if (finalImageUrl.startsWith("data:")) {
@@ -525,8 +519,13 @@ export function CommerceoCategoryList() {
                                 className="size-full object-cover aspect-square"
                                 onError={(e) => {
                                   const target = e.currentTarget;
-                                  if (!target.src.includes("unsplash.com")) {
-                                    target.src = "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80";
+                                  target.style.display = "none";
+                                  const parent = target.parentElement;
+                                  if (parent && !parent.querySelector(".fallback-initials")) {
+                                    const span = document.createElement("span");
+                                    span.className = "fallback-initials text-xs font-semibold text-muted-foreground";
+                                    span.innerText = cat.name.slice(0, 2).toUpperCase();
+                                    parent.appendChild(span);
                                   }
                                 }}
                               />
@@ -771,45 +770,7 @@ export function CommerceoCategoryList() {
                 </div>
               )}
 
-              {/* Preset Icon Picker */}
-              <div className="pt-2">
-                <p className="text-[11px] font-medium text-gray-500 dark:text-gray-400 mb-1.5">
-                  Or select a preset product icon:
-                </p>
-                <div className="grid grid-cols-8 gap-1.5 bg-gray-50 dark:bg-white/[0.02] p-2 rounded-xl border border-gray-200/80 dark:border-white/10">
-                  {PRESET_IMAGES.map((imgSrc, i) => {
-                    const isSelected = formImage === imgSrc;
-                    return (
-                      <button
-                        type="button"
-                        key={i}
-                        onClick={() => {
-                          setFormImage(imgSrc);
-                          setFormFileName("");
-                        }}
-                        className={`relative aspect-square rounded-lg overflow-hidden p-1 border transition-all ${
-                          isSelected
-                            ? "border-indigo-600 ring-2 ring-indigo-600/30 bg-white dark:bg-[#181818]"
-                            : "border-gray-200/70 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 bg-white dark:bg-[#181818]"
-                        }`}
-                      >
-                        <Image
-                          src={imgSrc}
-                          alt={`Preset ${i + 1}`}
-                          width={32}
-                          height={32}
-                          className="size-full object-contain"
-                        />
-                        {isSelected && (
-                          <div className="absolute inset-0 bg-indigo-600/20 flex items-center justify-center">
-                            <Check className="size-3 text-indigo-600 dark:text-indigo-400 stroke-[3]" />
-                          </div>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+
             </div>
 
             {/* Parent Category (Optional) */}

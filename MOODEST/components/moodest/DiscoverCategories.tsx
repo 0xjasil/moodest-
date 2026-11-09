@@ -26,13 +26,13 @@ interface DiscoverCategoriesProps {
  */
 export function getCategoryFallback(cat: CategoryItem): string {
   const text = `${cat.slug || ""} ${cat.name || ""}`.toLowerCase();
-  if (text.includes("kimono") || text.includes("kaftan")) return "/abaya/categories/kimono-abaya.jpg";
-  if (text.includes("occasion") || text.includes("bridal") || text.includes("party")) return "/abaya/categories/bridal-occasion.jpg";
-  if (text.includes("open") || text.includes("front")) return "/abaya/categories/front-open.jpg";
-  if (text.includes("syrian") || text.includes("handwork") || text.includes("embroid")) return "/abaya/categories/handwork-abaya.jpg";
-  if (text.includes("luxe") || text.includes("silk") || text.includes("satin")) return "/abaya/categories/silk-satin.jpg";
-  if (text.includes("classic") || text.includes("black")) return "/abaya/categories/classic-black.jpg";
-  return "/abaya/categories/classic-black.jpg";
+  if (text.includes("kimono") || text.includes("kaftan")) return "https://res.cloudinary.com/dsaegpb70/image/upload/v1794209244/moodest/products/main/nythensnfrcfxu0kgy9e.jpg";
+  if (text.includes("occasion") || text.includes("bridal") || text.includes("party")) return "https://res.cloudinary.com/dsaegpb70/image/upload/v1794240615/moodest/categories/yjzxcj73fypiu5u4s3v1.jpg";
+  if (text.includes("open") || text.includes("front")) return "https://res.cloudinary.com/dsaegpb70/image/upload/v1794240617/moodest/categories/ajyvnretlig5l2f0azlq.jpg";
+  if (text.includes("syrian") || text.includes("handwork") || text.includes("embroid")) return "https://res.cloudinary.com/dsaegpb70/image/upload/v1794240619/moodest/categories/spkc4gv6coj0xblaugcl.jpg";
+  if (text.includes("luxe") || text.includes("silk") || text.includes("satin")) return "https://res.cloudinary.com/dsaegpb70/image/upload/v1794240623/moodest/categories/yla8sad18ou0chssqcrr.jpg";
+  if (text.includes("classic") || text.includes("black")) return "https://res.cloudinary.com/dsaegpb70/image/upload/v1794240621/moodest/categories/ihom0wjmwqjtazurdkbj.jpg";
+  return "https://res.cloudinary.com/dsaegpb70/image/upload/v1794209244/moodest/products/main/nythensnfrcfxu0kgy9e.jpg";
 }
 
 /**
