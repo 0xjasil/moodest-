@@ -6,14 +6,10 @@ import Link from "next/link";
 import BrandLogo from "@/components/BrandLogo";
 
 import HeroCarousel from "@/components/moodest/HeroCarousel";
-import DiscoverCategories from "@/components/moodest/DiscoverCategories";
-import OfferGifsCarousel from "@/components/moodest/OfferGifsCarousel";
-import TopBrandsSection from "@/components/moodest/TopBrandsSection";
-import UnmissableOffers from "@/components/moodest/UnmissableOffers";
-import CuratedAbayas from "@/components/moodest/CuratedAbayas";
-import HotListProducts from "@/components/moodest/HotListProducts";
-import SpotlightSection from "@/components/moodest/SpotlightSection";
-import RadarSection from "@/components/moodest/RadarSection";
+import ShopByCategoryEditorial from "@/components/moodest/ShopByCategoryEditorial";
+import NewArrivalsEditorial from "@/components/moodest/NewArrivalsEditorial";
+import TrendingProductGallery from "@/components/moodest/TrendingProductGallery";
+import TrendingEditorial from "@/components/moodest/TrendingEditorial";
 
 export default function Home() {
   const [showAppBanner, setShowAppBanner] = useState(true);
@@ -29,92 +25,29 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
       </Head>
 
-      {/* 1. Header (Modest Studio) */}
+      {/* 1. Header (Modest Studio) — Shared Primary Brand Background Color */}
       <Header />
 
       <main id="main-content" className="min-h-screen bg-mb-bg w-full overflow-x-hidden">
-        {/* 2. Top Banner — Hidden on Mobile Screens, Visible on Desktop (Edge-to-Edge) */}
-        <div className="hidden md:block w-full mb-4 sm:mb-6">
-          <Link href="/category/all" className="block w-full">
-            <img
-              src="/banners/top-promo-banner.jpg"
-              alt="Modest Studio — Premium Abaya & Modest Wear New Arrivals"
-              className="w-full h-auto object-cover object-center"
-              onError={(e) => {
-                const target = e.currentTarget;
-                if (!target.src.includes("/abaya/banners/top-promo-banner.jpg")) {
-                  target.src = "/abaya/banners/top-promo-banner.jpg";
-                }
-              }}
-            />
-          </Link>
-        </div>
-
-        {/* 3. Hero Carousel Cards */}
+        {/* Top Promotional Hero Drop */}
         <HeroCarousel />
 
-        {/* 4. Discover Categories (Ovais Abaya Collection Style) */}
-        <DiscoverCategories />
+        {/* 1. Shop by Category — 2 Large Visual Image Cards */}
+        <ShopByCategoryEditorial />
 
-        {/* 5. Category Highlights Banner — Full Width Left to Right Without Gaps */}
-        <div className="w-full my-6 sm:my-8">
-          <Link href="/category/all" className="block w-full">
-            <img
-              src="/banners/category-highlights-banner.jpg"
-              alt="Curated Abaya Highlights — Modest Studio"
-              className="w-full h-auto object-cover object-center"
-              onError={(e) => {
-                const target = e.currentTarget;
-                if (!target.src.includes("/abaya/banners/category-highlights-banner.jpg")) {
-                  target.src = "/abaya/banners/category-highlights-banner.jpg";
-                }
-              }}
-            />
-          </Link>
-        </div>
+        {/* 2. New Arrivals — 2 Large Editorial Portrait Cards */}
+        <NewArrivalsEditorial />
 
-        {/* 6. Animated Carousel */}
-        <OfferGifsCarousel />
+        {/* 3. Trending Now — Curated Product Gallery with Real Database Products */}
+        <TrendingProductGallery />
 
-        {/* 7. Top Brands Section */}
-        <TopBrandsSection />
+        {/* 4. Trending Now — Featured Editorial Storytelling (2 Large Cards) */}
+        <TrendingEditorial />
 
-        {/* 8. Unmissable Offers */}
-        <UnmissableOffers />
-
-        {/* 9. Curated Signature Abayas */}
-        <CuratedAbayas />
-
-        {/* 10. Hot List Icons */}
-        <HotListProducts />
-
-        {/* 11. In The Spotlight */}
-        <SpotlightSection />
-
-        {/* 12. On Our Radar */}
-        <RadarSection />
-
-        {/* 13. Bottom Feature Banner — Full Width Left to Right Without Gaps */}
-        <div className="w-full my-8 sm:my-10">
-          <Link href="/category/all" className="block w-full">
-            <img
-              src="/banners/timeless-beauty-banner.jpg"
-              alt="Modest Studio — Grace In Every Fold"
-              className="w-full h-auto object-cover object-center"
-              onError={(e) => {
-                const target = e.currentTarget;
-                if (!target.src.includes("/abaya/banners/timeless-beauty-banner.jpg")) {
-                  target.src = "/abaya/banners/timeless-beauty-banner.jpg";
-                }
-              }}
-            />
-          </Link>
-        </div>
-
-        {/* 14. Store Brand Statement with Brand Logo */}
-        <div className="w-full px-4 sm:px-6 py-14 text-center bg-mb-surface border-t border-mb-border">
-          <BrandLogo variant="primary" className="h-16 sm:h-20 w-auto mx-auto mb-3" />
-          <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-mb-primary mb-2">
+        {/* Store Brand Statement with Gold Brand Logo */}
+        <div className="w-full px-4 sm:px-6 py-16 text-center bg-mb-surface border-t border-mb-border/40">
+          <BrandLogo variant="primary" className="h-14 sm:h-16 w-auto mx-auto mb-3" />
+          <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-mb-primary mb-2 tracking-wide">
             Modest Studio
           </h2>
           <p className="text-xs sm:text-sm font-light text-mb-muted uppercase tracking-[0.3em]">

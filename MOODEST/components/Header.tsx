@@ -221,27 +221,27 @@ export default function Header() {
         Skip to main content
       </a>
 
-      <header className="sticky top-0 z-50 bg-mb-bg shadow-sm" role="banner">
+      <header className="sticky top-0 z-50 bg-mb-primary shadow-md" role="banner">
 
         {/* ══ TIER 1: Announcement + top utility links (hidden on mobile) ═════════ */}
-        <div className="hidden sm:block bg-mb-surface text-mb-primary border-b border-mb-border">
+        <div className="hidden sm:block bg-mb-primary-hover text-mb-gold border-b border-white/10">
           <div className="mx-auto max-w-content px-4 md:px-6 h-8 flex items-center justify-between">
-            {/* Announcement — clickable like Modest Studio "BEAUTY BONANZA" */}
+            {/* Announcement — clickable */}
             <Link href="#"
-              className="text-[11px] font-semibold tracking-wide truncate hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mb-accent">
+              className="text-[11px] font-semibold tracking-wide truncate text-mb-gold hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mb-gold">
               Get Extra 20% Off on First App Order! Use Code: MODEST20
             </Link>
 
             {/* Utility list — [Get App, Store & Events, Gift Card, Help] with icons and dividers */}
-            <ul className="hidden md:flex items-center text-mb-primary" role="list">
+            <ul className="hidden md:flex items-center text-white/80" role="list">
               {TOP_LINKS.map((link, idx) => {
                 const IconComponent = link.icon;
                 return (
                   <React.Fragment key={link.label}>
-                    {idx > 0 && <span className="text-mb-dusty text-[10px] select-none">|</span>}
+                    {idx > 0 && <span className="text-white/30 text-[10px] select-none">|</span>}
                     <li role="listitem">
                       <a href={link.href}
-                        className="flex items-center gap-1.5 px-2.5 text-[11px] font-medium hover:underline whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mb-accent">
+                        className="flex items-center gap-1.5 px-2.5 text-[11px] font-medium hover:text-mb-gold transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mb-gold">
                         <IconComponent />
                         <span>{link.label}</span>
                       </a>
@@ -254,20 +254,20 @@ export default function Header() {
         </div>
 
         {/* ══ TIER 2: Logo | Search | Actions ════ */}
-        <div className="bg-mb-bg border-b border-mb-border">
+        <div className="bg-mb-primary border-b border-white/10">
           <div className="mx-auto max-w-content px-4 md:px-6 h-14 flex items-center gap-4">
 
-            {/* Logo — brand sheet logo: 40px mobile / 44px desktop */}
+            {/* Logo — brand sheet logo in gold for primary dark luxury background */}
             <Link href="/" aria-label="Modest Studio — homepage"
-              className="flex-shrink-0 mr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded flex items-center">
-              <BrandLogo variant="secondary" className="h-10 md:h-12 w-auto min-w-[140px] max-w-[220px] md:max-w-[260px]" />
+              className="flex-shrink-0 mr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-gold rounded flex items-center">
+              <BrandLogo variant="gold" className="h-10 md:h-12 w-auto min-w-[140px] max-w-[220px] md:max-w-[260px]" />
             </Link>
 
             {/* Search — "Search on Modest Studio" placeholder from snapshot */}
             <div ref={searchContainerRef} className="flex-1 hidden md:block max-w-2xl mx-auto relative">
               <form
                 onSubmit={handleSearchSubmit}
-                className="flex items-center bg-mb-surface border border-mb-border rounded h-9 focus-within:border-mb-accent focus-within:ring-2 focus-within:ring-mb-accent transition-colors"
+                className="flex items-center bg-mb-primary-hover/90 border border-white/20 rounded h-9 focus-within:border-mb-gold focus-within:ring-1 focus-within:ring-mb-gold transition-colors"
               >
                 <label htmlFor="header-search" className="sr-only">Search on Modest Studio</label>
                 <input
@@ -280,12 +280,12 @@ export default function Header() {
                   value={searchVal}
                   onChange={e => setSearchVal(e.target.value)}
                   onFocus={() => setSearchFocused(true)}
-                  className="flex-1 min-w-0 bg-transparent pl-3 pr-1 text-[13px] text-mb-text placeholder-mb-placeholder outline-none"
+                  className="flex-1 min-w-0 bg-transparent pl-3 pr-1 text-[13px] text-white placeholder-white/60 outline-none"
                 />
                 <button
                   type="submit"
                   aria-label="Search"
-                  className="flex-shrink-0 px-3 h-full text-mb-accent hover:text-mb-accent-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent"
+                  className="flex-shrink-0 px-3 h-full text-mb-gold hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-gold"
                 >
                   <SearchIcon />
                 </button>
@@ -344,12 +344,12 @@ export default function Header() {
               )}
             </div>
 
-            {/* Right actions: Sign in + Shopping Bag (exact labels from snapshot) */}
-            <div className="flex items-center gap-1 ml-auto md:ml-0">
+            {/* Right actions: Sign in + Shopping Bag */}
+            <div className="flex items-center gap-1.5 ml-auto md:ml-0">
 
               {/* Mobile search */}
               <button type="button" aria-label="Search"
-                className="md:hidden p-2 text-mb-body hover:text-mb-accent-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded">
+                className="md:hidden p-2 text-white/90 hover:text-mb-gold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-gold rounded">
                 <SearchIcon />
               </button>
 
@@ -360,9 +360,9 @@ export default function Header() {
                     type="button"
                     onClick={() => setUserDropdownOpen((v) => !v)}
                     aria-expanded={userDropdownOpen}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-semibold text-mb-text bg-mb-surface hover:bg-mb-surface-hover border border-mb-border rounded shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-semibold text-white bg-mb-primary-hover hover:bg-black/30 border border-white/20 rounded shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-gold"
                   >
-                    <span className="w-5 h-5 rounded-full bg-mb-primary text-mb-bg text-[10px] font-bold flex items-center justify-center">
+                    <span className="w-5 h-5 rounded-full bg-mb-gold text-mb-primary text-[10px] font-bold flex items-center justify-center">
                       {(user.firstName || user.email || "U")[0].toUpperCase()}
                     </span>
                     <span className="max-w-[100px] truncate">{user.firstName || "Account"}</span>
@@ -421,7 +421,7 @@ export default function Header() {
               ) : (
                 <Link
                   href="/login"
-                  className="hidden md:inline-flex items-center justify-center px-4 py-1.5 text-[13px] font-semibold text-mb-bg bg-mb-primary hover:bg-mb-primary-hover transition-colors rounded shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent"
+                  className="hidden md:inline-flex items-center justify-center px-4 py-1.5 text-[13px] font-semibold text-mb-primary bg-mb-gold hover:bg-white transition-colors rounded shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
                   Sign in
                 </Link>
@@ -430,26 +430,26 @@ export default function Header() {
               {/* Wishlist */}
               <Link href="/wishlist"
                 aria-label={`Wishlist, ${wishlistCount} items`}
-                className="relative hidden md:flex p-2 text-mb-body hover:text-mb-accent-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded">
+                className="relative hidden md:flex p-2 text-white/90 hover:text-mb-gold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-gold rounded">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                   strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
                 </svg>
                 {wishlistCount > 0 && (
                   <span aria-hidden="true"
-                    className="absolute top-0 right-0 w-4 h-4 bg-mb-primary text-mb-bg text-[9px] font-bold rounded-full flex items-center justify-center">
+                    className="absolute top-0 right-0 w-4 h-4 bg-mb-gold text-mb-primary text-[9px] font-bold rounded-full flex items-center justify-center">
                     {wishlistCount > 9 ? "9+" : wishlistCount}
                   </span>
                 )}
               </Link>
 
-              {/* Shopping Bag — exact label from snapshot */}
+              {/* Shopping Bag */}
               <Link href="/cart"
                 aria-label={`Shopping Bag, ${itemCount} items`}
-                className="relative flex items-center gap-1.5 p-2 text-mb-body hover:text-mb-accent-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded">
+                className="relative flex items-center gap-1.5 p-2 text-white/90 hover:text-mb-gold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-gold rounded">
                 <BagIcon />
                 <span aria-hidden="true"
-                  className="absolute top-0 right-0 w-4 h-4 bg-mb-primary text-mb-bg text-[9px] font-bold rounded-full flex items-center justify-center">
+                  className="absolute top-0 right-0 w-4 h-4 bg-mb-gold text-mb-primary text-[9px] font-bold rounded-full flex items-center justify-center">
                   {itemCount > 9 ? "9+" : itemCount}
                 </span>
               </Link>
@@ -460,7 +460,7 @@ export default function Header() {
                 aria-expanded={menuOpen}
                 aria-controls="mobile-nav"
                 onClick={() => setMenuOpen(v => !v)}
-                className="lg:hidden p-2 text-mb-body hover:text-mb-accent-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded">
+                className="lg:hidden p-2 text-white hover:text-mb-gold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-gold rounded">
                 {menuOpen ? <CloseIcon /> : <MenuIcon />}
               </button>
             </div>
@@ -468,19 +468,18 @@ export default function Header() {
         </div>
 
         {/* ══ TIER 3: Category nav ══════════════════════════════ */}
-        {/* navigation "Secondary" > navigation "Main navigation menu" from snapshot */}
         {(mainCategories.length > 0 || accentCategory) && (
           <nav aria-label="Main navigation menu"
-            className="hidden lg:block bg-mb-surface border-b border-mb-border">
+            className="hidden lg:block bg-mb-primary-hover border-b border-white/10">
             <div className="mx-auto max-w-content px-4 md:px-6">
               <ul className="flex items-center overflow-x-auto no-scrollbar gap-1" role="list">
                 {mainCategories.map(cat => (
                   <li key={cat.label} role="listitem" className="relative group">
                     <Link href={cat.href}
-                      className="inline-flex items-center gap-1 px-3.5 py-2.5 text-[13px] font-medium whitespace-nowrap border-b-2 border-transparent group-hover:border-mb-accent group-hover:text-mb-accent-deep transition-colors capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent text-mb-text">
+                      className="inline-flex items-center gap-1 px-3.5 py-2.5 text-[13px] font-medium whitespace-nowrap border-b-2 border-transparent group-hover:border-mb-gold group-hover:text-mb-gold transition-colors capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-gold text-white/90">
                       <span>{cat.label}</span>
                       {cat.children && cat.children.length > 0 && (
-                        <span className="opacity-40 group-hover:opacity-100 transition-opacity">
+                        <span className="opacity-60 group-hover:opacity-100 transition-opacity">
                           <ChevronDown />
                         </span>
                       )}
@@ -505,7 +504,7 @@ export default function Header() {
                 {accentCategory && (
                   <li role="listitem" className="relative">
                     <Link href={accentCategory.href}
-                      className="inline-flex items-center gap-1 px-3.5 py-2.5 text-[13px] font-semibold whitespace-nowrap border-b-2 border-transparent hover:border-mb-accent transition-colors capitalize text-mb-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent">
+                      className="inline-flex items-center gap-1 px-3.5 py-2.5 text-[13px] font-semibold whitespace-nowrap border-b-2 border-transparent hover:border-white transition-colors capitalize text-mb-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-gold">
                       <span>{accentCategory.label}</span>
                     </Link>
                   </li>
@@ -518,7 +517,7 @@ export default function Header() {
         {/* Mobile nav drawer */}
         {menuOpen && (
           <nav id="mobile-nav" aria-label="Mobile navigation"
-            className="lg:hidden bg-mb-surface border-t border-mb-border shadow-md max-h-[80vh] overflow-y-auto">
+            className="lg:hidden bg-mb-primary text-white border-t border-white/15 shadow-xl max-h-[85vh] overflow-y-auto">
 
             {/* Mobile search */}
             <form
@@ -531,14 +530,14 @@ export default function Header() {
                   router.push(`/category/all?q=${encodeURIComponent(input.value.trim())}`);
                 }
               }}
-              className="px-4 py-3 border-b border-mb-border-lite"
+              className="px-4 py-3 border-b border-white/10"
             >
               <label htmlFor="mobile-search" className="sr-only">Search</label>
-              <div className="flex items-center bg-mb-surface border border-mb-border rounded-sm h-9 focus-within:border-mb-accent">
+              <div className="flex items-center bg-mb-primary-hover border border-white/20 rounded h-9 focus-within:border-mb-gold">
                 <input id="mobile-search" type="search" name="q" placeholder="Search on Modest Studio"
                   autoComplete="off"
-                  className="flex-1 bg-transparent pl-3 text-[13px] outline-none" />
-                <button type="submit" aria-label="Search" className="px-3 text-mb-placeholder hover:text-mb-accent-deep"><SearchIcon /></button>
+                  className="flex-1 bg-transparent pl-3 text-[13px] text-white placeholder-white/60 outline-none" />
+                <button type="submit" aria-label="Search" className="px-3 text-mb-gold hover:text-white"><SearchIcon /></button>
               </div>
             </form>
 
@@ -562,29 +561,29 @@ export default function Header() {
               </div>
             </div>
 
-            <ul role="list">
+            <ul role="list" className="text-white">
               {navCategories.map(cat => (
                 <li key={cat.label} role="listitem">
                   <Link href={cat.href} onClick={() => setMenuOpen(false)}
-                    className={`flex items-center justify-between px-4 py-3 text-[13px] font-medium border-b border-mb-border-lite hover:bg-mb-surface capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-mb-accent ${
-                      cat.accent ? "text-mb-accent-deep font-semibold" : "text-mb-text"
+                    className={`flex items-center justify-between px-4 py-3 text-[13px] font-medium border-b border-white/10 hover:bg-white/5 capitalize transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mb-gold ${
+                      cat.accent ? "text-mb-gold font-semibold" : "text-white/90"
                     }`}>
                     <span>{cat.label}</span>
                     {cat.children && cat.children.length > 0 && (
-                      <span className="text-[11px] text-mb-placeholder font-normal">
+                      <span className="text-[11px] text-white/50 font-normal">
                         ({cat.children.length})
                       </span>
                     )}
                   </Link>
 
                   {cat.children && cat.children.length > 0 && (
-                    <div className="bg-mb-surface/40 border-b border-mb-border-lite pl-6 pr-4 py-1 space-y-1">
+                    <div className="bg-black/20 border-b border-white/10 pl-6 pr-4 py-1 space-y-1">
                       {cat.children.map(sub => (
                         <Link
                           key={sub.label}
                           href={sub.href}
                           onClick={() => setMenuOpen(false)}
-                          className="block py-1.5 text-xs text-mb-body hover:text-mb-accent-deep transition-colors"
+                          className="block py-1.5 text-xs text-white/80 hover:text-mb-gold transition-colors"
                         >
                           ↳ {sub.label}
                         </Link>
@@ -595,24 +594,24 @@ export default function Header() {
               ))}
               {isAuthenticated && user ? (
                 <>
-                  <li role="listitem" className="px-4 py-3 bg-mb-surface border-b border-mb-border-lite">
-                    <p className="text-xs font-semibold text-mb-text truncate">
+                  <li role="listitem" className="px-4 py-3 bg-mb-primary-hover border-b border-white/10">
+                    <p className="text-xs font-semibold text-white truncate">
                       Hi, {user.firstName || user.email.split('@')[0] || "Customer"}
                     </p>
-                    <p className="text-[11px] text-mb-placeholder truncate">{user.email}</p>
+                    <p className="text-[11px] text-white/60 truncate">{user.email}</p>
                   </li>
                   <li role="listitem">
-                    <Link href="/orders" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-[13px] font-medium border-b border-mb-border-lite hover:bg-mb-surface">
+                    <Link href="/orders" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-[13px] font-medium border-b border-white/10 hover:bg-white/5 text-white/90 hover:text-mb-gold">
                       My Orders
                     </Link>
                   </li>
                   <li role="listitem">
-                    <Link href="/addresses" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-[13px] font-medium border-b border-mb-border-lite hover:bg-mb-surface">
+                    <Link href="/addresses" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-[13px] font-medium border-b border-white/10 hover:bg-white/5 text-white/90 hover:text-mb-gold">
                       Saved Addresses
                     </Link>
                   </li>
                   <li role="listitem">
-                    <Link href="/wallet" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-[13px] font-medium border-b border-mb-border-lite hover:bg-mb-surface">
+                    <Link href="/wallet" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-[13px] font-medium border-b border-white/10 hover:bg-white/5 text-white/90 hover:text-mb-gold">
                       My Wallet
                     </Link>
                   </li>
@@ -620,7 +619,7 @@ export default function Header() {
                     <button
                       type="button"
                       onClick={() => { setMenuOpen(false); logout(); router.push("/"); }}
-                      className="w-full text-left px-4 py-3 text-[13px] font-medium text-red-600 border-b border-mb-border-lite hover:bg-red-50"
+                      className="w-full text-left px-4 py-3 text-[13px] font-medium text-rose-300 border-b border-white/10 hover:bg-rose-900/30"
                     >
                       Sign Out
                     </button>
@@ -631,7 +630,7 @@ export default function Header() {
                   <Link
                     href="/login"
                     onClick={() => setMenuOpen(false)}
-                    className="block w-full text-left px-4 py-3 text-[13px] font-medium text-mb-accent-deep border-b border-mb-border-lite hover:bg-mb-surface"
+                    className="block w-full text-left px-4 py-3 text-[13px] font-semibold text-mb-gold border-b border-white/10 hover:bg-white/5"
                   >
                     Sign In / Register
                   </Link>

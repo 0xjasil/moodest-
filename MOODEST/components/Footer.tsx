@@ -46,13 +46,13 @@ const SOCIALS = [
 /* ── Component ────────────────────────────────────────────────────────── */
 export default function Footer() {
   return (
-    <footer className="bg-mb-primary border-t border-mb-primary-hover text-mb-bg" role="contentinfo">
+    <footer className="bg-mb-primary border-t border-white/10 text-mb-bg" role="contentinfo">
 
       {/* ── Brand & Tagline Header ──────────────────────────── */}
-      <div className="border-b border-mb-primary-hover/60 py-8 px-4">
+      <div className="border-b border-white/10 py-10 px-4">
         <div className="mx-auto max-w-content flex flex-col items-center justify-center text-center">
-          <Link href="/" aria-label="Modest Studio" className="inline-block mb-3">
-            <BrandLogo variant="gold" className="h-14 md:h-16 w-auto min-w-[96px] max-w-[200px]" />
+          <Link href="/" aria-label="Modest Studio" className="inline-block mb-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-gold rounded">
+            <BrandLogo variant="gold" className="h-12 md:h-14 w-auto min-w-[96px] max-w-[200px]" />
           </Link>
           <p className="text-xs md:text-sm font-light text-mb-gold uppercase tracking-[0.3em]">
             Beauty Beyond Today
@@ -61,10 +61,10 @@ export default function Footer() {
       </div>
 
       {/* ── App + Social strip ──────────────────────────────── */}
-      <div className="border-b border-mb-primary-hover/60">
+      <div className="border-b border-white/10 bg-mb-primary-hover/50">
         <div className="mx-auto max-w-content px-4 md:px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
-            <p className="text-base font-serif font-semibold text-mb-bg">
+            <p className="text-base font-serif font-semibold text-white">
               Get Extra 20% Off on Your First Order
             </p>
             <p className="text-xs text-mb-gold mt-0.5">Experience Modest Studio on iOS &amp; Android</p>
@@ -72,14 +72,14 @@ export default function Footer() {
           <div className="flex gap-2">
             <a
               href="#"
-              className="inline-block bg-mb-bg text-mb-primary text-xs font-semibold px-4 py-2.5 rounded-md hover:bg-mb-surface transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent"
+              className="inline-block bg-mb-gold text-mb-primary text-xs font-semibold px-4 py-2 rounded hover:bg-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               aria-label="Get Modest Studio on Google Play"
             >
               Google Play
             </a>
             <a
               href="#"
-              className="inline-block bg-mb-bg text-mb-primary text-xs font-semibold px-4 py-2.5 rounded-md hover:bg-mb-surface transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent"
+              className="inline-block bg-white/10 text-white border border-white/20 text-xs font-semibold px-4 py-2 rounded hover:bg-white hover:text-mb-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               aria-label="Download Modest Studio on App Store"
             >
               App Store
@@ -91,7 +91,7 @@ export default function Footer() {
                 key={s.label}
                 href="#"
                 aria-label={s.label}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-mb-gold/40 bg-mb-primary text-xs font-semibold text-mb-gold hover:bg-mb-bg hover:text-mb-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/5 text-xs font-semibold text-mb-gold hover:bg-white hover:text-mb-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-gold"
               >
                 {s.abbr}
               </a>
@@ -101,7 +101,7 @@ export default function Footer() {
       </div>
 
       {/* ── Links grid ──────────────────────────────────────── */}
-      <div className="mx-auto max-w-content px-4 md:px-6 py-10">
+      <div className="mx-auto max-w-content px-4 md:px-6 py-12">
         <nav aria-label="Footer navigation">
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-5">
             {LINKS.map(section => (
@@ -113,8 +113,8 @@ export default function Footer() {
                   {section.items.map(item => (
                     <li key={item} role="listitem">
                       <Link
-                        href="#"
-                        className="text-xs text-mb-bg/90 hover:text-mb-gold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mb-accent rounded"
+                        href="/category/all"
+                        className="text-xs text-white/80 hover:text-mb-gold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mb-gold rounded"
                       >
                         {item}
                       </Link>
@@ -126,10 +126,10 @@ export default function Footer() {
           </div>
         </nav>
 
-        {/* Bottom bar */}
-        <div className="mt-10 pt-6 border-t border-mb-primary-hover/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Bottom bar divider and legal links */}
+        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            <p className="text-xs text-mb-bg font-medium">
+            <p className="text-xs text-white/90 font-medium">
               Customer Concierge: 1800-267-4444
             </p>
             <p className="text-[11px] text-mb-gold/80 mt-0.5">Available 7 days a week, 8 AM – 10 PM IST</p>
@@ -139,13 +139,13 @@ export default function Footer() {
               <a
                 key={l}
                 href="#"
-                className="text-xs text-mb-gold hover:text-mb-bg transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mb-accent rounded"
+                className="text-xs text-white/70 hover:text-mb-gold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mb-gold rounded"
               >
                 {l}
               </a>
             ))}
           </nav>
-          <p className="text-xs text-mb-gold/80">© 2026 Modest Studio. All rights reserved.</p>
+          <p className="text-xs text-white/60">© 2026 Modest Studio. All rights reserved.</p>
         </div>
       </div>
 
