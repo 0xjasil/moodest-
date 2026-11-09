@@ -29,6 +29,7 @@ import { type Category } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { apiFetch } from "@/lib/apiFetch";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 
 const categorySchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -63,12 +64,20 @@ export const CategoryDialogForm: FC<CategoryDialogFormProps> = ({
   const onSubmit = async (values: z.infer<typeof categorySchema>) => {
     setLoading(true);
     try {
-      // NestJS CreateCategoryDto: { name, slug, parentId? }
-      // No image upload support in backend — image field is ignored.
-      const payload = {
+      let imageUrl: string | undefined = undefined;
+      if (values.image instanceof File) {
+        toast.loading("Uploading image to Cloudinary...", { id: "cat-dialog-upload" });
+        imageUrl = await uploadToCloudinary(values.image, "moodest/categories");
+        toast.success("Image uploaded successfully!", { id: "cat-dialog-upload" });
+      }
+
+      const payload: Record<string, any> = {
         name: values.name,
         slug: values.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, ""),
       };
+      if (imageUrl) {
+        payload.image = imageUrl;
+      }
 
       const endpoint = category
         ? `/categories/${category.id}`

@@ -53,6 +53,9 @@ export function getDynamicCategoryImage(cat: CategoryItem, products?: Product[])
 
   if (rawImage && typeof rawImage === "string" && rawImage.trim() !== "") {
     const trimmed = rawImage.trim();
+    if (trimmed.startsWith("/images/")) {
+      return `https://admin-moodest-25.vercel.app${trimmed}`;
+    }
     return trimmed;
   }
 

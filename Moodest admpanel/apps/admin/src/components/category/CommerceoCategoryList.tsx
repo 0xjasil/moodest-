@@ -516,7 +516,11 @@ export function CommerceoCategoryList() {
                           <div className="size-11 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200/80 dark:border-white/10 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs relative">
                             {cat.image ? (
                               <img
-                                src={cat.image}
+                                src={
+                                  cat.image.startsWith("http") || cat.image.startsWith("data:")
+                                    ? cat.image
+                                    : `https://modest-eta.vercel.app${cat.image.startsWith("/") ? "" : "/"}${cat.image}`
+                                }
                                 alt={cat.name}
                                 className="size-full object-cover aspect-square"
                                 onError={(e) => {
@@ -737,7 +741,11 @@ export function CommerceoCategoryList() {
                 <div className="flex items-center gap-2 pt-1.5">
                   <div className="relative size-12 rounded-lg border border-gray-200 dark:border-white/10 overflow-hidden bg-gray-50 dark:bg-white/5 flex-shrink-0">
                     <img
-                      src={formImage}
+                      src={
+                        formImage.startsWith("http") || formImage.startsWith("data:")
+                          ? formImage
+                          : `https://modest-eta.vercel.app${formImage.startsWith("/") ? "" : "/"}${formImage}`
+                      }
                       alt="Preview"
                       className="size-full object-cover"
                     />
