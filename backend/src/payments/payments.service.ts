@@ -60,10 +60,14 @@ export class PaymentsService {
         });
         razorpayOrderId = rzpOrder.id;
       } catch (err: any) {
-        this.logger.error('Razorpay order creation failed, generating local fallback:', err?.message || err);
-        razorpayOrderId = `order_mock_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+        this.logger.error('Razorpay order creation failed:', err?.message || err);
+        throw new BadGatewayException('Payment gateway order creation failed');
       }
     } else {
+      if (process.env.NODE_ENV === 'production') {
+        throw new BadGatewayException('Payment gateway is not configured');
+      }
+      this.logger.warn('Razorpay client not configured - dev mode fallback order ID used');
       razorpayOrderId = `order_mock_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
     }
 
