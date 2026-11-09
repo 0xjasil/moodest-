@@ -239,55 +239,57 @@ function ProductImageAndCategories() {
 
   return (
     <Card className="space-y-4 w-full">
-      {/* ── 2 Thumbnail Images (Primary + Hover) ── */}
+      {/* ── Image Upload Section (Dual Hover Thumbnails + Multi-Gallery) ── */}
       <Card className="shadow-none border-none">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base font-semibold">Product Thumbnails (Dual Hover System)</CardTitle>
-          <p className="text-xs text-muted-foreground">
-            Configure both display thumbnails: one always shown, and one revealed smoothly on mouse hover.
-          </p>
+        <CardHeader className="py-4">
+          <CardTitle>Upload Product Images</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 pt-0">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Thumbnail 1: Primary (Always Shown) */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <Label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
-                  Thumbnail 1: Primary <span className="text-red-500">*</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Primary Thumbnail */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between h-5">
+                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                  Primary Thumbnail <span className="text-red-500">*</span>
                 </Label>
-                <span className="text-[11px] text-emerald-600 font-medium">Always Shown</span>
+                <span className="text-[11px] font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full">
+                  Always Shown
+                </span>
               </div>
+              <p className="text-xs text-muted-foreground">Default storefront image</p>
               <div
-                className={`border rounded-xl p-3 bg-white dark:bg-[#141414] relative overflow-hidden flex flex-col justify-between ${
+                className={`border rounded-lg p-3 bg-white dark:bg-[#141414] relative overflow-hidden flex flex-col justify-between ${
                   errors.mainImage ? 'border-red-500' : 'border-gray-200 dark:border-white/10'
                 }`}
-                style={{ minHeight: 180 }}
+                style={{ minHeight: 200 }}
               >
-                <div className="flex justify-center items-center h-[110px] w-full">
+                <div className="flex justify-center items-center h-[130px] w-full">
                   {mainImagePreview ? (
                     <Image
                       src={mainImagePreview}
                       alt="Primary Thumbnail"
-                      width={200}
-                      height={200}
+                      width={400}
+                      height={400}
                       unoptimized
-                      className="max-h-[110px] w-auto object-contain rounded-lg"
+                      className="max-h-[130px] w-auto object-contain rounded"
                     />
                   ) : (
                     <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-1">
-                      <ImageIcon size={24} />
-                      <span className="text-xs">No primary image</span>
+                      <ImageIcon size={36} />
+                      <span className="text-xs">No image selected</span>
                     </div>
                   )}
                 </div>
                 <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100 dark:border-white/5">
-                  <label className="flex-1 text-center py-1.5 border border-gray-300 dark:border-white/15 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer text-xs font-medium transition-colors">
+                  <label className="flex-1 py-1.5 border border-gray-300 dark:border-white/15 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer flex items-center justify-center gap-2 text-sm font-medium transition-colors">
+                    <ImageIcon size={14} />
                     Browse
                     <input type="file" accept="image/*" className="hidden" onChange={handleBrowseMain} />
                   </label>
                   {mainImagePreview && (
-                    <label className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/15 rounded-lg cursor-pointer text-xs font-medium transition-colors">
-                      <RefreshCcw size={12} />
+                    <label className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/15 rounded-lg cursor-pointer flex items-center justify-center gap-2 text-sm font-medium transition-colors">
+                      <RefreshCcw size={14} />
+                      Replace
                       <input type="file" accept="image/*" className="hidden" onChange={handleBrowseMain} />
                     </label>
                   )}
@@ -296,89 +298,107 @@ function ProductImageAndCategories() {
               {errors.mainImage && <p className="text-xs text-red-500">Primary thumbnail is required</p>}
             </div>
 
-            {/* Thumbnail 2: Hover (Shown on Hover) */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <Label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
-                  Thumbnail 2: Hover View <span className="text-gray-400 font-normal lowercase">(Optional)</span>
+            {/* Hover Thumbnail */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between h-5">
+                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                  Hover Thumbnail <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
                 </Label>
-                <span className="text-[11px] text-indigo-600 font-medium">Revealed on Hover</span>
+                <span className="text-[11px] font-medium text-indigo-600 bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded-full">
+                  Hover Reveal
+                </span>
               </div>
+              <p className="text-xs text-muted-foreground">Revealed on cursor hover</p>
               <div
-                className="border border-gray-200 dark:border-white/10 rounded-xl p-3 bg-white dark:bg-[#141414] relative overflow-hidden flex flex-col justify-between"
-                style={{ minHeight: 180 }}
+                className="border border-gray-200 dark:border-white/10 rounded-lg p-3 bg-white dark:bg-[#141414] relative overflow-hidden flex flex-col justify-between"
+                style={{ minHeight: 200 }}
               >
-                <div className="flex justify-center items-center h-[110px] w-full">
+                <div className="flex justify-center items-center h-[130px] w-full">
                   {hoverImagePreview ? (
                     <Image
                       src={hoverImagePreview}
                       alt="Hover Thumbnail"
-                      width={200}
-                      height={200}
+                      width={400}
+                      height={400}
                       unoptimized
-                      className="max-h-[110px] w-auto object-contain rounded-lg"
+                      className="max-h-[130px] w-auto object-contain rounded"
                     />
                   ) : (
                     <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-1">
-                      <ImageIcon size={24} />
+                      <ImageIcon size={36} />
                       <span className="text-xs">No hover image</span>
                     </div>
                   )}
                 </div>
                 <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100 dark:border-white/5">
-                  <label className="flex-1 text-center py-1.5 border border-gray-300 dark:border-white/15 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer text-xs font-medium transition-colors">
+                  <label className="flex-1 py-1.5 border border-gray-300 dark:border-white/15 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer flex items-center justify-center gap-2 text-sm font-medium transition-colors">
+                    <ImageIcon size={14} />
                     Browse
                     <input type="file" accept="image/*" className="hidden" onChange={handleBrowseHover} />
                   </label>
                   {hoverImagePreview && (
-                    <label className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/15 rounded-lg cursor-pointer text-xs font-medium transition-colors">
-                      <RefreshCcw size={12} />
-                      <input type="file" accept="image/*" className="hidden" onChange={handleBrowseHover} />
-                    </label>
+                    <>
+                      <label className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/15 rounded-lg cursor-pointer flex items-center justify-center gap-2 text-sm font-medium transition-colors">
+                        <RefreshCcw size={14} />
+                        Replace
+                        <input type="file" accept="image/*" className="hidden" onChange={handleBrowseHover} />
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setHoverImagePreview(null);
+                          updateBaseProduct({ hoverImage: null });
+                        }}
+                        className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg border border-transparent hover:border-red-200 dark:hover:border-red-900 transition-colors"
+                        title="Remove hover image"
+                      >
+                        <X size={16} />
+                      </button>
+                    </>
                   )}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* ── Product Gallery Images (Upload More Than 1 Option) ── */}
-          <div className="space-y-2 pt-2 border-t border-gray-100 dark:border-white/5">
+          {/* ── Product Gallery Images (Older Design Horizontal Row) ── */}
+          <div className="space-y-2 pt-3 border-t border-gray-100 dark:border-white/5">
             <div className="flex items-center justify-between">
-              <Label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
-                Product Gallery Images ({baseProduct.thumbnails.length}/{MAX_GALLERY_IMAGES})
+              <Label className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                Gallery Images ({baseProduct.thumbnails.length}/{MAX_GALLERY_IMAGES})
               </Label>
-              <span className="text-[11px] text-gray-400">Multiple image uploads allowed</span>
+              <span className="text-xs text-muted-foreground">More than 1 image supported</span>
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
               {galleryPreviews.map((preview, idx) => (
                 <div
-                  className="relative size-18 border border-gray-200 dark:border-white/10 rounded-xl overflow-hidden bg-gray-50 dark:bg-white/5 flex items-center justify-center shadow-xs"
+                  className="relative w-16 h-16 border border-gray-200 dark:border-white/10 rounded-md overflow-hidden bg-gray-50 dark:bg-white/5 flex items-center justify-center"
                   key={idx}
                 >
                   <Image
                     src={preview}
                     alt={`Gallery ${idx + 1}`}
-                    width={72}
-                    height={72}
+                    width={64}
+                    height={64}
                     unoptimized
-                    className="size-full object-cover rounded-xl"
+                    className="w-full h-full object-cover rounded"
                   />
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute top-1 right-1 size-5 p-0.5 bg-white/80 dark:bg-black/80 hover:bg-white rounded-full z-10"
+                    className="absolute top-0.5 right-0.5 h-4 w-4 p-0.5 bg-white/80 dark:bg-black/80 hover:bg-white text-gray-700 dark:text-gray-200 rounded-full z-10"
                     onClick={() => removeGalleryImage(idx)}
                   >
-                    <X size={12} className="text-gray-700 dark:text-gray-200" />
+                    <X size={10} />
                   </Button>
                 </div>
               ))}
 
               {baseProduct.thumbnails.length < MAX_GALLERY_IMAGES && (
-                <label className="size-18 border-2 border-dashed border-gray-300 dark:border-white/20 rounded-xl flex flex-col items-center justify-center cursor-pointer bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors text-center">
-                  <Plus size={18} className="text-indigo-600 dark:text-indigo-400" />
-                  <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 mt-0.5">+ Add Image</span>
+                <label className="w-16 h-16 border-2 border-dashed border-gray-300 dark:border-white/20 rounded-md flex flex-col items-center justify-center cursor-pointer bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 text-center transition-colors">
+                  <Plus size={18} className="text-green-600 dark:text-green-400" />
+                  <span className="text-xs text-gray-500 dark:text-gray-400">Add</span>
                   <input type="file" accept="image/*" multiple className="hidden" onChange={handleAddGalleryImages} />
                 </label>
               )}
