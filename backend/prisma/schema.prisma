@@ -230,6 +230,7 @@ model ProductVariant {
   size       String
   color      String
   colorHex   String?
+  image      String?
   price      Decimal  @db.Decimal(10, 2)
   offerPrice Decimal? @db.Decimal(10, 2)
   qty        Int      @default(0)

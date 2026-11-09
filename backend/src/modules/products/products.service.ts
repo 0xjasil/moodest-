@@ -83,6 +83,7 @@ export class ProductsService {
         size: v.size,
         color: v.color,
         colorHex: v.colorHex || null,
+        image: v.image || null,
         price: Number(v.price),
         offerPrice: v.offerPrice ? Number(v.offerPrice) : null,
         stock: v.qty,
@@ -342,6 +343,7 @@ export class ProductsService {
       size: string;
       color: string;
       colorHex?: string;
+      image?: string | null;
       price: number;
       offerPrice?: number;
       qty: number;
@@ -416,6 +418,7 @@ export class ProductsService {
               size: v.size,
               color: v.color,
               colorHex: v.colorHex || null,
+              image: v.image || null,
               price: new Prisma.Decimal(v.price),
               offerPrice: v.offerPrice ? new Prisma.Decimal(v.offerPrice) : null,
               qty: v.qty || 0,
@@ -500,6 +503,7 @@ export class ProductsService {
         size: data.size,
         color: data.color,
         colorHex: data.colorHex || null,
+        image: data.image || null,
         price: new Prisma.Decimal(data.price),
         offerPrice: data.offerPrice ? new Prisma.Decimal(data.offerPrice) : null,
         qty: data.qty ?? data.stock ?? 0,
@@ -519,6 +523,7 @@ export class ProductsService {
         size: data.size ?? existing.size,
         color: data.color ?? existing.color,
         colorHex: data.colorHex !== undefined ? data.colorHex : existing.colorHex,
+        image: data.image !== undefined ? data.image : existing.image,
         price: data.price ? new Prisma.Decimal(data.price) : existing.price,
         offerPrice:
           data.offerPrice !== undefined
