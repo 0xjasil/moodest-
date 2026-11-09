@@ -1,24 +1,111 @@
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { categoryAPI } from "@/lib/api";
+import type { Product } from "@/lib/types";
 
 export interface CategoryItem {
   id: string;
   name: string;
   slug: string;
-  image: string;
+  image?: string;
+  imageUrl?: string;
+  img?: string;
+  thumbnail?: string;
+  banner?: string;
+  coverImage?: string;
   description?: string;
 }
 
 interface DiscoverCategoriesProps {
   initialCategories?: CategoryItem[];
+  initialProducts?: Product[];
 }
 
-export default function DiscoverCategories({ initialCategories }: DiscoverCategoriesProps) {
+/**
+ * Aesthetic fallback mapping based on category slug/name
+ */
+export function getCategoryFallback(cat: CategoryItem): string {
+  const text = `${cat.slug || ""} ${cat.name || ""}`.toLowerCase();
+  if (text.includes("kimono") || text.includes("kaftan")) return "/abaya/categories/kimono-abaya.jpg";
+  if (text.includes("occasion") || text.includes("bridal") || text.includes("party")) return "/abaya/categories/bridal-occasion.jpg";
+  if (text.includes("open") || text.includes("front")) return "/abaya/categories/front-open.jpg";
+  if (text.includes("syrian") || text.includes("handwork") || text.includes("embroid")) return "/abaya/categories/handwork-abaya.jpg";
+  if (text.includes("luxe") || text.includes("silk") || text.includes("satin")) return "/abaya/categories/silk-satin.jpg";
+  if (text.includes("classic") || text.includes("black")) return "/abaya/categories/classic-black.jpg";
+  return "/abaya/categories/classic-black.jpg";
+}
+
+/**
+ * Dynamically resolves category image from:
+ * 1. Direct category image (Cloudinary URL, external URL, or database path)
+ * 2. Matched product image from this category if available
+ * 3. High-resolution category-matched silhouette fallback
+ */
+export function getDynamicCategoryImage(cat: CategoryItem, products?: Product[]): string {
+  // 1. Direct dynamic image passed in category data
+  const rawImage =
+    cat.image ||
+    cat.imageUrl ||
+    cat.img ||
+    cat.thumbnail ||
+    cat.coverImage ||
+    cat.banner;
+
+  if (rawImage && typeof rawImage === "string" && rawImage.trim() !== "") {
+    const trimmed = rawImage.trim();
+    return trimmed;
+  }
+
+  // 2. Dynamically match product image from this category if available
+  if (products && products.length > 0) {
+    const slug = (cat.slug || "").toLowerCase();
+    const name = (cat.name || "").toLowerCase();
+    const id = String(cat.id || "");
+
+    const matchedProduct = products.find((p: any) => {
+      const pCat = p.category;
+      if (!pCat) return false;
+      if (typeof pCat === "string") {
+        const pSlug = pCat.toLowerCase();
+        return pSlug === slug || pSlug === name || pSlug === id;
+      }
+      if (typeof pCat === "object") {
+        return (
+          pCat.id === id ||
+          pCat.slug?.toLowerCase() === slug ||
+          pCat.name?.toLowerCase() === name
+        );
+      }
+      return false;
+    });
+
+    if (matchedProduct) {
+      const pImg =
+        matchedProduct.image ||
+        (Array.isArray(matchedProduct.images) && matchedProduct.images[0]);
+      if (pImg && typeof pImg === "string" && pImg.trim() !== "") {
+        return pImg.trim();
+      }
+    }
+  }
+
+  // 3. Fallback to category silhouette
+  return getCategoryFallback(cat);
+}
+
+export default function DiscoverCategories({ initialCategories, initialProducts }: DiscoverCategoriesProps) {
   const [categories, setCategories] = useState<CategoryItem[]>(initialCategories || []);
   const [loading, setLoading] = useState(!initialCategories || initialCategories.length === 0);
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Sync state whenever initialCategories prop changes
+  useEffect(() => {
+    if (initialCategories && initialCategories.length > 0) {
+      setCategories(initialCategories);
+      setLoading(false);
+    }
+  }, [initialCategories]);
 
   // Live fetch from database via backend API (/api/categories)
   const fetchDbCategories = async (isSubscribed = true) => {
@@ -30,17 +117,29 @@ export default function DiscoverCategories({ initialCategories }: DiscoverCatego
       if (!isSubscribed) return;
       const list = Array.isArray(data) ? data : Array.isArray((data as any)?.data) ? (data as any).data : [];
       if (list.length > 0) {
-        const mapped: CategoryItem[] = list.map((cat: any) => ({
-          id: String(cat.id),
-          name: cat.name,
-          slug: cat.slug || cat.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-          // Fetch exact category image stored in DB with reliable fallback
-          image:
-            cat.image && typeof cat.image === "string" && cat.image.trim() !== ""
-              ? cat.image.trim()
-              : "/abaya/categories/classic-black.jpg",
-          description: cat.description || "",
-        }));
+        const mapped: CategoryItem[] = list.map((cat: any) => {
+          const directImg =
+            cat.image ||
+            cat.imageUrl ||
+            cat.img ||
+            cat.thumbnail ||
+            cat.coverImage ||
+            cat.banner;
+          return {
+            id: String(cat.id),
+            name: cat.name,
+            slug: cat.slug || cat.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+            image:
+              directImg && typeof directImg === "string" && directImg.trim() !== ""
+                ? directImg.trim()
+                : "",
+            imageUrl: cat.imageUrl,
+            img: cat.img,
+            thumbnail: cat.thumbnail,
+            banner: cat.banner,
+            description: cat.description || "",
+          };
+        });
         setCategories(mapped);
       }
     } catch (err) {
@@ -125,8 +224,8 @@ export default function DiscoverCategories({ initialCategories }: DiscoverCatego
           </h2>
           <p className="text-xs sm:text-sm text-mb-muted mt-0.5">
             {categories.length > 0
-              ? `Signature Silhouettes — ${categories.slice(0, 4).map((c) => c.name).join(", ")}`
-              : "Signature Silhouettes — Curated Luxury Abayas & Modest Wears"}
+              ? `Signature Silhouettes  ${categories.slice(0, 4).map((c) => c.name).join(", ")}`
+              : "Signature Silhouettes  Curated Luxury Abayas & Modest Wears"}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -185,13 +284,14 @@ export default function DiscoverCategories({ initialCategories }: DiscoverCatego
               >
                 <div className="relative aspect-[2/3] w-full overflow-hidden bg-[#EEE4D8]">
                   <img
-                    src={cat.image}
+                    src={getDynamicCategoryImage(cat, initialProducts)}
                     alt={cat.name}
                     className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                     onError={(e) => {
                       const target = e.currentTarget;
-                      if (!target.src.includes("/abaya/categories/classic-black.jpg")) {
-                        target.src = "/abaya/categories/classic-black.jpg";
+                      const fallback = getCategoryFallback(cat);
+                      if (target.src !== fallback && !target.src.endsWith(fallback)) {
+                        target.src = fallback;
                       }
                     }}
                   />

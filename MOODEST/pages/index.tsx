@@ -41,7 +41,7 @@ export default function Home({ initialCategories = [], initialProducts = [] }: H
         <HeroCarousel />
 
         {/* 1. Shop by Category — Single Line Fill with Live DB Categories */}
-        <DiscoverCategories initialCategories={initialCategories} />
+        <DiscoverCategories initialCategories={initialCategories} initialProducts={initialProducts} />
 
         {/* 2. New Arrivals — 2 Rows with Discover More Link */}
         <NewArrivalsSection initialProducts={initialProducts} />
@@ -132,9 +132,13 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
         name: cat.name,
         slug: cat.slug || cat.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
         image:
-          cat.image && typeof cat.image === "string" && cat.image.trim() !== ""
-            ? cat.image.trim()
-            : "/abaya/categories/classic-black.jpg",
+          typeof (cat.image || cat.imageUrl || cat.img || cat.thumbnail || cat.coverImage || cat.banner) === "string"
+            ? (cat.image || cat.imageUrl || cat.img || cat.thumbnail || cat.coverImage || cat.banner).trim()
+            : "",
+        imageUrl: cat.imageUrl,
+        img: cat.img,
+        thumbnail: cat.thumbnail,
+        banner: cat.banner,
         description: cat.description || "",
       })
     );
