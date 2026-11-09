@@ -2,51 +2,57 @@ import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { categoryAPI } from "@/lib/api";
 
-interface CategoryItem {
+export interface CategoryItem {
   id: string;
   name: string;
   slug: string;
   image: string;
+  description?: string;
 }
 
-export default function DiscoverCategories() {
-  const [categories, setCategories] = useState<CategoryItem[]>([]);
-  const [loading, setLoading] = useState(true);
+interface DiscoverCategoriesProps {
+  initialCategories?: CategoryItem[];
+}
+
+export default function DiscoverCategories({ initialCategories }: DiscoverCategoriesProps) {
+  const [categories, setCategories] = useState<CategoryItem[]>(initialCategories || []);
+  const [loading, setLoading] = useState(!initialCategories || initialCategories.length === 0);
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Live fetch from database via backend API (/api/categories)
+  const fetchDbCategories = async (isSubscribed = true) => {
+    try {
+      if (!initialCategories || initialCategories.length === 0) {
+        setLoading(true);
+      }
+      const data = await categoryAPI.getAll();
+      if (!isSubscribed) return;
+      const list = Array.isArray(data) ? data : Array.isArray((data as any)?.data) ? (data as any).data : [];
+      if (list.length > 0) {
+        const mapped: CategoryItem[] = list.map((cat: any) => ({
+          id: String(cat.id),
+          name: cat.name,
+          slug: cat.slug || cat.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          // Fetch exact category image stored in DB with reliable fallback
+          image:
+            cat.image && typeof cat.image === "string" && cat.image.trim() !== ""
+              ? cat.image.trim()
+              : "/abaya/categories/classic-black.jpg",
+          description: cat.description || "",
+        }));
+        setCategories(mapped);
+      }
+    } catch (err) {
+      console.warn("[DiscoverCategories] Failed to load DB categories:", err);
+    } finally {
+      if (isSubscribed) setLoading(false);
+    }
+  };
+
   useEffect(() => {
     let isSubscribed = true;
-    (async () => {
-      try {
-        setLoading(true);
-        // Connect live to https://admin-moodest-25.vercel.app/products/categories-list (backed by /categories API)
-        const data = await categoryAPI.getAll();
-        if (!isSubscribed) return;
-        const list = Array.isArray(data) ? data : Array.isArray((data as any)?.data) ? (data as any).data : [];
-        if (list.length > 0) {
-          const mapped: CategoryItem[] = list.map((cat: any) => ({
-            id: String(cat.id),
-            name: cat.name,
-            slug: cat.slug || cat.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-            // Use image uploaded in admin panel with clean fallback
-            image:
-              cat.image && typeof cat.image === "string" && cat.image.trim() !== ""
-                ? cat.image.trim()
-                : "/abaya/categories/classic-black.jpg",
-          }));
-          setCategories(mapped);
-        } else {
-          setCategories([]);
-        }
-      } catch (err) {
-        console.warn("[DiscoverCategories] Failed to load categories from admin API:", err);
-        if (isSubscribed) setCategories([]);
-      } finally {
-        if (isSubscribed) setLoading(false);
-      }
-    })();
-
+    fetchDbCategories(isSubscribed);
     return () => {
       isSubscribed = false;
     };
@@ -86,9 +92,9 @@ export default function DiscoverCategories() {
     scrollToCard(Math.min(activeIndex + 1, categories.length - 1));
   };
 
-  if (loading) {
+  if (loading && categories.length === 0) {
     return (
-      <section className="w-full px-3 sm:px-6 my-8" aria-label="Loading Abaya Categories">
+      <section className="w-full px-3 sm:px-6 my-10" aria-label="Loading Abaya Categories">
         <div className="flex items-center justify-between mb-5">
           <div className="space-y-1">
             <div className="h-6 w-48 bg-mb-border/40 rounded animate-pulse" />
@@ -111,14 +117,16 @@ export default function DiscoverCategories() {
 
   return (
     <section className="w-full px-3 sm:px-6 my-10 relative group/section" aria-label="Explore Abaya Categories">
-      {/* Header */}
+      {/* Header with Dynamic Database Categories Subtitle */}
       <div className="flex items-center justify-between mb-5">
         <div>
           <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-mb-text">
             Shop by Category
           </h2>
           <p className="text-xs sm:text-sm text-mb-muted mt-0.5">
-            Signature Silhouettes Syrian Collection, The Classics, Luxe Edit &amp; Occasion Wear
+            {categories.length > 0
+              ? `Signature Silhouettes — ${categories.slice(0, 4).map((c) => c.name).join(", ")}`
+              : "Signature Silhouettes — Curated Luxury Abayas & Modest Wears"}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -129,34 +137,36 @@ export default function DiscoverCategories() {
             <span>Discover More</span> <span className="transition-transform group-hover:translate-x-1">→</span>
           </Link>
           {/* Arrow navigation buttons */}
-          <div className="hidden sm:flex items-center gap-1.5 ml-2">
-            <button
-              type="button"
-              onClick={scrollPrev}
-              disabled={activeIndex === 0}
-              aria-label="Previous categories"
-              className="w-8 h-8 rounded-full bg-mb-surface border border-mb-border text-mb-text hover:bg-mb-primary hover:text-white transition-all flex items-center justify-center disabled:opacity-30 disabled:pointer-events-none shadow-xs"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button
-              type="button"
-              onClick={scrollNext}
-              disabled={activeIndex >= categories.length - 1}
-              aria-label="Next categories"
-              className="w-8 h-8 rounded-full bg-mb-surface border border-mb-border text-mb-text hover:bg-mb-primary hover:text-white transition-all flex items-center justify-center disabled:opacity-30 disabled:pointer-events-none shadow-xs"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
+          {categories.length > 1 && (
+            <div className="hidden sm:flex items-center gap-1.5 ml-2">
+              <button
+                type="button"
+                onClick={scrollPrev}
+                disabled={activeIndex === 0}
+                aria-label="Previous categories"
+                className="w-8 h-8 rounded-full bg-mb-surface border border-mb-border text-mb-text hover:bg-mb-primary hover:text-white transition-all flex items-center justify-center disabled:opacity-30 disabled:pointer-events-none shadow-xs"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={scrollNext}
+                disabled={activeIndex >= categories.length - 1}
+                aria-label="Next categories"
+                className="w-8 h-8 rounded-full bg-mb-surface border border-mb-border text-mb-text hover:bg-mb-primary hover:text-white transition-all flex items-center justify-center disabled:opacity-30 disabled:pointer-events-none shadow-xs"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Horizontal Scrollable Rail with Snap */}
+      {/* Horizontal Scrollable Rail with Snap: Displays Live Database Categories */}
       <div
         ref={scrollRef}
         onScroll={handleScroll}

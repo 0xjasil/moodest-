@@ -14,9 +14,20 @@ function shuffleList<T>(list: T[]): T[] {
   return result;
 }
 
-export default function NewArrivalsSection() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+interface NewArrivalsSectionProps {
+  initialProducts?: Product[];
+}
+
+export default function NewArrivalsSection({ initialProducts }: NewArrivalsSectionProps = {}) {
+  const [products, setProducts] = useState<Product[]>(() => {
+    if (initialProducts && initialProducts.length > 0) {
+      const newArrivals = initialProducts.filter((p: any) => p.isNewArrival);
+      const remaining = initialProducts.filter((p: any) => !p.isNewArrival);
+      return [...newArrivals, ...remaining].slice(0, 8);
+    }
+    return [];
+  });
+  const [loading, setLoading] = useState(!initialProducts || initialProducts.length === 0);
 
   useEffect(() => {
     let isSubscribed = true;

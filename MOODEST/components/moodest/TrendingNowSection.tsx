@@ -14,9 +14,24 @@ function shuffleList<T>(list: T[]): T[] {
   return result;
 }
 
-export default function TrendingNowSection() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+interface TrendingNowSectionProps {
+  initialProducts?: Product[];
+}
+
+export default function TrendingNowSection({ initialProducts }: TrendingNowSectionProps = {}) {
+  const [products, setProducts] = useState<Product[]>(() => {
+    if (initialProducts && initialProducts.length > 0) {
+      const trending = initialProducts.filter(
+        (p: any) => p.isCustomerFavorite || p.isTrending || p.isFeatured || p.isBestSeller
+      );
+      const remaining = initialProducts.filter(
+        (p: any) => !(p.isCustomerFavorite || p.isTrending || p.isFeatured || p.isBestSeller)
+      );
+      return [...trending, ...remaining];
+    }
+    return [];
+  });
+  const [loading, setLoading] = useState(!initialProducts || initialProducts.length === 0);
   const [activeIndex, setActiveIndex] = useState(0);
   const railRef = useRef<HTMLDivElement>(null);
 

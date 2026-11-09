@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -6,12 +7,19 @@ import Link from "next/link";
 import BrandLogo from "@/components/BrandLogo";
 
 import HeroCarousel from "@/components/moodest/HeroCarousel";
-import DiscoverCategories from "@/components/moodest/DiscoverCategories";
+import DiscoverCategories, { type CategoryItem } from "@/components/moodest/DiscoverCategories";
 import NewArrivalsSection from "@/components/moodest/NewArrivalsSection";
 import EditorialGalleryBanner from "@/components/moodest/EditorialGalleryBanner";
 import TrendingNowSection from "@/components/moodest/TrendingNowSection";
+import { categoryAPI, productAPI, mapBackendProductToProduct } from "@/lib/api";
+import type { Product } from "@/lib/types";
 
-export default function Home() {
+interface HomeProps {
+  initialCategories: CategoryItem[];
+  initialProducts: Product[];
+}
+
+export default function Home({ initialCategories = [], initialProducts = [] }: HomeProps) {
   const [showAppBanner, setShowAppBanner] = useState(true);
 
   return (
@@ -32,17 +40,17 @@ export default function Home() {
         {/* Top Hero Carousel — Full Viewport on Top Without Extra Test Banners */}
         <HeroCarousel />
 
-        {/* 1. Shop by Category — Single Line Fill with Discover More Link */}
-        <DiscoverCategories />
+        {/* 1. Shop by Category — Single Line Fill with Live DB Categories */}
+        <DiscoverCategories initialCategories={initialCategories} />
 
         {/* 2. New Arrivals — 2 Rows with Discover More Link */}
-        <NewArrivalsSection />
+        <NewArrivalsSection initialProducts={initialProducts} />
 
         {/* 3. Small Gallery Section — Full Viewport Width */}
         <EditorialGalleryBanner />
 
         {/* 4. Trending Now Section — With Discover More Link */}
-        <TrendingNowSection />
+        <TrendingNowSection initialProducts={initialProducts} />
 
         {/* Store Brand Statement with Brand Logo */}
         <div className="w-full px-4 sm:px-6 mt-20 sm:mt-28 py-16 sm:py-24 text-center bg-mb-surface border-t border-mb-border">
@@ -110,3 +118,45 @@ export default function Home() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+  try {
+    const [categoriesRes, productsRes] = await Promise.all([
+      categoryAPI.getAll().catch(() => []),
+      productAPI.getAll({ limit: 40 }).catch(() => null),
+    ]);
+
+    const initialCategories: CategoryItem[] = (Array.isArray(categoriesRes) ? categoriesRes : []).map(
+      (cat: any) => ({
+        id: String(cat.id),
+        name: cat.name,
+        slug: cat.slug || cat.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        image:
+          cat.image && typeof cat.image === "string" && cat.image.trim() !== ""
+            ? cat.image.trim()
+            : "/abaya/categories/classic-black.jpg",
+        description: cat.description || "",
+      })
+    );
+
+    const initialProducts: Product[] = Array.isArray(productsRes?.items)
+      ? productsRes.items.map(mapBackendProductToProduct)
+      : [];
+
+    return {
+      props: {
+        initialCategories,
+        initialProducts,
+      },
+    };
+  } catch (err) {
+    console.warn("[getServerSideProps:Home] Failed to preload data:", err);
+    return {
+      props: {
+        initialCategories: [],
+        initialProducts: [],
+      },
+    };
+  }
+};
+
