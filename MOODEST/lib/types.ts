@@ -72,6 +72,12 @@ export interface BackendProduct {
   discountPct?: number | null;
   images: string[];
   tags?: string[];
+  isNewArrival?: boolean;
+  isTrending?: boolean;
+  isCustomerFavorite?: boolean;
+  isFeatured?: boolean;
+  isBestSeller?: boolean;
+  badge?: string;
   brand?: Brand;
   category?: Category;
   variants?: Variant[];
@@ -95,6 +101,11 @@ export interface Product {
   image: string;
   images?: string[];
   badge?: string;
+  isNewArrival?: boolean;
+  isTrending?: boolean;
+  isCustomerFavorite?: boolean;
+  isFeatured?: boolean;
+  isBestSeller?: boolean;
   category: string;
   brand: string;
   description?: string;

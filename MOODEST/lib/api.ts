@@ -49,6 +49,12 @@ export function mapBackendProductToProduct(item: BackendProduct): Product {
     brand: item.brand?.name || "Modest Studio",
     description: item.description || "",
     fabric: item.fabric || undefined,
+    isNewArrival: Boolean(item.isNewArrival),
+    isTrending: Boolean(item.isTrending),
+    isCustomerFavorite: Boolean(item.isCustomerFavorite),
+    isFeatured: Boolean(item.isFeatured),
+    isBestSeller: Boolean(item.isCustomerFavorite || item.isTrending || item.isBestSeller),
+    badge: item.badge || (item.isCustomerFavorite || item.isTrending ? "BESTSELLER" : item.isNewArrival ? "NEW" : undefined),
     variants: item.variants || [],
     variantId: item.variants?.[0]?.id,
   };
