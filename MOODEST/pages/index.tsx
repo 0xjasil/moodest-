@@ -45,9 +45,9 @@ export default function Home() {
         <TrendingNowSection />
 
         {/* Store Brand Statement with Brand Logo */}
-        <div className="w-full px-4 sm:px-6 py-14 text-center bg-mb-surface border-t border-mb-border">
-          <BrandLogo variant="primary" className="h-16 sm:h-20 w-auto mx-auto mb-3" />
-          <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-mb-primary mb-2">
+        <div className="w-full px-4 sm:px-6 mt-20 sm:mt-28 py-16 sm:py-24 text-center bg-mb-surface border-t border-mb-border">
+          <BrandLogo variant="primary" className="h-16 sm:h-20 w-auto mx-auto mb-4" />
+          <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-mb-primary mb-2.5">
             Modest Studio
           </h2>
           <p className="text-xs sm:text-sm font-light text-mb-muted uppercase tracking-[0.3em]">
