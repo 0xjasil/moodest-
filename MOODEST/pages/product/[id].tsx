@@ -255,7 +255,12 @@ export default function ProductDetail() {
                         <button
                           key={v.id}
                           type="button"
-                          onClick={() => setSelectedVariantId(v.id)}
+                          onClick={() => {
+                            setSelectedVariantId(v.id);
+                            if (v.image) {
+                              setSelectedImage(v.image);
+                            }
+                          }}
                           className={`px-3 py-1.5 text-xs font-medium rounded-md border transition-all ${
                             selectedVariantId === v.id
                               ? "border-mb-primary bg-mb-primary text-white"

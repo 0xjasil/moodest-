@@ -168,6 +168,35 @@ function ProductFormContent({}: ProductFormContentProps) {
         }
       }
 
+      toast.loading("Uploading variant photos if provided...", { id: "product-save" });
+      const processedVariants = [];
+      for (let i = 0; i < variants.length; i++) {
+        const v = variants[i];
+        let variantImageUrl: string | null = null;
+        if (v.image instanceof File) {
+          toast.loading(`Uploading variant photo (${v.size}/${v.color || "Default"}) to Cloudinary...`, { id: "product-save" });
+          variantImageUrl = await uploadToCloudinary(v.image, "moodest/products/variants");
+          uploadedGalleryUrls.push(variantImageUrl);
+        } else if (typeof v.image === "string" && v.image.trim()) {
+          variantImageUrl = v.image;
+        }
+
+        processedVariants.push({
+          size: v.size,
+          color: v.color || "",
+          colorHex: v.colorHex || null,
+          sku: v.sku.trim(),
+          price: Number(v.price).toFixed(2),
+          offerPrice:
+            v.offerPrice != null && Number(v.offerPrice) > 0
+              ? Number(v.offerPrice).toFixed(2)
+              : null,
+          qty: Math.max(0, Math.floor(Number(v.qty || 0))),
+          isActive: v.isActive !== false,
+          image: variantImageUrl,
+        });
+      }
+
       toast.loading("Publishing product to database...", { id: "product-save" });
 
       const allImages = [mainImageUrl, hoverImageUrl, ...uploadedGalleryUrls].filter(Boolean);
@@ -201,19 +230,7 @@ function ProductFormContent({}: ProductFormContentProps) {
         images: allImages,
         isCustomerFavorite: Boolean(baseProduct.isCustomerFavorite),
         isNewArrival: Boolean(baseProduct.isNewArrival),
-        variants: variants.map((v) => ({
-          size: v.size,
-          color: v.color || "",
-          colorHex: v.colorHex || null,
-          sku: v.sku.trim(),
-          price: Number(v.price).toFixed(2),
-          offerPrice:
-            v.offerPrice != null && Number(v.offerPrice) > 0
-              ? Number(v.offerPrice).toFixed(2)
-              : null,
-          qty: Math.max(0, Math.floor(Number(v.qty || 0))),
-          isActive: v.isActive !== false,
-        })),
+        variants: processedVariants,
       };
 
       // 7. Send Request through API Client

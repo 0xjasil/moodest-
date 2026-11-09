@@ -16,6 +16,9 @@ import {
   Eye,
   ExternalLink,
   Check,
+  X,
+  Image as ImageIcon,
+  ImagePlus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -85,6 +88,7 @@ export interface AbayaVariantItem {
   isActive: boolean;
   isNew?: boolean;
   isModified?: boolean;
+  image?: File | string | null;
   reservations?: Array<{
     id: string;
     quantity: number;
@@ -205,6 +209,8 @@ function AbayaVariantsManagerUI({
   const [formOfferPrice, setFormOfferPrice] = useState<string>("");
   const [formQty, setFormQty] = useState<string>("10");
   const [formIsActive, setFormIsActive] = useState<boolean>(true);
+  const [formImage, setFormImage] = useState<File | string | null>(null);
+  const [formImagePreview, setFormImagePreview] = useState<string | null>(null);
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
   // State for Combinations Generator Modal
@@ -270,6 +276,8 @@ function AbayaVariantsManagerUI({
     setFormOfferPrice(baseProduct.baseDiscountPrice > 0 ? String(baseProduct.baseDiscountPrice) : "");
     setFormQty(baseProduct.baseQuantity > 0 ? String(baseProduct.baseQuantity) : "10");
     setFormIsActive(true);
+    setFormImage(null);
+    setFormImagePreview(null);
     setFormErrors({});
     setModalOpen(true);
   };
@@ -317,6 +325,17 @@ function AbayaVariantsManagerUI({
     setFormOfferPrice(variant.offerPrice != null ? String(variant.offerPrice) : "");
     setFormQty(String(variant.qty));
     setFormIsActive(variant.isActive);
+    if (variant.image) {
+      setFormImage(variant.image);
+      if (typeof variant.image === "string") {
+        setFormImagePreview(variant.image);
+      } else if (variant.image instanceof File) {
+        setFormImagePreview(URL.createObjectURL(variant.image));
+      }
+    } else {
+      setFormImage(null);
+      setFormImagePreview(null);
+    }
     setFormErrors({});
     setModalOpen(true);
   };
@@ -430,6 +449,7 @@ function AbayaVariantsManagerUI({
             qty: numQty,
             isActive: formIsActive,
             isModified: !v.isNew,
+            image: formImage,
           };
         }
         return v;
@@ -448,6 +468,7 @@ function AbayaVariantsManagerUI({
         qty: numQty,
         isActive: formIsActive,
         isNew: true,
+        image: formImage,
       };
       setVariants([...variants, newVariant]);
       toast.success("Variant added");
@@ -476,6 +497,7 @@ function AbayaVariantsManagerUI({
       qty: source.qty,
       isActive: source.isActive,
       isNew: true,
+      image: source.image,
     };
 
     setVariants([...variants, duplicated]);
@@ -734,6 +756,7 @@ function AbayaVariantsManagerUI({
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="border-b border-gray-200 dark:border-white/10 bg-gray-50/70 dark:bg-white/[0.02] text-muted-foreground uppercase tracking-wider font-semibold">
+                  <th className="py-3 px-3 min-w-[55px]">Image</th>
                   <th className="py-3 px-3 min-w-[70px]">Size</th>
                   <th className="py-3 px-3 min-w-[120px]">Color</th>
                   <th className="py-3 px-3 min-w-[150px]">SKU</th>
@@ -755,6 +778,26 @@ function AbayaVariantsManagerUI({
                         !v.isActive && "opacity-60 bg-gray-50/40 dark:bg-white/[0.01]"
                       )}
                     >
+                      {/* Variant Image */}
+                      <td className="py-3 px-3 align-middle">
+                        {v.image ? (
+                          <div className="size-8 rounded-md border border-gray-200 dark:border-white/10 overflow-hidden relative bg-white dark:bg-[#141414] flex items-center justify-center shrink-0">
+                            <Image
+                              src={typeof v.image === "string" ? v.image : URL.createObjectURL(v.image)}
+                              alt={v.sku}
+                              width={32}
+                              height={32}
+                              unoptimized
+                              className="size-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="size-8 rounded-md border border-dashed border-gray-200 dark:border-white/10 flex items-center justify-center text-gray-300 dark:text-gray-600 shrink-0">
+                            <ImageIcon className="size-3.5" />
+                          </div>
+                        )}
+                      </td>
+
                       {/* Size */}
                       <td className="py-3 px-3 align-middle font-bold text-gray-900 dark:text-white">
                         <span
@@ -1324,6 +1367,66 @@ function AbayaVariantsManagerUI({
                 >
                   Active for Sale
                 </Label>
+              </div>
+            </div>
+
+            {/* Variant Image (Optional) */}
+            <div className="space-y-1.5 pt-1 border-t border-gray-100 dark:border-white/5">
+              <div className="flex items-center justify-between">
+                <Label className="text-xs font-semibold">
+                  Variant Image <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
+                </Label>
+                {formImage && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormImage(null);
+                      setFormImagePreview(null);
+                    }}
+                    className="text-[11px] text-red-500 hover:underline flex items-center gap-1 cursor-pointer font-medium"
+                  >
+                    <X className="size-3" />
+                    Remove Image
+                  </button>
+                )}
+              </div>
+              <div className="flex items-center gap-3 p-2.5 border rounded-xl border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-white/[0.02]">
+                <div className="size-14 rounded-lg border border-gray-200 dark:border-white/10 overflow-hidden bg-white dark:bg-[#141414] flex items-center justify-center shrink-0">
+                  {formImagePreview ? (
+                    <Image
+                      src={formImagePreview}
+                      alt="Variant preview"
+                      width={56}
+                      height={56}
+                      unoptimized
+                      className="size-full object-cover"
+                    />
+                  ) : (
+                    <ImagePlus className="size-5 text-gray-300 dark:text-gray-600" />
+                  )}
+                </div>
+                <div className="flex-1 space-y-1">
+                  <p className="text-[11px] text-muted-foreground">
+                    Upload an individual photo for this specific color/size variant.
+                  </p>
+                  <label className="inline-flex items-center gap-1.5 px-3 py-1 bg-white dark:bg-white/10 border border-gray-300 dark:border-white/20 rounded-md text-xs font-medium cursor-pointer hover:bg-gray-50 dark:hover:bg-white/15 transition-colors shadow-2xs">
+                    <ImagePlus className="size-3 text-gray-600 dark:text-gray-300" />
+                    <span>{formImage ? "Change Image" : "Upload Variant Image"}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setFormImage(file);
+                          setFormImagePreview(URL.createObjectURL(file));
+                        }
+                        e.target.value = "";
+                      }}
+                    />
+                  </label>
+                </div>
               </div>
             </div>
           </div>

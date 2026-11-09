@@ -29,6 +29,7 @@ export interface VariantData {
   offerPrice?: number | null;
   isActive: boolean;
   isNew?: boolean;
+  image?: File | string | null;
   images?: File[];
   attributes?: {
     attributeId: string;

@@ -53,6 +53,7 @@ export interface Variant {
   sku: string;
   price?: number;
   offerPrice?: number | null;
+  image?: string | null;
   product?: Product;
 }
 

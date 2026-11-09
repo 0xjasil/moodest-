@@ -245,118 +245,114 @@ function ProductImageAndCategories() {
           <CardTitle>Upload Product Images</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 pt-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Primary Thumbnail */}
-            <div className="space-y-1">
-              <div className="flex items-center justify-between h-5">
-                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                  Primary Thumbnail <span className="text-red-500">*</span>
-                </Label>
-                <span className="text-[11px] font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full">
-                  Always Shown
-                </span>
+          {/* Primary Thumbnail */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+                Primary Thumbnail <span className="text-red-500">*</span>
+              </Label>
+              <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/50 dark:border-emerald-800 dark:text-emerald-300 px-2.5 py-0.5 rounded-full">
+                Always Shown
+              </span>
+            </div>
+            <div
+              className={`border rounded-lg p-3 bg-white dark:bg-[#141414] relative overflow-hidden flex flex-col justify-between ${
+                errors.mainImage ? 'border-red-500' : 'border-gray-200 dark:border-white/10'
+              }`}
+              style={{ minHeight: 180 }}
+            >
+              <div className="flex justify-center items-center h-[120px] w-full">
+                {mainImagePreview ? (
+                  <Image
+                    src={mainImagePreview}
+                    alt="Primary Thumbnail"
+                    width={400}
+                    height={400}
+                    unoptimized
+                    className="max-h-[120px] w-auto object-contain rounded"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-1.5">
+                    <ImageIcon size={36} className="stroke-[1.5]" />
+                    <span className="text-xs">No primary image selected</span>
+                  </div>
+                )}
               </div>
-              <p className="text-xs text-muted-foreground">Default storefront image</p>
-              <div
-                className={`border rounded-lg p-3 bg-white dark:bg-[#141414] relative overflow-hidden flex flex-col justify-between ${
-                  errors.mainImage ? 'border-red-500' : 'border-gray-200 dark:border-white/10'
-                }`}
-                style={{ minHeight: 200 }}
-              >
-                <div className="flex justify-center items-center h-[130px] w-full">
-                  {mainImagePreview ? (
-                    <Image
-                      src={mainImagePreview}
-                      alt="Primary Thumbnail"
-                      width={400}
-                      height={400}
-                      unoptimized
-                      className="max-h-[130px] w-auto object-contain rounded"
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-1">
-                      <ImageIcon size={36} />
-                      <span className="text-xs">No image selected</span>
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100 dark:border-white/5">
-                  <label className="flex-1 py-1.5 border border-gray-300 dark:border-white/15 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer flex items-center justify-center gap-2 text-sm font-medium transition-colors">
-                    <ImageIcon size={14} />
-                    Browse
+              <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100 dark:border-white/5">
+                <label className="flex-1 py-1.5 border border-gray-300 dark:border-white/15 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer flex items-center justify-center gap-2 text-sm font-medium transition-colors">
+                  <ImageIcon size={14} />
+                  Browse
+                  <input type="file" accept="image/*" className="hidden" onChange={handleBrowseMain} />
+                </label>
+                {mainImagePreview && (
+                  <label className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/15 rounded-lg cursor-pointer flex items-center justify-center gap-2 text-sm font-medium transition-colors">
+                    <RefreshCcw size={14} />
+                    Replace
                     <input type="file" accept="image/*" className="hidden" onChange={handleBrowseMain} />
                   </label>
-                  {mainImagePreview && (
+                )}
+              </div>
+            </div>
+            {errors.mainImage && <p className="text-xs text-red-500">Primary thumbnail is required</p>}
+          </div>
+
+          {/* Hover Thumbnail */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+                Hover Thumbnail <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
+              </Label>
+              <span className="text-[11px] font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 dark:bg-indigo-950/50 dark:border-indigo-800 dark:text-indigo-300 px-2.5 py-0.5 rounded-full">
+                Revealed on Hover
+              </span>
+            </div>
+            <div
+              className="border border-gray-200 dark:border-white/10 rounded-lg p-3 bg-white dark:bg-[#141414] relative overflow-hidden flex flex-col justify-between"
+              style={{ minHeight: 180 }}
+            >
+              <div className="flex justify-center items-center h-[120px] w-full">
+                {hoverImagePreview ? (
+                  <Image
+                    src={hoverImagePreview}
+                    alt="Hover Thumbnail"
+                    width={400}
+                    height={400}
+                    unoptimized
+                    className="max-h-[120px] w-auto object-contain rounded"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-1.5">
+                    <ImageIcon size={36} className="stroke-[1.5]" />
+                    <span className="text-xs">No hover image selected</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100 dark:border-white/5">
+                <label className="flex-1 py-1.5 border border-gray-300 dark:border-white/15 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer flex items-center justify-center gap-2 text-sm font-medium transition-colors">
+                  <ImageIcon size={14} />
+                  Browse
+                  <input type="file" accept="image/*" className="hidden" onChange={handleBrowseHover} />
+                </label>
+                {hoverImagePreview && (
+                  <>
                     <label className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/15 rounded-lg cursor-pointer flex items-center justify-center gap-2 text-sm font-medium transition-colors">
                       <RefreshCcw size={14} />
                       Replace
-                      <input type="file" accept="image/*" className="hidden" onChange={handleBrowseMain} />
+                      <input type="file" accept="image/*" className="hidden" onChange={handleBrowseHover} />
                     </label>
-                  )}
-                </div>
-              </div>
-              {errors.mainImage && <p className="text-xs text-red-500">Primary thumbnail is required</p>}
-            </div>
-
-            {/* Hover Thumbnail */}
-            <div className="space-y-1">
-              <div className="flex items-center justify-between h-5">
-                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                  Hover Thumbnail <span className="text-xs font-normal text-muted-foreground">(Optional)</span>
-                </Label>
-                <span className="text-[11px] font-medium text-indigo-600 bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded-full">
-                  Hover Reveal
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground">Revealed on cursor hover</p>
-              <div
-                className="border border-gray-200 dark:border-white/10 rounded-lg p-3 bg-white dark:bg-[#141414] relative overflow-hidden flex flex-col justify-between"
-                style={{ minHeight: 200 }}
-              >
-                <div className="flex justify-center items-center h-[130px] w-full">
-                  {hoverImagePreview ? (
-                    <Image
-                      src={hoverImagePreview}
-                      alt="Hover Thumbnail"
-                      width={400}
-                      height={400}
-                      unoptimized
-                      className="max-h-[130px] w-auto object-contain rounded"
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-1">
-                      <ImageIcon size={36} />
-                      <span className="text-xs">No hover image</span>
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100 dark:border-white/5">
-                  <label className="flex-1 py-1.5 border border-gray-300 dark:border-white/15 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer flex items-center justify-center gap-2 text-sm font-medium transition-colors">
-                    <ImageIcon size={14} />
-                    Browse
-                    <input type="file" accept="image/*" className="hidden" onChange={handleBrowseHover} />
-                  </label>
-                  {hoverImagePreview && (
-                    <>
-                      <label className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/15 rounded-lg cursor-pointer flex items-center justify-center gap-2 text-sm font-medium transition-colors">
-                        <RefreshCcw size={14} />
-                        Replace
-                        <input type="file" accept="image/*" className="hidden" onChange={handleBrowseHover} />
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setHoverImagePreview(null);
-                          updateBaseProduct({ hoverImage: null });
-                        }}
-                        className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg border border-transparent hover:border-red-200 dark:hover:border-red-900 transition-colors"
-                        title="Remove hover image"
-                      >
-                        <X size={16} />
-                      </button>
-                    </>
-                  )}
-                </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setHoverImagePreview(null);
+                        updateBaseProduct({ hoverImage: null });
+                      }}
+                      className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg border border-transparent hover:border-red-200 dark:hover:border-red-900 transition-colors"
+                      title="Remove hover image"
+                    >
+                      <X size={16} />
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>
