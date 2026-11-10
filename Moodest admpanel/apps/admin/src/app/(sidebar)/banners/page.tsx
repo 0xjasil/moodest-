@@ -25,13 +25,14 @@ import {
   ArrowUp, ArrowDown, MoreVertical, ImageIcon,
   ChevronLeft, ChevronRight, Link as LinkIcon, Eye, EyeOff,
 } from "lucide-react";
-import { API_URL } from "@/lib/api-client";
+import { apiFetch } from "@/lib/apiFetch";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 
 const PAGE_SIZE = 6;
-const MIN_ACTIVE = 2;
-const MAX_ACTIVE = 5;
+const MIN_ACTIVE = 1;
+const MAX_ACTIVE = 8;
 
-type Banner = {
+export type Banner = {
   id: string;
   title: string;
   image: string;
@@ -45,9 +46,17 @@ type Banner = {
   isActive: boolean;
 };
 
+function resolveBannerUrl(url?: string | null): string {
+  if (!url) return "https://modest-eta.vercel.app/banners/top-promo-banner.jpg";
+  if (url.startsWith("/")) {
+    return `https://modest-eta.vercel.app${url}`;
+  }
+  return url;
+}
+
 const validateImageSize = (file: File): boolean => {
-  if (file.size > 8 * 1024 * 1024) {
-    toast.error("Image must be under 8 MB");
+  if (file.size > 10 * 1024 * 1024) {
+    toast.error("Image must be under 10 MB");
     return false;
   }
   return true;
@@ -61,7 +70,7 @@ function DeleteBannerDialog({ open, setOpen, banner, onDeleted }: {
   const handleDelete = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/banners/${banner.id}`, { method: "DELETE" });
+      const res = await apiFetch(`/banners/${banner.id}`, { method: "DELETE" });
       if (!res.ok) throw new Error();
       toast.success("Banner deleted");
       onDeleted();
@@ -106,14 +115,15 @@ function ToggleActiveDialog({ open, setOpen, banner, activeCount, onToggled }: {
       setOpen(false); return;
     }
     if (isBlockedHide) {
-      toast.error(`At least ${MIN_ACTIVE} banners must remain active.`);
+      toast.error(`At least ${MIN_ACTIVE} banner must remain active.`);
       setOpen(false); return;
     }
     setLoading(true);
     try {
-      const formData = new FormData();
-      formData.append("isActive", String(nextState));
-      const res = await fetch(`${API_URL}/banners/${banner.id}`, { method: "PATCH", body: formData });
+      const res = await apiFetch(`/banners/${banner.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ isActive: nextState }),
+      });
       if (!res.ok) throw new Error();
       toast.success(`Banner ${nextState ? "activated" : "hidden"}`);
       onToggled();
@@ -131,7 +141,7 @@ function ToggleActiveDialog({ open, setOpen, banner, activeCount, onToggled }: {
             {isBlockedActivate
               ? `You already have ${MAX_ACTIVE} active banners. Hide one before activating another.`
               : isBlockedHide
-                ? `You need at least ${MIN_ACTIVE} active banners. Add or activate another before hiding this one.`
+                ? `You need at least ${MIN_ACTIVE} active banner. Add or activate another before hiding this one.`
                 : nextState
                   ? (banner.title ? `Make "${banner.title}" visible on the homepage?` : "Make this banner visible on the homepage?")
                   : (banner.title ? `Hide "${banner.title}" from the homepage?` : "Hide this banner from the homepage?")}
@@ -162,7 +172,7 @@ function EditBannerDialog({ open, setOpen, banner, onUpdated }: {
   const [description, setDescription] = useState(banner.description || "");
   const [buttonText, setButtonText] = useState(banner.buttonText || "");
   const [buttonLink, setButtonLink] = useState(banner.buttonLink || "");
-  const [preview, setPreview] = useState<string>(banner.image);
+  const [preview, setPreview] = useState<string>(resolveBannerUrl(banner.image));
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -177,20 +187,31 @@ function EditBannerDialog({ open, setOpen, banner, onUpdated }: {
   const handleSave = async () => {
     setLoading(true);
     try {
-      const formData = new FormData();
-      formData.append("title", title.trim());
-      formData.append("tag", tag.trim());
-      formData.append("offerPrice", offerPrice.trim());
-      formData.append("description", description.trim());
-      formData.append("buttonText", buttonText.trim());
-      formData.append("buttonLink", buttonLink.trim());
-      if (file) formData.append("image", file);
-      const res = await fetch(`${API_URL}/banners/${banner.id}`, { method: "PATCH", body: formData });
+      let finalImageUrl = banner.image;
+      if (file) {
+        toast.info("Uploading image to Cloudinary CDN...");
+        finalImageUrl = await uploadToCloudinary(file, "moodest/banners");
+      }
+      const res = await apiFetch(`/banners/${banner.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          title: title.trim(),
+          tag: tag.trim(),
+          offerPrice: offerPrice.trim(),
+          description: description.trim(),
+          buttonText: buttonText.trim(),
+          buttonLink: buttonLink.trim(),
+          image: finalImageUrl,
+        }),
+      });
       if (!res.ok) throw new Error();
       toast.success("Banner updated");
       onUpdated(); setOpen(false);
-    } catch { toast.error("Failed to update banner"); }
-    finally { setLoading(false); }
+    } catch (e: any) {
+      toast.error(e?.message || "Failed to update banner");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -254,7 +275,7 @@ function EditBannerDialog({ open, setOpen, banner, onUpdated }: {
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">Button Link</Label>
-                <Input value={buttonLink} onChange={(e) => setButtonLink(e.target.value)} placeholder="e.g. /product" />
+                <Input value={buttonLink} onChange={(e) => setButtonLink(e.target.value)} placeholder="e.g. /category/all" />
               </div>
             </div>
           </div>
@@ -329,9 +350,7 @@ export default function AdminBannersPage() {
   const fetchBanners = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/banners?all=true`).catch(() =>
-        fetch(`${API_URL}/banners?all=true`)
-      );
+      const res = await apiFetch("/banners?all=true");
       if (res.ok) {
         const json = await res.json();
         const data = Array.isArray(json) ? json : json.data || json.banners || [];
@@ -357,24 +376,33 @@ export default function AdminBannersPage() {
   };
 
   const handleAdd = async () => {
-    if (!file) { toast.error("Please select a banner image"); return; }
+    if (!file && !preview) { toast.error("Please select a banner image"); return; }
     if (activeCount >= MAX_ACTIVE) {
       toast.error(`Maximum ${MAX_ACTIVE} banners active. Hide one first.`); return;
     }
     setUploading(true);
     try {
-      const formData = new FormData();
-      formData.append("title", title.trim());
-      formData.append("tag", tag.trim());
-      formData.append("offerPrice", offerPrice.trim());
-      formData.append("description", description.trim());
-      formData.append("buttonText", buttonText.trim());
-      formData.append("buttonLink", buttonLink.trim());
-      formData.append("image", file);
-      const res = await fetch(`${API_URL}/banners`, { method: "POST", body: formData });
+      let uploadedUrl = preview || "";
+      if (file) {
+        toast.info("Uploading image to Cloudinary CDN...");
+        uploadedUrl = await uploadToCloudinary(file, "moodest/banners");
+      }
+      const res = await apiFetch("/banners", {
+        method: "POST",
+        body: JSON.stringify({
+          title: title.trim(),
+          tag: tag.trim(),
+          offerPrice: offerPrice.trim(),
+          description: description.trim(),
+          buttonText: buttonText.trim(),
+          buttonLink: buttonLink.trim(),
+          image: uploadedUrl,
+          isActive: true,
+        }),
+      });
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed");
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || err.error || "Failed to add banner");
       }
       toast.success("Banner added successfully");
       setTitle(""); setTag(""); setOfferPrice(""); setDescription(""); setButtonText(""); setButtonLink("");
@@ -391,15 +419,23 @@ export default function AdminBannersPage() {
     if (direction === "up" && idx === 0) return;
     if (direction === "down" && idx === banners.length - 1) return;
     const swapIdx = direction === "up" ? idx - 1 : idx + 1;
+    const reordered = [...banners];
+    const temp = reordered[idx];
+    reordered[idx] = reordered[swapIdx];
+    reordered[swapIdx] = temp;
+    setBanners(reordered);
+
     try {
-      const fd1 = new FormData(); fd1.append("order", String(banners[swapIdx].order));
-      const fd2 = new FormData(); fd2.append("order", String(banners[idx].order));
-      await Promise.all([
-        fetch(`${API_URL}/banners/${banners[idx].id}`, { method: "PATCH", body: fd1 }),
-        fetch(`${API_URL}/banners/${banners[swapIdx].id}`, { method: "PATCH", body: fd2 }),
-      ]);
+      const bannerIds = reordered.map((b) => b.id);
+      await apiFetch("/banners/reorder", {
+        method: "PATCH",
+        body: JSON.stringify({ bannerIds }),
+      });
       fetchBanners();
-    } catch { toast.error("Failed to reorder"); }
+    } catch {
+      toast.error("Failed to reorder");
+      fetchBanners();
+    }
   };
 
   return (
@@ -409,9 +445,9 @@ export default function AdminBannersPage() {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight">Hero Banners</h1>
+              <h1 className="text-2xl font-bold tracking-tight">Hero Banners (CMS)</h1>
               <p className="text-muted-foreground text-sm">
-                Manage homepage hero slides. Min {MIN_ACTIVE}, Max {MAX_ACTIVE} active at a time.
+                Manage storefront hero slider banners. Active banners appear automatically on the homepage.
               </p>
             </div>
             <div className="flex items-center gap-2 text-sm border border-border rounded-lg px-3 py-1.5">
@@ -425,16 +461,16 @@ export default function AdminBannersPage() {
           {/* Min warning */}
           {activeCount < MIN_ACTIVE && (
             <div className="flex items-center gap-2 px-4 py-3 rounded-lg border border-amber-200 bg-amber-50 text-amber-700 text-sm font-medium">
-              ⚠ At least {MIN_ACTIVE} banners must be active. Please activate more banners.
+              ⚠ At least {MIN_ACTIVE} banner should be active for the homepage hero carousel.
             </div>
           )}
 
           {/* Add Banner */}
           <Card>
             <CardHeader>
-              <CardTitle>Add New Banner</CardTitle>
+              <CardTitle>Add New Hero Banner</CardTitle>
               <CardDescription>
-                Upload an image banner. All text fields and CTA button are optional.
+                Upload an image banner. Uploaded images are stored on Cloudinary CDN for instant storefront loading.
                 {activeCount >= MAX_ACTIVE && (
                   <span className="ml-2 text-destructive font-medium">— Active limit reached ({MAX_ACTIVE}). Hide one first.</span>
                 )}
@@ -453,7 +489,7 @@ export default function AdminBannersPage() {
                 >
                   {preview ? (
                     <div className="relative w-full h-full">
-                      <Image src={preview} alt="Preview" fill unoptimized className="object-cover" />
+                      <Image src={resolveBannerUrl(preview)} alt="Preview" fill unoptimized className="object-cover" />
                       <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity gap-2">
                         <ImageIcon className="w-6 h-6 text-white" />
                         <span className="text-white text-xs font-semibold">Click to change image</span>
@@ -464,7 +500,7 @@ export default function AdminBannersPage() {
                       <ImageIcon className="w-10 h-10" />
                       <div className="text-center">
                         <p className="text-sm font-medium">Click to upload banner image</p>
-                        <p className="text-xs">Recommended: 1920×800px or wider. Max 8 MB.</p>
+                        <p className="text-xs">Recommended: 1920×800px or wider luxury abaya banner.</p>
                       </div>
                     </div>
                   )}
@@ -477,7 +513,7 @@ export default function AdminBannersPage() {
                 <Input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Signature Tailoring & Outerwear"
+                  placeholder="e.g. New Arrivals Worth The Wait — Luxury Abayas"
                   className="max-w-lg"
                 />
               </div>
@@ -489,7 +525,7 @@ export default function AdminBannersPage() {
                   <Input
                     value={tag}
                     onChange={(e) => setTag(e.target.value)}
-                    placeholder="e.g. AUTUMN / WINTER COLLECTION"
+                    placeholder="e.g. ATELIER 2026 | ALL SIZES 50-62"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -497,7 +533,7 @@ export default function AdminBannersPage() {
                   <Input
                     value={offerPrice}
                     onChange={(e) => setOfferPrice(e.target.value)}
-                    placeholder="e.g. Starting from ₹4,299* or Up to 40% OFF"
+                    placeholder="e.g. Free Worldwide Shipping on ₹1,999+"
                   />
                 </div>
               </div>
@@ -508,7 +544,7 @@ export default function AdminBannersPage() {
                 <Input
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="e.g. Precision-tailored wool overshirts, blazers..."
+                  placeholder="e.g. Handcrafted luxury abayas tailored for every occasion..."
                 />
               </div>
 
@@ -524,7 +560,7 @@ export default function AdminBannersPage() {
                     <Input
                       value={buttonText}
                       onChange={(e) => setButtonText(e.target.value)}
-                      placeholder="e.g. EXPLORE NOW"
+                      placeholder="e.g. Shop Collection"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -532,21 +568,18 @@ export default function AdminBannersPage() {
                     <Input
                       value={buttonLink}
                       onChange={(e) => setButtonLink(e.target.value)}
-                      placeholder="e.g. /products or https://..."
+                      placeholder="e.g. /category/all or /category/the-classics"
                     />
                   </div>
                 </div>
-                {buttonText && !buttonLink && (
-                  <p className="text-xs text-amber-600">⚠ Button text is set but link is empty. Please add a link.</p>
-                )}
               </div>
 
               <Button
                 onClick={handleAdd}
-                disabled={uploading || !file || activeCount >= MAX_ACTIVE}
+                disabled={uploading || (!file && !preview) || activeCount >= MAX_ACTIVE}
                 className="min-w-[140px]"
               >
-                {uploading ? "Uploading..." : "Add Banner"}
+                {uploading ? "Uploading to Cloudinary..." : "Add Banner"}
               </Button>
             </CardContent>
           </Card>
@@ -556,7 +589,7 @@ export default function AdminBannersPage() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>All Banners</CardTitle>
+                  <CardTitle>All Hero Banners</CardTitle>
                   <CardDescription className="mt-1">
                     {banners.length} banner{banners.length !== 1 ? "s" : ""} total
                     {totalPages > 1 && ` · Page ${currentPage} of ${totalPages}`}
@@ -602,7 +635,7 @@ export default function AdminBannersPage() {
                         <div key={banner.id} className="flex items-center gap-4 border border-border rounded-xl p-3 bg-card hover:bg-muted/30 transition-colors">
                           {/* Thumbnail */}
                           <div className="relative rounded-lg overflow-hidden flex-shrink-0 bg-muted border border-border" style={{ width: 120, height: 64 }}>
-                            <Image src={banner.image} alt={banner.title || "Banner"} fill unoptimized className="object-cover" />
+                            <Image src={resolveBannerUrl(banner.image)} alt={banner.title || "Banner"} fill unoptimized className="object-cover" />
                           </div>
 
                           {/* Info */}
@@ -613,7 +646,7 @@ export default function AdminBannersPage() {
                             {banner.buttonText ? (
                               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                 <LinkIcon className="w-3 h-3 shrink-0" />
-                                <span className="truncate">{banner.buttonText} → {banner.buttonLink || "no link"}</span>
+                                <span className="truncate">{banner.buttonText} → {banner.buttonLink || "/category/all"}</span>
                               </div>
                             ) : (
                               <p className="text-xs text-muted-foreground italic">No CTA button</p>

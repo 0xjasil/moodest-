@@ -11,15 +11,20 @@ import DiscoverCategories, { type CategoryItem } from "@/components/moodest/Disc
 import NewArrivalsSection from "@/components/moodest/NewArrivalsSection";
 import EditorialGalleryBanner from "@/components/moodest/EditorialGalleryBanner";
 import TrendingNowSection from "@/components/moodest/TrendingNowSection";
-import { categoryAPI, productAPI, mapBackendProductToProduct } from "@/lib/api";
-import type { Product } from "@/lib/types";
+import { categoryAPI, productAPI, bannerAPI, mapBackendProductToProduct } from "@/lib/api";
+import type { Product, Banner } from "@/lib/types";
 
 interface HomeProps {
   initialCategories: CategoryItem[];
   initialProducts: Product[];
+  initialBanners: Banner[];
 }
 
-export default function Home({ initialCategories = [], initialProducts = [] }: HomeProps) {
+export default function Home({
+  initialCategories = [],
+  initialProducts = [],
+  initialBanners = [],
+}: HomeProps) {
   const [showAppBanner, setShowAppBanner] = useState(true);
 
   return (
@@ -37,8 +42,8 @@ export default function Home({ initialCategories = [], initialProducts = [] }: H
       <Header />
 
       <main id="main-content" className="min-h-screen bg-mb-bg w-full overflow-x-hidden">
-        {/* Top Hero Carousel — Full Viewport on Top Without Extra Test Banners */}
-        <HeroCarousel />
+        {/* Top Hero Carousel — Powered by CMS with Luxury Default Fallback */}
+        <HeroCarousel initialBanners={initialBanners} />
 
         {/* 1. Shop by Category — Single Line Fill with Live DB Categories */}
         <DiscoverCategories initialCategories={initialCategories} initialProducts={initialProducts} />
@@ -121,9 +126,10 @@ export default function Home({ initialCategories = [], initialProducts = [] }: H
 
 export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
   try {
-    const [categoriesRes, productsRes] = await Promise.all([
+    const [categoriesRes, productsRes, bannersRes] = await Promise.all([
       categoryAPI.getAll().catch(() => []),
       productAPI.getAll({ limit: 40 }).catch(() => null),
+      bannerAPI.getAll().catch(() => []),
     ]);
 
     const initialCategories: CategoryItem[] = (Array.isArray(categoriesRes) ? categoriesRes : []).map(
@@ -147,10 +153,13 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
       ? productsRes.items.map(mapBackendProductToProduct)
       : [];
 
+    const initialBanners: Banner[] = Array.isArray(bannersRes) ? bannersRes : [];
+
     return {
       props: {
         initialCategories,
         initialProducts,
+        initialBanners,
       },
     };
   } catch (err) {
@@ -159,6 +168,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
       props: {
         initialCategories: [],
         initialProducts: [],
+        initialBanners: [],
       },
     };
   }

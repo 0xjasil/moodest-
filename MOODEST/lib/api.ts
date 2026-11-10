@@ -21,6 +21,7 @@ import type {
   Wallet,
   WalletTransaction,
   PaymentIntentResult,
+  Banner,
 } from "./types";
 
 /* ── Product Mapping Helper ──────────────────────────────────── */
@@ -430,3 +431,13 @@ export const walletAPI = {
     });
   },
 };
+
+/* ── Banners CMS API ─────────────────────────────────────────── */
+
+export const bannerAPI = {
+  getAll: async (all?: boolean): Promise<Banner[]> => {
+    const query = all ? "?all=true" : "";
+    return apiFetchJson<Banner[]>(`/api/banners${query}`);
+  },
+};
+

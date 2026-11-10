@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import type { Banner } from "@/lib/types";
 
-export const heroSlides = [
+export interface HeroSlideItem {
+  id?: string;
+  img: string;
+  link: string;
+  title?: string | null;
+  subtitle?: string | null;
+  buttonText?: string | null;
+}
+
+export const heroSlides: HeroSlideItem[] = [
   {
     img: "/banners/top-promo-banner.jpg",
     link: "/category/all",
@@ -28,10 +38,44 @@ export const heroSlides = [
   },
 ];
 
-export default function HeroCarousel() {
+interface HeroCarouselProps {
+  initialBanners?: Banner[];
+}
+
+export default function HeroCarousel({ initialBanners }: HeroCarouselProps) {
+  const [banners, setBanners] = useState<Banner[]>(initialBanners || []);
+
+  // Client-side fallback fetch if not provided via SSR
+  useEffect(() => {
+    if (!initialBanners || initialBanners.length === 0) {
+      fetch("/api/banners")
+        .then((res) => (res.ok ? res.json() : []))
+        .then((data) => {
+          if (Array.isArray(data) && data.length > 0) {
+            setBanners(data);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [initialBanners]);
+
+  // Map CMS banners to slide objects
+  const cmsSlides: HeroSlideItem[] = banners
+    .filter((b) => b.isActive !== false && (b.imageUrl || b.image))
+    .map((b) => ({
+      id: b.id,
+      img: b.imageUrl || b.image || "/banners/top-promo-banner.jpg",
+      link: b.buttonLink || b.linkUrl || b.link || "/category/all",
+      title: b.title,
+      subtitle: b.subtitle || b.tag,
+      buttonText: b.buttonText,
+    }));
+
+  const slides = cmsSlides.length > 0 ? cmsSlides : heroSlides;
+
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const total = heroSlides.length;
+  const total = slides.length;
 
   const nextSlide = () => {
     setCurrent((prev) => (prev + 1) % total);
@@ -42,10 +86,17 @@ export default function HeroCarousel() {
   };
 
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || total <= 1) return;
     const interval = setInterval(nextSlide, 4500);
     return () => clearInterval(interval);
   }, [isPaused, total]);
+
+  // Reset current slide if total changes
+  useEffect(() => {
+    if (current >= total && total > 0) {
+      setCurrent(0);
+    }
+  }, [total, current]);
 
   return (
     <div
@@ -60,16 +111,16 @@ export default function HeroCarousel() {
         className="flex h-full w-full transition-transform duration-700 ease-out"
         style={{ transform: `translateX(-${current * 100}%)` }}
       >
-        {heroSlides.map((slide, idx) => (
-          <div key={idx} className="relative w-full h-full flex-shrink-0">
+        {slides.map((slide, idx) => (
+          <div key={slide.id || idx} className="relative w-full h-full flex-shrink-0">
             <Link
               href={slide.link}
               className="block w-full h-full relative cursor-pointer group"
-              aria-label={`Featured Collection Slide ${idx + 1}`}
+              aria-label={slide.title || `Featured Collection Slide ${idx + 1}`}
             >
               <img
                 src={slide.img}
-                alt={`Modest Studio Visual ${idx + 1}`}
+                alt={slide.title || `Modest Studio Visual ${idx + 1}`}
                 className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-[1.02]"
                 onError={(e) => {
                   const target = e.currentTarget;
@@ -86,44 +137,50 @@ export default function HeroCarousel() {
       </div>
 
       {/* Prev Navigation Arrow */}
-      <button
-        type="button"
-        onClick={prevSlide}
-        aria-label="Previous Hero Image"
-        className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 hover:bg-white text-neutral-900 shadow-xl backdrop-blur-sm flex items-center justify-center transition-all hover:scale-105 active:scale-95 focus:outline-none"
-      >
-        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
+      {total > 1 && (
+        <button
+          type="button"
+          onClick={prevSlide}
+          aria-label="Previous Hero Image"
+          className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 hover:bg-white text-neutral-900 shadow-xl backdrop-blur-sm flex items-center justify-center transition-all hover:scale-105 active:scale-95 focus:outline-none"
+        >
+          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+      )}
 
       {/* Next Navigation Arrow */}
-      <button
-        type="button"
-        onClick={nextSlide}
-        aria-label="Next Hero Image"
-        className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 hover:bg-white text-neutral-900 shadow-xl backdrop-blur-sm flex items-center justify-center transition-all hover:scale-105 active:scale-95 focus:outline-none"
-      >
-        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
+      {total > 1 && (
+        <button
+          type="button"
+          onClick={nextSlide}
+          aria-label="Next Hero Image"
+          className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 hover:bg-white text-neutral-900 shadow-xl backdrop-blur-sm flex items-center justify-center transition-all hover:scale-105 active:scale-95 focus:outline-none"
+        >
+          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      )}
 
       {/* Slide Indicators */}
-      <div className="absolute bottom-5 sm:bottom-7 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
-        {heroSlides.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            aria-label={`Go to slide ${i + 1}`}
-            className={`transition-all duration-300 rounded-full ${
-              current === i
-                ? "w-8 h-2 bg-white shadow-md"
-                : "w-2 h-2 bg-white/50 hover:bg-white/80"
-            }`}
-          />
-        ))}
-      </div>
+      {total > 1 && (
+        <div className="absolute bottom-5 sm:bottom-7 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              aria-label={`Go to slide ${i + 1}`}
+              className={`transition-all duration-300 rounded-full ${
+                current === i
+                  ? "w-8 h-2 bg-white shadow-md"
+                  : "w-2 h-2 bg-white/50 hover:bg-white/80"
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

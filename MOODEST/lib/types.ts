@@ -277,3 +277,21 @@ export interface PaymentIntentResult {
   amount: number;
 }
 
+export interface Banner {
+  id: string;
+  title?: string | null;
+  subtitle?: string | null;
+  tag?: string | null;
+  description?: string | null;
+  buttonText?: string | null;
+  buttonLink?: string | null;
+  link?: string | null;
+  linkUrl?: string | null;
+  image?: string | null;
+  imageUrl?: string | null;
+  mobileImage?: string | null;
+  order?: number;
+  sortOrder?: number;
+  isActive: boolean;
+}
+

@@ -76,6 +76,11 @@ export const navigationConfig: NavItem[] = [
         href: "/products/categories-list",
       },
       {
+        id: "hero-banners",
+        title: "Hero Banners",
+        href: "/banners",
+      },
+      {
         id: "discount-coupons",
         title: "Discount Coupons",
         href: "/products/discount-coupons",

@@ -212,8 +212,8 @@ export default function DiscoverCategories({ initialCategories, initialProducts 
           </h2>
           <p className="text-xs sm:text-sm text-mb-muted mt-0.5">
             {categories.length > 0
-              ? `Signature Silhouettes — ${categories.slice(0, 4).map((c) => c.name).join(", ")}`
-              : "Signature Silhouettes — Curated Luxury Abayas & Modest Wears"}
+              ? `Signature Silhouettes  ${categories.slice(0, 4).map((c) => c.name).join(", ")}`
+              : "Signature Silhouettes  Curated Luxury Abayas & Modest Wears"}
           </p>
         </div>
         <div className="flex items-center gap-3">
