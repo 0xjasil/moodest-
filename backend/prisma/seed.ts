@@ -10,58 +10,40 @@ async function main() {
   const adminEmail = process.env.SEED_ADMIN_EMAIL?.trim().toLowerCase();
   const rawAdminPassword = process.env.SEED_ADMIN_PASSWORD?.trim();
   const adminName = process.env.SEED_ADMIN_NAME?.trim() || 'Moodest Store Administrator';
-  // SEED_ADMIN_RESET_PASSWORD flag:
-  // - default: false -> create admin if missing; if admin already exists, do NOT overwrite the existing passwordHash.
-  // - true: explicitly rotate/update the existing admin passwordHash to SEED_ADMIN_PASSWORD.
-  // Passwords and hashes are NEVER logged.
   const resetPassword = process.env.SEED_ADMIN_RESET_PASSWORD?.trim().toLowerCase() === 'true';
 
   if (!adminEmail || !rawAdminPassword) {
-    console.error('❌ SEED ABORTED: Both SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD are required environment variables.');
-    console.error('Please configure SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD in your .env file before running seed.');
-    process.exit(1);
-  }
-
-  const existingAdmin = await prisma.user.findUnique({
-    where: { email: adminEmail },
-  });
-
-  let adminUser;
-  if (!existingAdmin) {
-    const passwordHash = await bcrypt.hash(rawAdminPassword, 10);
-    adminUser = await prisma.user.create({
-      data: {
-        email: adminEmail,
-        passwordHash,
-        name: adminName,
-        role: Role.ADMIN,
-        isActive: true,
-      },
-    });
-    console.log(`✅ Admin user seeded (created): ${adminUser.email} [Role: ${adminUser.role}]`);
-  } else if (resetPassword) {
-    const passwordHash = await bcrypt.hash(rawAdminPassword, 10);
-    adminUser = await prisma.user.update({
-      where: { email: adminEmail },
-      data: {
-        name: adminName,
-        role: Role.ADMIN,
-        isActive: true,
-        passwordHash,
-      },
-    });
-    console.log(`✅ Admin user password updated (SEED_ADMIN_RESET_PASSWORD=true): ${adminUser.email}`);
+    console.warn('⚠️ SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD not set in env, skipping admin account seed.');
   } else {
-    adminUser = await prisma.user.update({
+    const existingAdmin = await prisma.user.findUnique({
       where: { email: adminEmail },
-      data: {
-        name: adminName,
-        role: Role.ADMIN,
-        isActive: true,
-        // passwordHash is deliberately preserved
-      },
     });
-    console.log(`ℹ️ Admin user already exists; password preserved (SEED_ADMIN_RESET_PASSWORD=false): ${adminUser.email}`);
+
+    if (!existingAdmin) {
+      const passwordHash = await bcrypt.hash(rawAdminPassword, 10);
+      await prisma.user.create({
+        data: {
+          email: adminEmail,
+          passwordHash,
+          name: adminName,
+          role: Role.ADMIN,
+          isActive: true,
+        },
+      });
+      console.log(`✅ Admin user seeded: ${adminEmail}`);
+    } else if (resetPassword) {
+      const passwordHash = await bcrypt.hash(rawAdminPassword, 10);
+      await prisma.user.update({
+        where: { email: adminEmail },
+        data: {
+          name: adminName,
+          role: Role.ADMIN,
+          isActive: true,
+          passwordHash,
+        },
+      });
+      console.log(`✅ Admin user password updated: ${adminEmail}`);
+    }
   }
 
   // 2. Seed Single Brand: Moodest Studio
@@ -84,16 +66,16 @@ async function main() {
   // 3. Seed Core Abaya Categories
   const categoriesData = [
     {
-      name: 'Syrian Collection',
-      slug: 'syrian-collection',
-      description: 'Authentic Syrian artisanal embroidery and delicate handwoven details on breathable luxury fabrics.',
-      image: '/abaya/categories/handwork-abaya.jpg',
-    },
-    {
       name: 'The Classics',
       slug: 'the-classics',
       description: 'Timeless black abayas crafted from premium midnight Nida with clean, versatile cuts.',
       image: '/abaya/categories/classic-black.jpg',
+    },
+    {
+      name: 'Syrian Collection',
+      slug: 'syrian-collection',
+      description: 'Authentic Syrian artisanal embroidery and delicate handwoven details on breathable luxury fabrics.',
+      image: '/abaya/categories/handwork-abaya.jpg',
     },
     {
       name: 'The Luxe Edit',
@@ -136,173 +118,346 @@ async function main() {
   }
   console.log(`✅ ${Object.keys(categories).length} Categories seeded`);
 
-  // 4. Seed SubCategories
-  const subCategoriesData = [
-    { name: 'Front Open Abayas', slug: 'front-open-abayas', categorySlug: 'everyday-abayas' },
-    { name: 'Pull-over Closed Abayas', slug: 'pull-over-closed-abayas', categorySlug: 'everyday-abayas' },
-    { name: 'Hand-Embroidered Luxury', slug: 'hand-embroidered-luxury', categorySlug: 'occasion-luxury-abayas' },
-    { name: 'Bridal Velvet Abayas', slug: 'bridal-velvet-abayas', categorySlug: 'occasion-luxury-abayas' },
-    { name: 'French Khimars', slug: 'french-khimars', categorySlug: 'jilbabs-khimars' },
-    { name: 'Malaysian Instant Stoles', slug: 'malaysian-instant-stoles', categorySlug: 'hijabs-stoles' },
-  ];
-
-  const subcategories: Record<string, any> = {};
-  for (const sub of subCategoriesData) {
-    const parentCategory = categories[sub.categorySlug];
-    if (parentCategory) {
-      const record = await prisma.subCategory.upsert({
-        where: { slug: sub.slug },
-        update: {
-          name: sub.name,
-          categoryId: parentCategory.id,
-        },
-        create: {
-          name: sub.name,
-          slug: sub.slug,
-          categoryId: parentCategory.id,
-        },
-      });
-      subcategories[sub.slug] = record;
-    }
-  }
-  console.log(`✅ ${Object.keys(subcategories).length} Subcategories seeded`);
-
-  // 5. Seed Showcase Products with Variants & Images
-  const everydayCat = categories['everyday-abayas'];
-  const frontOpenSub = subcategories['front-open-abayas'];
-
-  const product1 = await prisma.product.upsert({
-    where: { slug: 'signature-jet-black-nida-abaya' },
-    update: {
-      name: 'Moodest Signature Jet Black Nida Abaya',
-      description: 'Our quintessential classic abaya made from ultra-soft Korean Nida fabric. Features clean lines, discreet side pockets, and flowing drape.',
-      fabric: 'Premium Korean Nida',
-      careInstructions: 'Dry clean recommended or gentle cold hand wash. Low heat iron.',
-      image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80',
-      brandId: brand.id,
-      categoryId: everydayCat?.id,
-      subCategoryId: frontOpenSub?.id,
-      isFeatured: true,
-      isBestSeller: true,
-      isNewArrival: false,
-    },
-    create: {
+  // 4. Products Catalog
+  const productsToSeed = [
+    {
       name: 'Moodest Signature Jet Black Nida Abaya',
       slug: 'signature-jet-black-nida-abaya',
-      description: 'Our quintessential classic abaya made from ultra-soft Korean Nida fabric. Features clean lines, discreet side pockets, and flowing drape.',
+      categorySlug: 'the-classics',
       fabric: 'Premium Korean Nida',
       careInstructions: 'Dry clean recommended or gentle cold hand wash. Low heat iron.',
-      image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80',
-      brandId: brand.id,
-      categoryId: everydayCat?.id,
-      subCategoryId: frontOpenSub?.id,
+      image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1000&q=80',
+      description: 'Our quintessential classic abaya made from ultra-soft Korean Nida fabric. Features clean lines, discreet side pockets, and flowing drape.',
       isFeatured: true,
       isBestSeller: true,
       isNewArrival: false,
+      gallery: [
+        'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1000&q=80',
+        'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=1000&q=80'
+      ],
+      variants: [
+        { size: '50', color: 'Jet Black', colorHex: '#0A0A0A', price: 3499, offerPrice: 2999, qty: 15 },
+        { size: '52', color: 'Jet Black', colorHex: '#0A0A0A', price: 3499, offerPrice: 2999, qty: 15 },
+        { size: '54', color: 'Jet Black', colorHex: '#0A0A0A', price: 3499, offerPrice: 2999, qty: 15 },
+        { size: '56', color: 'Jet Black', colorHex: '#0A0A0A', price: 3499, offerPrice: 2999, qty: 15 },
+        { size: '58', color: 'Jet Black', colorHex: '#0A0A0A', price: 3499, offerPrice: 2999, qty: 15 },
+        { size: '60', color: 'Jet Black', colorHex: '#0A0A0A', price: 3499, offerPrice: 2999, qty: 15 },
+      ]
     },
-  });
-
-  // Seed Product Images
-  const images = [
-    { url: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80', alt: 'Signature Jet Black Front View', sortOrder: 0 },
-    { url: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80', alt: 'Signature Jet Black Side Drape', sortOrder: 1 },
+    {
+      name: 'Medina Classic Front-Open Abaya',
+      slug: 'medina-classic-front-open-abaya',
+      categorySlug: 'the-classics',
+      fabric: 'Breathable Korean Nida',
+      careInstructions: 'Machine wash delicate or cold hand wash. Cool iron on reverse.',
+      image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1000&q=80',
+      description: 'Crafted from ultra-soft, wrinkle-resistant Korean Nida, the Medina Classic features a minimalist front-open cut with concealed snap buttons and deep tailored side pockets.',
+      isFeatured: true,
+      isBestSeller: true,
+      isNewArrival: false,
+      gallery: [
+        'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1000&q=80'
+      ],
+      variants: [
+        { size: '52', color: 'Midnight Black', colorHex: '#111111', price: 3899, offerPrice: 3499, qty: 15 },
+        { size: '54', color: 'Midnight Black', colorHex: '#111111', price: 3899, offerPrice: 3499, qty: 20 },
+        { size: '56', color: 'Midnight Black', colorHex: '#111111', price: 3899, offerPrice: 3499, qty: 18 },
+        { size: '58', color: 'Midnight Black', colorHex: '#111111', price: 3899, offerPrice: 3499, qty: 10 },
+      ]
+    },
+    {
+      name: 'Zahra Everyday Linen Abaya',
+      slug: 'zahra-everyday-linen-abaya',
+      categorySlug: 'the-classics',
+      fabric: 'Washed Organic Linen-Crepe',
+      careInstructions: 'Gentle cycle, cold water. Hang dry in shade. Light steam.',
+      image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1000&q=80',
+      description: 'An airy, relaxed-fit silhouette cut from natural organic linen blend. Features rolled cuff accents, side splits, and an optional matching fabric tie sash.',
+      isFeatured: false,
+      isBestSeller: true,
+      isNewArrival: true,
+      gallery: [
+        'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1000&q=80'
+      ],
+      variants: [
+        { size: '52', color: 'Sand Beige', colorHex: '#d8c7b5', price: 4299, offerPrice: 3799, qty: 10 },
+        { size: '54', color: 'Sand Beige', colorHex: '#d8c7b5', price: 4299, offerPrice: 3799, qty: 15 },
+        { size: '56', color: 'Sand Beige', colorHex: '#d8c7b5', price: 4299, offerPrice: 3799, qty: 12 },
+      ]
+    },
+    {
+      name: 'Damascus Floral Handwork Abaya',
+      slug: 'damascus-floral-handwork-abaya',
+      categorySlug: 'syrian-collection',
+      fabric: 'Syrian Textured Royal Georgette',
+      careInstructions: 'Specialist dry clean only. Do not soak.',
+      image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=1000&q=80',
+      description: 'Authentic Levantine artisan embroidery inspired by antique Damascus motifs. Each cuff and front hem is meticulously hand-stitched with micro-silk threads.',
+      isFeatured: true,
+      isBestSeller: true,
+      isNewArrival: false,
+      gallery: [
+        'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=1000&q=80'
+      ],
+      variants: [
+        { size: '52', color: 'Jet Black with Gold Thread', colorHex: '#1a1a1a', price: 6499, offerPrice: 5999, qty: 8 },
+        { size: '54', color: 'Jet Black with Gold Thread', colorHex: '#1a1a1a', price: 6499, offerPrice: 5999, qty: 14 },
+        { size: '56', color: 'Jet Black with Gold Thread', colorHex: '#1a1a1a', price: 6499, offerPrice: 5999, qty: 10 },
+      ]
+    },
+    {
+      name: 'Aleppo Royal Bisht Abaya',
+      slug: 'aleppo-royal-bisht-abaya',
+      categorySlug: 'syrian-collection',
+      fabric: 'Heavyweight Matte Satin Silk',
+      careInstructions: 'Professional dry clean only. Steam softly.',
+      image: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=1000&q=80',
+      description: 'A regal bisht cape silhouette adorned with authentic Syrian braided gimp lace borders. Featuring wide dramatic sleeves and a fluid royal drape.',
+      isFeatured: true,
+      isBestSeller: false,
+      isNewArrival: true,
+      gallery: [
+        'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=1000&q=80'
+      ],
+      variants: [
+        { size: '54', color: 'Forest Pine', colorHex: '#1c3329', price: 7299, offerPrice: 6899, qty: 8 },
+        { size: '56', color: 'Forest Pine', colorHex: '#1c3329', price: 7299, offerPrice: 6899, qty: 10 },
+      ]
+    },
+    {
+      name: 'Layla Shimmer Kimono Abaya',
+      slug: 'layla-shimmer-kimono-abaya',
+      categorySlug: 'the-luxe-edit',
+      fabric: 'Shimmer Chiffon over Silk Charmeuse',
+      careInstructions: 'Dry clean recommended. Keep away from rough surfaces.',
+      image: 'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=1000&q=80',
+      description: 'Luminous layered kimono abaya with delicate metallic lurex threading woven into French georgette.',
+      isFeatured: true,
+      isBestSeller: false,
+      isNewArrival: true,
+      gallery: [
+        'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=1000&q=80'
+      ],
+      variants: [
+        { size: '52', color: 'Champagne Taupe', colorHex: '#bda38f', price: 5899, offerPrice: 5299, qty: 10 },
+        { size: '54', color: 'Champagne Taupe', colorHex: '#bda38f', price: 5899, offerPrice: 5299, qty: 12 },
+        { size: '56', color: 'Champagne Taupe', colorHex: '#bda38f', price: 5899, offerPrice: 5299, qty: 8 },
+      ]
+    },
+    {
+      name: 'Sultana Velvet Layered Abaya',
+      slug: 'sultana-velvet-layered-abaya',
+      categorySlug: 'the-luxe-edit',
+      fabric: 'Crushed Silk Velvet with Cupro Lining',
+      careInstructions: 'Dry clean only. Steam vertical only, do not press iron.',
+      image: 'https://images.unsplash.com/photo-1550614000-4895a10e1bfd?auto=format&fit=crop&w=1000&q=80',
+      description: 'An opulent evening creation fashioned from sumptuous plush micro-velvet. Features subtle satin contrast lapels and an elongated flowing silhouette.',
+      isFeatured: false,
+      isBestSeller: false,
+      isNewArrival: true,
+      gallery: [
+        'https://images.unsplash.com/photo-1550614000-4895a10e1bfd?auto=format&fit=crop&w=1000&q=80'
+      ],
+      variants: [
+        { size: '54', color: 'Royal Burgundy', colorHex: '#581825', price: 8499, offerPrice: 7799, qty: 6 },
+        { size: '56', color: 'Royal Burgundy', colorHex: '#581825', price: 8499, offerPrice: 7799, qty: 8 },
+      ]
+    },
+    {
+      name: 'Shahana Beaded Bridal Abaya',
+      slug: 'shahana-beaded-bridal-abaya',
+      categorySlug: 'occasion-wear',
+      fabric: 'French Multi-Tier Organza & Silk Crepe',
+      careInstructions: 'Specialist haute-couture dry clean only.',
+      image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1000&q=80',
+      description: 'Created for weddings and formal gala evenings. Adorned with Swarovski crystals, pearl seed beads, and floral lace appliqués.',
+      isFeatured: true,
+      isBestSeller: true,
+      isNewArrival: false,
+      gallery: [
+        'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1000&q=80'
+      ],
+      variants: [
+        { size: '52', color: 'Pristine Ivory', colorHex: '#fcf8f2', price: 11999, offerPrice: 10499, qty: 5 },
+        { size: '54', color: 'Pristine Ivory', colorHex: '#fcf8f2', price: 11999, offerPrice: 10499, qty: 8 },
+      ]
+    },
+    {
+      name: 'Soraya Pleated Accordion Abaya',
+      slug: 'soraya-pleated-accordion-abaya',
+      categorySlug: 'occasion-wear',
+      fabric: 'Japanese Crepe-de-Chine',
+      careInstructions: 'Dry clean only. Gentle steam from distance.',
+      image: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=1000&q=80',
+      description: 'Architectural sunburst accordion pleats expand gracefully with movement. Features sleek concealed buttons and a refined mandarin collar.',
+      isFeatured: false,
+      isBestSeller: false,
+      isNewArrival: true,
+      gallery: [
+        'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=1000&q=80'
+      ],
+      variants: [
+        { size: '54', color: 'Emerald Green', colorHex: '#13402e', price: 6899, offerPrice: 6299, qty: 10 },
+        { size: '56', color: 'Emerald Green', colorHex: '#13402e', price: 6899, offerPrice: 6299, qty: 8 },
+      ]
+    },
+    {
+      name: 'Amani Moroccan Cut Kaftan Abaya',
+      slug: 'amani-moroccan-cut-kaftan-abaya',
+      categorySlug: 'kimono-kaftan',
+      fabric: 'Airflow Turkish Cey Crepe',
+      careInstructions: 'Delicate hand wash. Flat air dry. Medium iron.',
+      image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&q=80',
+      description: 'Inspired by traditional Maghreb kaftans with authentic braided sfifa trimming and handmade aakid buttons.',
+      isFeatured: true,
+      isBestSeller: false,
+      isNewArrival: false,
+      gallery: [
+        'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&q=80'
+      ],
+      variants: [
+        { size: '54', color: 'Warm Cocoa', colorHex: '#523a28', price: 4799, offerPrice: 4299, qty: 10 },
+        { size: '56', color: 'Warm Cocoa', colorHex: '#523a28', price: 4799, offerPrice: 4299, qty: 12 },
+      ]
+    },
+    {
+      name: 'Aura Batwing Relaxed Kaftan',
+      slug: 'aura-batwing-relaxed-kaftan',
+      categorySlug: 'kimono-kaftan',
+      fabric: 'Silky Modal Twill',
+      careInstructions: 'Machine wash cold. Low tumble dry or hang dry.',
+      image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=80',
+      description: 'Ultra-draped batwing silhouette that provides full modest coverage with maximum freedom of movement.',
+      isFeatured: false,
+      isBestSeller: true,
+      isNewArrival: true,
+      gallery: [
+        'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=80'
+      ],
+      variants: [
+        { size: 'Free Size', color: 'Pebble Grey', colorHex: '#94928e', price: 3699, offerPrice: 3199, qty: 25 },
+      ]
+    },
+    {
+      name: 'Ruaa Reversible Two-Tone Open Abaya',
+      slug: 'ruaa-reversible-two-tone-open-abaya',
+      categorySlug: 'open-abaya-edit',
+      fabric: 'Double-Woven Korean Cey Crepe',
+      careInstructions: 'Hand wash or dry clean. Low iron.',
+      image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1000&q=80',
+      description: 'Two luxurious styles in one single garment. Double-faced fabric enables wearing charcoal grey on one day and midnight black on the next.',
+      isFeatured: true,
+      isBestSeller: true,
+      isNewArrival: false,
+      gallery: [
+        'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1000&q=80'
+      ],
+      variants: [
+        { size: '54', color: 'Charcoal / Black', colorHex: '#2b2b2b', price: 4999, offerPrice: 4499, qty: 15 },
+        { size: '56', color: 'Charcoal / Black', colorHex: '#2b2b2b', price: 4999, offerPrice: 4499, qty: 14 },
+      ]
+    },
+    {
+      name: 'Farasha Flowing Open Shrug Abaya',
+      slug: 'farasha-flowing-open-shrug-abaya',
+      categorySlug: 'open-abaya-edit',
+      fabric: 'Multi-Chiffon Georgette',
+      careInstructions: 'Delicate cold hand wash. Drip dry.',
+      image: 'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=1000&q=80',
+      description: 'Floor-skimming butterfly farasha wings that ripple with grace. Designed to be styled effortlessly over casual outfits or evening slips.',
+      isFeatured: false,
+      isBestSeller: false,
+      isNewArrival: true,
+      gallery: [
+        'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=1000&q=80'
+      ],
+      variants: [
+        { size: '54', color: 'Dusty Plum', colorHex: '#4d2d38', price: 3999, offerPrice: 3499, qty: 14 },
+        { size: '56', color: 'Dusty Plum', colorHex: '#4d2d38', price: 3999, offerPrice: 3499, qty: 10 },
+      ]
+    }
   ];
 
-  for (const [idx, img] of images.entries()) {
-    const existing = await prisma.productImage.findFirst({
-      where: { productId: product1.id, sortOrder: idx },
+  for (const item of productsToSeed) {
+    const category = categories[item.categorySlug];
+    const product = await prisma.product.upsert({
+      where: { slug: item.slug },
+      update: {
+        name: item.name,
+        description: item.description,
+        fabric: item.fabric,
+        careInstructions: item.careInstructions,
+        image: item.image,
+        brandId: brand.id,
+        categoryId: category?.id,
+        isFeatured: item.isFeatured,
+        isBestSeller: item.isBestSeller,
+        isNewArrival: item.isNewArrival,
+        isArchived: false,
+      },
+      create: {
+        name: item.name,
+        slug: item.slug,
+        description: item.description,
+        fabric: item.fabric,
+        careInstructions: item.careInstructions,
+        image: item.image,
+        brandId: brand.id,
+        categoryId: category?.id,
+        isFeatured: item.isFeatured,
+        isBestSeller: item.isBestSeller,
+        isNewArrival: item.isNewArrival,
+        isArchived: false,
+      },
     });
-    if (!existing) {
-      await prisma.productImage.create({
-        data: {
-          productId: product1.id,
-          url: img.url,
-          alt: img.alt,
-          sortOrder: img.sortOrder,
+
+    for (const [idx, imgUrl] of item.gallery.entries()) {
+      const existingImg = await prisma.productImage.findFirst({
+        where: { productId: product.id, sortOrder: idx },
+      });
+      if (!existingImg) {
+        await prisma.productImage.create({
+          data: {
+            productId: product.id,
+            url: imgUrl,
+            alt: `${item.name} View ${idx + 1}`,
+            sortOrder: idx,
+          },
+        });
+      }
+    }
+
+    for (const v of item.variants) {
+      const sku = `${item.slug.slice(0, 8).toUpperCase()}-${v.color.slice(0, 3).toUpperCase()}-${v.size.replace(/\s+/g, '')}`;
+      await prisma.productVariant.upsert({
+        where: { sku },
+        update: {
+          size: v.size,
+          color: v.color,
+          colorHex: v.colorHex,
+          price: v.price,
+          offerPrice: v.offerPrice,
+          image: item.image,
+          qty: v.qty,
+          isActive: true,
+        },
+        create: {
+          productId: product.id,
+          sku,
+          size: v.size,
+          color: v.color,
+          colorHex: v.colorHex,
+          price: v.price,
+          offerPrice: v.offerPrice,
+          image: item.image,
+          qty: v.qty,
+          isActive: true,
         },
       });
     }
+
+    console.log(`✅ Seeded: ${product.name}`);
   }
-
-  // Seed Variants across sizes 50 to 62
-  const sizes = ['50', '52', '54', '56', '58', '60', '62'];
-  for (const size of sizes) {
-    const sku = `MOD-SIG-BLK-${size}`;
-    await prisma.productVariant.upsert({
-      where: { sku },
-      update: {
-        size,
-        color: 'Jet Black',
-        colorHex: '#0A0A0A',
-        price: 3499.00,
-        offerPrice: 2999.00,
-        qty: 15,
-        isActive: true,
-      },
-      create: {
-        productId: product1.id,
-        sku,
-        size,
-        color: 'Jet Black',
-        colorHex: '#0A0A0A',
-        price: 3499.00,
-        offerPrice: 2999.00,
-        qty: 15,
-        isActive: true,
-      },
-    });
-  }
-  console.log(`✅ Product '${product1.name}' and 7 size variants (50-62) seeded`);
-
-  // 6. Seed Marketing Hero Banner
-  const heroBanner = await prisma.banner.upsert({
-    where: { id: 'seed-hero-banner-1' },
-    update: {
-      title: 'Timeless Elegance & Modern Modesty',
-      subtitle: 'Discover our handcrafted abayas tailored for every occasion',
-      linkUrl: '/category/everyday-abayas',
-      imageUrl: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1600&q=80',
-      section: 'HERO',
-      sortOrder: 0,
-      isActive: true,
-    },
-    create: {
-      id: 'seed-hero-banner-1',
-      title: 'Timeless Elegance & Modern Modesty',
-      subtitle: 'Discover our handcrafted abayas tailored for every occasion',
-      linkUrl: '/category/everyday-abayas',
-      imageUrl: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1600&q=80',
-      section: 'HERO',
-      sortOrder: 0,
-      isActive: true,
-    },
-  });
-  console.log(`✅ Banner seeded: ${heroBanner.title}`);
-
-  // 7. Seed Promotional Coupon
-  const coupon = await prisma.coupon.upsert({
-    where: { code: 'MOODEST10' },
-    update: {
-      discountType: DiscountType.PERCENTAGE,
-      discountValue: 10.00,
-      minOrderValue: 1000.00,
-      maxDiscount: 500.00,
-      startDate: new Date('2026-01-01'),
-      endDate: new Date('2027-12-31'),
-      isActive: true,
-    },
-    create: {
-      code: 'MOODEST10',
-      discountType: DiscountType.PERCENTAGE,
-      discountValue: 10.00,
-      minOrderValue: 1000.00,
-      maxDiscount: 500.00,
-      startDate: new Date('2026-01-01'),
-      endDate: new Date('2027-12-31'),
-      isActive: true,
-    },
-  });
-  console.log(`✅ Coupon seeded: ${coupon.code} [${coupon.discountValue}% off]`);
 
   console.log('🎉 Seed completed successfully!');
 }
