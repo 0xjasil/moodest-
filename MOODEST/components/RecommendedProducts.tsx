@@ -91,7 +91,7 @@ function ProductCard({ product }: ProductCardProps) {
           <img
             src={product.image}
             alt={`${product.name} — Recommended Luxury Abaya | Modest Studio`}
-            className="w-full h-full object-contain group-hover:scale-105 transition duration-300"
+            className="w-full h-full object-cover object-top group-hover:scale-105 transition duration-300"
           />
           {product.discount && (
             <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-bold">

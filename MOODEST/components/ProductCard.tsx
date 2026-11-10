@@ -13,10 +13,10 @@ const StarIcon = () => (
 );
 
 const HeartIcon = ({ filled }: { filled: boolean }) => (
-  <svg width="14" height="14" viewBox="0 0 24 24"
-    fill={filled ? "currentColor" : "none"}
-    stroke="currentColor"
-    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+  <svg width="17" height="17" viewBox="0 0 24 24"
+    fill={filled ? "#e11d48" : "none"}
+    stroke={filled ? "#e11d48" : "currentColor"}
+    strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
   </svg>
 );
@@ -35,32 +35,29 @@ export default function ProductCard({ product }: { product: Product }) {
     : null;
 
   return (
-    <article className="group relative flex flex-col bg-mb-surface border border-mb-border rounded-[4px] sm:rounded-[6px] shadow-card hover:shadow-dropdown transition-all overflow-hidden">
+    <article className="group relative flex flex-col bg-mb-surface border border-mb-border rounded-[20px] sm:rounded-[24px] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
 
-      {/* ── Badges [BESTSELLER / NEW / FEATURED] ───────────────── */}
-      {(product.badge || (product.discount && product.discount > 10)) && (
-        <ul className="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1" role="list" aria-label="Badges">
-          {product.discount && product.discount > 10 && (
-            <li role="listitem"
-              className="bg-mb-gold-deep text-mb-bg text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-[4px] shadow-sm">
-              BESTSELLER
-            </li>
-          )}
-          {product.badge && (
-            <li role="listitem"
-              className="bg-mb-primary text-mb-bg text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-[4px] shadow-sm">
-              {product.badge}
-            </li>
-          )}
-        </ul>
-      )}
+      {/* ── Badges [e.g. 10% OFF / BESTSELLER] matching Reference ── */}
+      <div className="absolute top-3 left-3 z-20 flex flex-col gap-1">
+        {product.discount ? (
+          <span className="bg-black/90 backdrop-blur-xs text-white text-[11px] font-bold uppercase tracking-wider px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-sm">
+            {product.discount}% OFF
+          </span>
+        ) : product.badge ? (
+          <span className="bg-black/90 backdrop-blur-xs text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-sm">
+            {product.badge}
+          </span>
+        ) : null}
+      </div>
 
-      {/* ── Wishlist button ────────────────────────────────────── */}
-      <button type="button"
+      {/* ── Wishlist circular white button matching Reference ──── */}
+      <button
+        type="button"
         aria-label={wishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
         aria-pressed={wishlisted}
         onClick={onWish}
-        className="absolute top-2.5 right-2.5 z-10 w-7 h-7 flex items-center justify-center bg-mb-bg border border-mb-border text-mb-accent hover:text-mb-primary rounded-full shadow-sm transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent">
+        className="absolute top-3 right-3 z-20 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-white text-neutral-900 rounded-full shadow-md transition-all hover:scale-110 active:scale-95 focus-visible:outline-none"
+      >
         <HeartIcon filled={wishlisted} />
       </button>
 
@@ -70,7 +67,7 @@ export default function ProductCard({ product }: { product: Product }) {
         className="flex flex-col flex-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-mb-accent">
 
         {/* Product image (Primary + Hover Thumbnail) — tall fashion aspect ratio */}
-        <div className="relative bg-mb-surface overflow-hidden aspect-[3/4] sm:aspect-[4/5] w-full flex items-center justify-center p-2">
+        <div className="relative bg-mb-surface overflow-hidden aspect-[3/4] sm:aspect-[4/5] w-full">
           <img
             src={product.image}
             alt={`${product.name} — ${product.brand || "Modest Studio"} Luxury Designer Abaya`}
@@ -81,7 +78,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 target.src = "/abaya/products/abaya-1.jpg";
               }
             }}
-            className={`w-full h-full object-contain object-center rounded-[2px] transition-all duration-500 ${
+            className={`w-full h-full object-cover object-top transition-all duration-700 ${
               product.images && product.images[1] ? "group-hover:opacity-0" : "group-hover:scale-105"
             }`}
           />
@@ -96,7 +93,7 @@ export default function ProductCard({ product }: { product: Product }) {
                   target.src = "/abaya/products/abaya-1.jpg";
                 }
               }}
-              className="absolute inset-0 w-full h-full object-contain object-center p-2 rounded-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              className="absolute inset-0 w-full h-full object-cover object-top opacity-0 group-hover:opacity-100 transition-opacity duration-500"
             />
           )}
         </div>

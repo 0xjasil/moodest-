@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { apiUrl } from "@/lib/apiFetch";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") {
@@ -7,8 +8,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "https://bkndmoodest.vercel.app/api";
-    const response = await fetch(`${backendUrl}/banners`, {
+    const targetUrl = apiUrl("/banners");
+    const response = await fetch(targetUrl, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -19,7 +20,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const data = await response.json();
-    // Cache for 60 seconds with stale-while-revalidate
     res.setHeader("Cache-Control", "public, s-maxage=60, stale-while-revalidate=120");
     return res.status(200).json(data);
   } catch (error) {

@@ -204,24 +204,22 @@ export default function DiscoverCategories({ initialCategories, initialProducts 
 
   return (
     <section className="w-full px-3 sm:px-6 my-10 relative group/section" aria-label="Explore Abaya Categories">
-      {/* Header with Dynamic Database Categories Subtitle */}
-      <div className="flex items-center justify-between mb-5">
+      {/* Header with Clean High-Fashion Typography */}
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
         <div>
-          <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-mb-text">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-mb-text">
             Shop by Category
           </h2>
           <p className="text-xs sm:text-sm text-mb-muted mt-0.5">
-            {categories.length > 0
-              ? `Signature Silhouettes  ${categories.slice(0, 4).map((c) => c.name).join(", ")}`
-              : "Signature Silhouettes  Curated Luxury Abayas & Modest Wears"}
+            Browse our curated collections
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Link
             href="/category/all"
-            className="text-xs sm:text-sm font-semibold text-mb-primary hover:text-mb-primary-hover flex items-center gap-1 transition-colors group"
+            className="font-bold text-xs sm:text-sm uppercase tracking-wider text-neutral-900 hover:text-mb-primary transition-colors underline underline-offset-4 decoration-[1.5px]"
           >
-            <span>Discover More</span> <span className="transition-transform group-hover:translate-x-1">→</span>
+            DISCOVER MORE
           </Link>
           {/* Arrow navigation buttons */}
           {categories.length > 1 && (
@@ -253,31 +251,36 @@ export default function DiscoverCategories({ initialCategories, initialProducts 
         </div>
       </div>
 
-      {/* Horizontal Scrollable Rail with Snap: Displays Live Database Categories */}
+      {/* Horizontal Scrollable Rail with Snap: Reference Category Cards */}
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory gap-3.5 sm:gap-4.5 pb-2 -mx-3 px-3 sm:mx-0 sm:px-0"
+        className="flex overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory gap-3.5 sm:gap-5 pb-2 -mx-3 px-3 sm:mx-0 sm:px-0"
       >
         {categories.map((cat, idx) => {
           const href = `/category/${cat.slug || cat.id}`;
           return (
             <div
               key={cat.id || cat.slug || idx}
-              className="snap-start flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[calc((100%-5*1.125rem)/6)]"
+              className="snap-start flex-shrink-0 w-[54vw] sm:w-[35vw] md:w-[25vw] lg:w-[calc((100%-4*1.25rem)/5)]"
             >
               <Link
                 href={href}
-                className="group block overflow-hidden rounded-[14px] sm:rounded-[18px] bg-mb-surface border border-mb-border shadow-card hover:shadow-dropdown hover:-translate-y-1 transition-all duration-300"
+                className="group block overflow-hidden rounded-[22px] sm:rounded-[26px] bg-mb-surface shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               >
-                <div className="relative aspect-[2/3] w-full overflow-hidden bg-[#E8DDD0]">
+                <div className="relative aspect-[3/4.2] w-full overflow-hidden bg-[#E8DDD0]">
+                  {/* Floating Number Badge (Reference: 01, 02, 03) */}
+                  <span className="absolute top-3 left-3 z-20 px-2.5 py-0.5 rounded-full bg-white/25 backdrop-blur-md text-white font-medium text-xs tracking-wider border border-white/20 shadow-xs">
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+
                   {(() => {
                     const dynamicImg = getDynamicCategoryImage(cat, initialProducts);
                     return dynamicImg ? (
                       <img
                         src={dynamicImg}
                         alt={`${cat.name} — Handcrafted Luxury Modest Abaya Collection | Modest Studio`}
-                        className="w-full h-full object-contain object-center transition-transform duration-700 group-hover:scale-105"
+                        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                         onError={(e) => {
                           e.currentTarget.style.display = "none";
                         }}
@@ -290,13 +293,17 @@ export default function DiscoverCategories({ initialCategories, initialProducts 
                       </div>
                     );
                   })()}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent flex flex-col justify-end p-3.5 sm:p-4">
-                    <span className="text-white font-serif text-sm sm:text-base font-semibold group-hover:text-[#D29A90] transition-colors drop-shadow-sm leading-tight">
+
+                  {/* Bottom Bar: Category Name & Circular Arrow Button */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end justify-between p-3.5 sm:p-4 z-10">
+                    <span className="text-white font-semibold text-sm sm:text-base leading-tight drop-shadow-sm pr-2 truncate">
                       {cat.name}
                     </span>
-                    <span className="text-[11px] text-white/80 font-sans mt-1 inline-flex items-center gap-1 group-hover:underline">
-                      Explore Collection →
-                    </span>
+                    <div className="w-8 h-8 rounded-full bg-white text-neutral-900 flex items-center justify-center shrink-0 shadow-md transition-transform duration-300 group-hover:translate-x-0.5">
+                      <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </Link>

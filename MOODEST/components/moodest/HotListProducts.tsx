@@ -126,7 +126,7 @@ export default function HotListProducts() {
                             target.src = "/abaya/products/abaya-1.jpg";
                           }
                         }}
-                        className="w-full h-full object-contain p-2 transition-transform duration-500 group-hover/card:scale-105"
+                        className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/card:scale-105"
                       />
                     </div>
 
