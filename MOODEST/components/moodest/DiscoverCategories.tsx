@@ -22,27 +22,13 @@ interface DiscoverCategoriesProps {
 }
 
 /**
- * Aesthetic fallback mapping based on category slug/name
- */
-export function getCategoryFallback(cat: CategoryItem): string {
-  const text = `${cat.slug || ""} ${cat.name || ""}`.toLowerCase();
-  if (text.includes("kimono") || text.includes("kaftan")) return "https://res.cloudinary.com/dsaegpb70/image/upload/v1794209244/moodest/products/main/nythensnfrcfxu0kgy9e.jpg";
-  if (text.includes("occasion") || text.includes("bridal") || text.includes("party")) return "https://res.cloudinary.com/dsaegpb70/image/upload/v1794240615/moodest/categories/yjzxcj73fypiu5u4s3v1.jpg";
-  if (text.includes("open") || text.includes("front")) return "https://res.cloudinary.com/dsaegpb70/image/upload/v1794240617/moodest/categories/ajyvnretlig5l2f0azlq.jpg";
-  if (text.includes("syrian") || text.includes("handwork") || text.includes("embroid")) return "https://res.cloudinary.com/dsaegpb70/image/upload/v1794240619/moodest/categories/spkc4gv6coj0xblaugcl.jpg";
-  if (text.includes("luxe") || text.includes("silk") || text.includes("satin")) return "https://res.cloudinary.com/dsaegpb70/image/upload/v1794240623/moodest/categories/yla8sad18ou0chssqcrr.jpg";
-  if (text.includes("classic") || text.includes("black")) return "https://res.cloudinary.com/dsaegpb70/image/upload/v1794240621/moodest/categories/ihom0wjmwqjtazurdkbj.jpg";
-  return "https://res.cloudinary.com/dsaegpb70/image/upload/v1794209244/moodest/products/main/nythensnfrcfxu0kgy9e.jpg";
-}
-
-/**
  * Dynamically resolves category image from:
- * 1. Direct category image (Cloudinary URL, external URL, or database path)
- * 2. Matched product image from this category if available
- * 3. High-resolution category-matched silhouette fallback
+ * 1. Direct dynamically uploaded category image (Cloudinary URL, external URL, or uploaded path)
+ * 2. Dynamically matched product image for this category from live products
+ * 3. Gracefully returns empty string if no image has been uploaded yet
  */
 export function getDynamicCategoryImage(cat: CategoryItem, products?: Product[]): string {
-  // 1. Direct dynamic image passed in category data
+  // 1. Direct dynamically uploaded image from Category
   const rawImage =
     cat.image ||
     cat.imageUrl ||
@@ -59,7 +45,7 @@ export function getDynamicCategoryImage(cat: CategoryItem, products?: Product[])
     return trimmed;
   }
 
-  // 2. Dynamically match product image from this category if available
+  // 2. Dynamically match product image uploaded for this category if available
   if (products && products.length > 0) {
     const slug = (cat.slug || "").toLowerCase();
     const name = (cat.name || "").toLowerCase();
@@ -92,8 +78,7 @@ export function getDynamicCategoryImage(cat: CategoryItem, products?: Product[])
     }
   }
 
-  // 3. Fallback to category silhouette
-  return getCategoryFallback(cat);
+  return "";
 }
 
 export default function DiscoverCategories({ initialCategories, initialProducts }: DiscoverCategoriesProps) {
@@ -227,8 +212,8 @@ export default function DiscoverCategories({ initialCategories, initialProducts 
           </h2>
           <p className="text-xs sm:text-sm text-mb-muted mt-0.5">
             {categories.length > 0
-              ? `Signature Silhouettes  ${categories.slice(0, 4).map((c) => c.name).join(", ")}`
-              : "Signature Silhouettes  Curated Luxury Abayas & Modest Wears"}
+              ? `Signature Silhouettes — ${categories.slice(0, 4).map((c) => c.name).join(", ")}`
+              : "Signature Silhouettes — Curated Luxury Abayas & Modest Wears"}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -285,19 +270,26 @@ export default function DiscoverCategories({ initialCategories, initialProducts 
                 href={href}
                 className="group block overflow-hidden rounded-[14px] sm:rounded-[18px] bg-mb-surface border border-mb-border shadow-card hover:shadow-dropdown hover:-translate-y-1 transition-all duration-300"
               >
-                <div className="relative aspect-[2/3] w-full overflow-hidden bg-[#EEE4D8]">
-                  <img
-                    src={getDynamicCategoryImage(cat, initialProducts)}
-                    alt={cat.name}
-                    className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                    onError={(e) => {
-                      const target = e.currentTarget;
-                      const fallback = getCategoryFallback(cat);
-                      if (target.src !== fallback && !target.src.endsWith(fallback)) {
-                        target.src = fallback;
-                      }
-                    }}
-                  />
+                <div className="relative aspect-[2/3] w-full overflow-hidden bg-[#E8DDD0]">
+                  {(() => {
+                    const dynamicImg = getDynamicCategoryImage(cat, initialProducts);
+                    return dynamicImg ? (
+                      <img
+                        src={dynamicImg}
+                        alt={cat.name}
+                        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-b from-[#EFE5D9] to-[#DDD1C3] text-center">
+                        <span className="font-serif text-3xl text-mb-primary/30 font-bold">
+                          {cat.name.slice(0, 1).toUpperCase()}
+                        </span>
+                      </div>
+                    );
+                  })()}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent flex flex-col justify-end p-3.5 sm:p-4">
                     <span className="text-white font-serif text-sm sm:text-base font-semibold group-hover:text-[#D29A90] transition-colors drop-shadow-sm leading-tight">
                       {cat.name}
