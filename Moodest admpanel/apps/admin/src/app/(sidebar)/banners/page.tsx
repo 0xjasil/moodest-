@@ -240,15 +240,23 @@ function EditBannerDialog({ open, setOpen, banner, onUpdated }: {
 
           {/* Image Upload */}
           <div className="space-y-1.5">
-            <Label>Banner Image <span className="text-destructive">*</span></Label>
+            <div className="flex items-center justify-between">
+              <Label>Banner Image <span className="text-destructive">*</span></Label>
+              <span className="text-[10px] text-muted-foreground">Optimal: 1920×800 px (2.4:1)</span>
+            </div>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
             <div
               onClick={() => fileRef.current?.click()}
-              className="relative border-2 border-dashed border-border rounded-xl cursor-pointer overflow-hidden hover:border-primary transition-colors bg-slate-900/40"
-              style={{ height: 160 }}
+              className="relative border-2 border-dashed border-border rounded-xl cursor-pointer overflow-hidden hover:border-primary transition-colors bg-neutral-950"
+              style={{ height: 170 }}
             >
-              <Image src={preview} alt={alt || "Banner Preview"} fill unoptimized className="object-contain" />
-              <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity gap-1">
+              <Image src={preview} alt={alt || "Banner Preview"} fill unoptimized className="object-contain object-center" />
+              <div className="absolute top-2 right-2 z-10">
+                <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-black/75 text-white backdrop-blur-xs">
+                  object-contain
+                </span>
+              </div>
+              <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity gap-1 z-20">
                 <ImageIcon className="w-6 h-6 text-white" />
                 <span className="text-white text-xs font-medium">Click to change image (Cloudinary CDN)</span>
               </div>
@@ -511,28 +519,69 @@ export default function AdminBannersPage() {
             <CardContent className="space-y-5">
 
               {/* Image Upload */}
-              <div className="space-y-2">
-                <Label>Banner Image <span className="text-destructive">*</span></Label>
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <Label>Banner Image <span className="text-destructive">*</span></Label>
+                  <span className="text-[11px] text-muted-foreground font-medium">Max 10 MB · WebP, PNG, JPG</span>
+                </div>
+
+                {/* Recommended Dimensions Guide */}
+                <div className="rounded-xl border border-indigo-100 dark:border-indigo-950/60 bg-indigo-50/50 dark:bg-indigo-950/20 p-3 space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-indigo-950 dark:text-indigo-200 flex items-center gap-1.5">
+                      <span>📐</span> Suitable Image Size to Fill (Contain Mode)
+                    </span>
+                    <Badge variant="outline" className="text-[10px] bg-white dark:bg-black/40 text-indigo-600 dark:text-indigo-300 border-indigo-200">
+                      object-contain
+                    </Badge>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed">
+                    The storefront renders hero slides in <strong>object-contain</strong> so your abaya designs are never cropped. Upload in the following sizes for optimal screen fill:
+                  </p>
+                  <div className="flex flex-wrap gap-1.5 pt-0.5">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-indigo-100/80 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300">
+                      ★ 1920 × 800 px (2.4:1 Recommended)
+                    </span>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-white/10">
+                      1920 × 1080 px (16:9)
+                    </span>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 border border-gray-200/80 dark:border-white/10">
+                      2560 × 1080 px (21:9)
+                    </span>
+                  </div>
+                </div>
+
                 <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
                 <div
                   onClick={() => fileRef.current?.click()}
-                  className="relative border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary transition-colors overflow-hidden bg-muted/20"
-                  style={{ height: 200 }}
+                  className="relative border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary transition-colors overflow-hidden bg-neutral-950"
+                  style={{ height: 220 }}
                 >
                   {preview ? (
-                    <div className="relative w-full h-full">
-                      <Image src={resolveBannerUrl(preview)} alt={alt || "Banner Preview"} fill unoptimized className="object-cover" />
-                      <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity gap-2">
+                    <div className="relative w-full h-full flex items-center justify-center">
+                      <Image
+                        src={resolveBannerUrl(preview)}
+                        alt={alt || "Banner Preview"}
+                        fill
+                        unoptimized
+                        className="object-contain object-center"
+                      />
+                      <div className="absolute top-2 right-2 z-10">
+                        <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-black/75 text-white backdrop-blur-xs">
+                          Preview: object-contain
+                        </span>
+                      </div>
+                      <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity gap-2 z-20">
                         <ImageIcon className="w-6 h-6 text-white" />
-                        <span className="text-white text-xs font-semibold">Click to change image</span>
+                        <span className="text-white text-xs font-semibold">Click to change banner image</span>
                       </div>
                     </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center h-full gap-3 text-muted-foreground">
-                      <ImageIcon className="w-10 h-10" />
+                    <div className="flex flex-col items-center justify-center h-full gap-3 text-muted-foreground p-4">
+                      <ImageIcon className="w-10 h-10 text-neutral-500" />
                       <div className="text-center">
-                        <p className="text-sm font-medium">Click to upload banner image</p>
-                        <p className="text-xs">Recommended: 1920×800px or wider luxury abaya banner.</p>
+                        <p className="text-sm font-semibold text-neutral-200">Click to upload hero banner</p>
+                        <p className="text-xs text-neutral-400 mt-1">Recommended size: 1920 × 800 px (2.4:1) or 1920 × 1080 px (16:9)</p>
                       </div>
                     </div>
                   )}

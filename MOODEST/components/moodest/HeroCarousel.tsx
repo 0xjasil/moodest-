@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { bannerAPI } from "@/lib/api";
 import type { Banner } from "@/lib/types";
 
 export interface HeroSlideItem {
@@ -58,17 +59,34 @@ interface HeroCarouselProps {
 export default function HeroCarousel({ initialBanners }: HeroCarouselProps) {
   const [banners, setBanners] = useState<Banner[]>(initialBanners || []);
 
+  // Sync state whenever initialBanners prop changes
+  useEffect(() => {
+    if (initialBanners && initialBanners.length > 0) {
+      setBanners(initialBanners);
+    }
+  }, [initialBanners]);
+
   // Client-side fallback fetch if not provided via SSR
   useEffect(() => {
     if (!initialBanners || initialBanners.length === 0) {
-      fetch("/api/banners")
-        .then((res) => (res.ok ? res.json() : []))
+      bannerAPI
+        .getAll()
         .then((data) => {
           if (Array.isArray(data) && data.length > 0) {
             setBanners(data);
           }
         })
-        .catch(() => {});
+        .catch(() => {
+          // Secondary fallback to local proxy endpoint
+          fetch("/api/banners")
+            .then((res) => (res.ok ? res.json() : []))
+            .then((data) => {
+              if (Array.isArray(data) && data.length > 0) {
+                setBanners(data);
+              }
+            })
+            .catch(() => {});
+        });
     }
   }, [initialBanners]);
 
@@ -114,7 +132,7 @@ export default function HeroCarousel({ initialBanners }: HeroCarouselProps) {
 
   return (
     <div
-      className="relative w-full h-[70vh] sm:h-[80vh] md:h-[88vh] lg:h-[92vh] max-h-[960px] overflow-hidden select-none bg-neutral-900"
+      className="relative w-full h-[55vh] sm:h-[65vh] md:h-[75vh] lg:h-[82vh] min-h-[380px] sm:min-h-[460px] md:min-h-[520px] max-h-[840px] overflow-hidden select-none bg-neutral-950"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       role="region"
@@ -126,10 +144,17 @@ export default function HeroCarousel({ initialBanners }: HeroCarouselProps) {
         style={{ transform: `translateX(-${current * 100}%)` }}
       >
         {slides.map((slide, idx) => (
-          <div key={slide.id || idx} className="relative w-full h-full flex-shrink-0">
+          <div key={slide.id || idx} className="relative w-full h-full flex-shrink-0 overflow-hidden">
+            {/* Ambient blurred backdrop for seamless contain filling */}
+            <div
+              className="absolute inset-0 bg-cover bg-center blur-3xl opacity-35 scale-110 pointer-events-none transition-all duration-700"
+              style={{ backgroundImage: `url(${slide.img})` }}
+              aria-hidden="true"
+            />
+
             <Link
               href={slide.link}
-              className="block w-full h-full relative cursor-pointer group"
+              className="block w-full h-full relative cursor-pointer group z-10"
               aria-label={slide.title || `Featured Collection Slide ${idx + 1}`}
             >
               <img
@@ -144,7 +169,7 @@ export default function HeroCarousel({ initialBanners }: HeroCarouselProps) {
                 }}
               />
               {/* Subtle top/bottom luxury vignette overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/15 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/15 pointer-events-none" />
             </Link>
           </div>
         ))}

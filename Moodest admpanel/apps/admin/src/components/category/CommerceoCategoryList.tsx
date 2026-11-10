@@ -713,9 +713,31 @@ export function CommerceoCategoryList() {
 
             {/* Attachment */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
-                Attachment
-              </label>
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                  Attachment / Category Image
+                </label>
+                <span className="text-[10px] text-muted-foreground font-medium">2:3 Portrait Recommended</span>
+              </div>
+
+              {/* Suitable Size Guide */}
+              <div className="rounded-lg border border-indigo-100 dark:border-indigo-950/60 bg-indigo-50/40 dark:bg-indigo-950/20 p-2.5 text-[11px] text-muted-foreground leading-relaxed">
+                <p className="font-semibold text-indigo-950 dark:text-indigo-200 text-xs mb-1">
+                  📐 Suitable Size to Fill (Contain Mode)
+                </p>
+                <p>
+                  Storefront category cards use <strong>2:3 portrait ratio</strong> with <strong>object-contain</strong>.
+                </p>
+                <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+                  <span className="px-2 py-0.5 rounded bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 font-semibold text-[10px]">
+                    ★ 600 × 900 px (2:3)
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 text-[10px]">
+                    800 × 1200 px
+                  </span>
+                </div>
+              </div>
+
               <div className="relative flex items-center rounded-xl border border-gray-200 dark:border-white/10 shadow-2xs overflow-hidden h-10 bg-white dark:bg-[#181818]">
                 <label className="bg-gray-100 dark:bg-white/5 px-3.5 py-2 text-xs font-medium border-r border-gray-200 dark:border-white/10 hover:bg-gray-200/70 dark:hover:bg-white/10 cursor-pointer h-full flex items-center shrink-0 transition-colors">
                   <Upload className="size-3.5 mr-1.5 text-gray-600 dark:text-gray-300" />
@@ -741,7 +763,7 @@ export function CommerceoCategoryList() {
 
               {formImage && (
                 <div className="flex items-center gap-2 pt-1.5">
-                  <div className="relative size-12 rounded-lg border border-gray-200 dark:border-white/10 overflow-hidden bg-gray-50 dark:bg-white/5 flex-shrink-0">
+                  <div className="relative size-12 rounded-lg border border-gray-200 dark:border-white/10 overflow-hidden bg-neutral-900 flex-shrink-0">
                     <img
                       src={
                         formImage.startsWith("http") || formImage.startsWith("data:")
@@ -749,7 +771,7 @@ export function CommerceoCategoryList() {
                           : `https://modest-eta.vercel.app${formImage.startsWith("/") ? "" : "/"}${formImage}`
                       }
                       alt="Preview"
-                      className="size-full object-cover"
+                      className="size-full object-contain object-center"
                     />
                     {isUploadingImage && (
                       <div className="absolute inset-0 bg-black/40 flex items-center justify-center">

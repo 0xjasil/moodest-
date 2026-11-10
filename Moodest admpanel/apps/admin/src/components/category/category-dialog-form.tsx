@@ -146,7 +146,10 @@ export const CategoryDialogForm: FC<CategoryDialogFormProps> = ({
               name="image"
               render={({ field: { onChange, ...rest } }) => (
                 <FormItem>
-                  <FormLabel>Image {!category && "*"}</FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel>Image {!category && "*"}</FormLabel>
+                    <span className="text-[10px] text-muted-foreground">Optimal: 600×900 px (2:3)</span>
+                  </div>
                   <FormControl>
                     <Input
                       type="file"
@@ -164,12 +167,12 @@ export const CategoryDialogForm: FC<CategoryDialogFormProps> = ({
                   </FormControl>
 
                   {preview && (
-                    <div className="mt-2 relative h-24 w-24 rounded-md border overflow-hidden">
+                    <div className="mt-2 relative h-28 w-20 rounded-md border border-border bg-neutral-900 overflow-hidden">
                       <Image
                         src={preview}
                         alt="Preview"
                         fill
-                        className="object-cover"
+                        className="object-contain object-center"
                       />
                     </div>
                   )}
