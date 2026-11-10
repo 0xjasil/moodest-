@@ -135,7 +135,7 @@ export default function HeroCarousel({ initialBanners }: HeroCarouselProps) {
               <img
                 src={slide.img}
                 alt={slide.alt || slide.title || `Modest Studio Luxury Abaya Banner ${idx + 1}`}
-                className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-[1.02]"
+                className="w-full h-full object-contain object-center transition-transform duration-1000 group-hover:scale-[1.01]"
                 onError={(e) => {
                   const target = e.currentTarget;
                   if (!target.src.includes("/banners/top-promo-banner.jpg")) {

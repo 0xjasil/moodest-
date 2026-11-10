@@ -277,7 +277,7 @@ export default function DiscoverCategories({ initialCategories, initialProducts 
                       <img
                         src={dynamicImg}
                         alt={`${cat.name} — Handcrafted Luxury Modest Abaya Collection | Modest Studio`}
-                        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                        className="w-full h-full object-contain object-center transition-transform duration-700 group-hover:scale-105"
                         onError={(e) => {
                           e.currentTarget.style.display = "none";
                         }}

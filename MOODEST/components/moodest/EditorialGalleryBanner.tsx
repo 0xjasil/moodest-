@@ -17,7 +17,7 @@ export default function EditorialGalleryBanner() {
             <img
               src="/abaya/hero/hero-6.jpg"
               alt="Syrian Collection — Modest Silhouettes & Artisanal Handwork | Modest Studio"
-              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              className="w-full h-full object-contain object-center transition-transform duration-700 group-hover:scale-105"
               onError={(e) => {
                 const target = e.currentTarget;
                 if (!target.src.includes("/banners/top-promo-banner.jpg")) {
@@ -50,7 +50,7 @@ export default function EditorialGalleryBanner() {
             <img
               src="/abaya/hero/hero-2.jpg"
               alt="The Classics — Silk & Midnight Nida Classic Abayas | Modest Studio"
-              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              className="w-full h-full object-contain object-center transition-transform duration-700 group-hover:scale-105"
               onError={(e) => {
                 const target = e.currentTarget;
                 if (!target.src.includes("/banners/category-highlights-banner.jpg")) {
@@ -79,7 +79,7 @@ export default function EditorialGalleryBanner() {
             <img
               src="/abaya/hero/hero-3.jpg"
               alt="The Luxe Edit — Earth Tones & Silk Organza Edits | Modest Studio"
-              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              className="w-full h-full object-contain object-center transition-transform duration-700 group-hover:scale-105"
               onError={(e) => {
                 const target = e.currentTarget;
                 if (!target.src.includes("/banners/timeless-beauty-banner.jpg")) {
@@ -110,7 +110,7 @@ export default function EditorialGalleryBanner() {
             <img
               src="/abaya/hero/hero-4.jpg"
               alt="Occasion Wear — Bespoke Celebratory Cuts & Opulent Drapes | Modest Studio"
-              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              className="w-full h-full object-contain object-center transition-transform duration-700 group-hover:scale-105"
               onError={(e) => {
                 const target = e.currentTarget;
                 if (!target.src.includes("/banners/top-promo-banner.jpg")) {

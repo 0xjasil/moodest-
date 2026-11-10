@@ -44,7 +44,7 @@ export default function OfferGifsCarousel() {
               <img
                 src={banner.img}
                 alt={`${banner.title} — Seasonal Luxury Modest Offer`}
-                className="w-full h-auto object-cover rounded-[4px] sm:rounded-[6px]"
+                className="w-full h-auto object-contain rounded-[4px] sm:rounded-[6px]"
               
                     onError={(e) => {
                       const target = e.currentTarget;

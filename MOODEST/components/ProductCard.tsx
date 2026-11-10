@@ -81,7 +81,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 target.src = "/abaya/products/abaya-1.jpg";
               }
             }}
-            className={`w-full h-full object-cover object-top rounded-[2px] transition-all duration-500 ${
+            className={`w-full h-full object-contain object-center rounded-[2px] transition-all duration-500 ${
               product.images && product.images[1] ? "group-hover:opacity-0" : "group-hover:scale-105"
             }`}
           />
@@ -96,7 +96,7 @@ export default function ProductCard({ product }: { product: Product }) {
                   target.src = "/abaya/products/abaya-1.jpg";
                 }
               }}
-              className="absolute inset-0 w-full h-full object-cover object-top p-2 rounded-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              className="absolute inset-0 w-full h-full object-contain object-center p-2 rounded-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
             />
           )}
         </div>

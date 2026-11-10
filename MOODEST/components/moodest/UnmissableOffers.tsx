@@ -49,7 +49,7 @@ export default function UnmissableOffers() {
                 <img
                   src={item.img}
                   alt={`${item.title} — Modest Studio Exclusive Offer`}
-                  className="w-full h-auto object-cover rounded-[4px] sm:rounded-[6px]"
+                  className="w-full h-auto object-contain rounded-[4px] sm:rounded-[6px]"
                 
                     onError={(e) => {
                       const target = e.currentTarget;

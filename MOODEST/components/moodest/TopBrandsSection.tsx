@@ -80,7 +80,7 @@ export default function TopBrandsSection() {
               <img
                 src={brand.image}
                 alt={`${brand.name} — Luxury Modest Atelier & Design House`}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-105"
               />
             </div>
             <div className="flex flex-col flex-1 justify-between">

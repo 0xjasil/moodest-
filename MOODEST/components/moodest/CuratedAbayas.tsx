@@ -36,7 +36,7 @@ export default function CuratedAbayas() {
           <img
             src="/banners/category-highlights-banner.jpg"
             alt="Curated Signature Abayas — Luxury Modest Collection | Modest Studio"
-            className="w-full h-auto max-h-[360px] object-cover object-center transition-transform duration-500 group-hover:scale-[1.01]"
+            className="w-full h-auto max-h-[360px] object-contain object-center transition-transform duration-500 group-hover:scale-[1.01]"
             onError={(e) => {
               const target = e.currentTarget;
               if (!target.src.includes("/banners/top-promo-banner.jpg")) {
@@ -63,7 +63,7 @@ export default function CuratedAbayas() {
               <img
                 src={item.img}
                 alt={`${item.name} — Handcrafted Luxury Abaya | Modest Studio`}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-105"
                 onError={(e) => {
                   const target = e.currentTarget;
                   if (!target.src.includes("/abaya/categories/classic-black.jpg")) {
