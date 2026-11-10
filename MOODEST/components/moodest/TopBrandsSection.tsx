@@ -79,7 +79,7 @@ export default function TopBrandsSection() {
             <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[4px] bg-mb-surface mb-3">
               <img
                 src={brand.image}
-                alt={brand.name}
+                alt={`${brand.name} — Luxury Modest Atelier & Design House`}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
             </div>

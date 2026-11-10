@@ -311,7 +311,7 @@ export default function Header() {
                         >
                           <img
                             src={prod.image}
-                            alt=""
+                            alt={`${prod.name} — Luxury Abaya Search Preview`}
                             width={36}
                             height={36}
                             onError={(e) => {

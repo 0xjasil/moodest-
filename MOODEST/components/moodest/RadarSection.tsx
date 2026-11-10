@@ -54,7 +54,7 @@ export default function RadarSection() {
             <div className="relative aspect-square w-full overflow-hidden rounded-[4px] bg-mb-surface mb-2.5 flex items-center justify-center">
               <img
                 src={p.image}
-                alt={p.name}
+                alt={`${p.name} — Trending Luxury Modest Silhouette`}
                 className="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105"
               />
             </div>

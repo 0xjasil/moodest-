@@ -113,7 +113,7 @@ export default function Hero() {
           <a href={b.link} target="_blank" rel="noreferrer" tabIndex={i === active ? 0 : -1}>
             <img
               src={b.image}
-              alt={b.title}
+              alt={b.title || "Modest Studio Luxury Abaya Featured Banner"}
               width={1440}
               height={440}
               loading={i === 0 ? "eager" : "lazy"}

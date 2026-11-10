@@ -186,7 +186,7 @@ function RecommendedProductCard({ product }: ProductCardProps) {
         <div className="relative aspect-square bg-gray-200 overflow-hidden">
           <img
             src={product.image}
-            alt={product.name}
+            alt={`${product.name} — Recommended Luxury Abaya | Modest Studio`}
             className="w-full h-full object-cover group-hover:scale-105 transition"
           />
           {product.discount && (
@@ -226,7 +226,7 @@ function TrendingProductCard({ product }: ProductCardProps) {
         <div className="relative aspect-square bg-gray-200 overflow-hidden">
           <img
             src={product.image}
-            alt={product.name}
+            alt={`${product.name} — Recommended Luxury Abaya | Modest Studio`}
             className="w-full h-full object-cover group-hover:scale-105 transition"
           />
           <div className="absolute top-2 left-2 bg-gradient-to-r from-pink-500 to-red-500 text-white px-2 py-1 rounded-lg text-xs font-bold flex items-center space-x-1">

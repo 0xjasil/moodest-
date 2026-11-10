@@ -16,6 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEditProduct } from '@/context/EcitProductContext';
 import { toast } from 'sonner';
 import { apiFetch } from '@/lib/apiFetch';
+import { deleteFromCloudinary } from '@/lib/cloudinary';
 
 interface SubCategory {
   id: string;
@@ -196,8 +197,12 @@ export default function EditProductImageAndCategories() {
     e.target.value = '';
   };
 
-  // Remove a gallery thumbnail by index
+  // Remove a gallery thumbnail by index and clean up Cloudinary storage
   const removeGalleryImage = (idx: number) => {
+    const toRemove = baseProduct.thumbnails?.[idx];
+    if (typeof toRemove === 'string' && toRemove.includes('cloudinary.com')) {
+      deleteFromCloudinary(toRemove);
+    }
     const newThumbnails = (baseProduct.thumbnails || []).filter((_, i) => i !== idx);
     updateBaseProduct({ thumbnails: newThumbnails });
   };

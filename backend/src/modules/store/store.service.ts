@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { Prisma } from '@prisma/client';
+import { v2 as cloudinary } from 'cloudinary';
 
 @Injectable()
 export class StoreService {
@@ -273,9 +274,12 @@ export class StoreService {
   // --- BANNERS & FLASH SALES ---
 
   private formatBanner(b: any) {
+    const title = b.title || 'Modest Studio Luxury Abaya';
+    const alt = b.subtitle || title;
     return {
       id: b.id,
       title: b.title,
+      alt,
       subtitle: b.subtitle || null,
       tag: b.subtitle || null,
       offerPrice: b.subtitle || null,
@@ -344,7 +348,7 @@ export class StoreService {
 
   async createBanner(data: any, file?: any) {
     const title = data.title ? String(data.title).trim() : 'Featured Collection';
-    const subtitle = data.tag || data.offerPrice || data.description || data.subtitle || '';
+    const subtitle = data.alt || data.tag || data.offerPrice || data.description || data.subtitle || '';
     const linkUrl = data.buttonLink || data.linkUrl || data.link || '/category/all';
     let imageUrl = data.image || data.imageUrl || '/banners/top-promo-banner.jpg';
 
@@ -379,12 +383,13 @@ export class StoreService {
     const updateData: any = {};
     if (data.title !== undefined) updateData.title = String(data.title).trim();
     if (
+      data.alt !== undefined ||
       data.tag !== undefined ||
       data.description !== undefined ||
       data.offerPrice !== undefined ||
       data.subtitle !== undefined
     ) {
-      updateData.subtitle = data.tag || data.description || data.offerPrice || data.subtitle || null;
+      updateData.subtitle = data.alt || data.tag || data.description || data.offerPrice || data.subtitle || null;
     }
     if (data.buttonLink !== undefined || data.linkUrl !== undefined || data.link !== undefined) {
       updateData.linkUrl = data.buttonLink || data.linkUrl || data.link;
@@ -414,6 +419,24 @@ export class StoreService {
     if (!existing) {
       throw new NotFoundException(`Banner ${id} not found`);
     }
+
+    // Clean up image from Cloudinary CDN to prevent orphaned storage
+    if (existing.imageUrl && existing.imageUrl.includes('cloudinary.com')) {
+      try {
+        const match = existing.imageUrl.match(/\/image\/upload\/(?:[^\/]+\/)*(?:v\d+\/)?(.+?)(?:\.[a-zA-Z0-9]+)?(?:\?.*)?$/);
+        if (match && match[1]) {
+          cloudinary.config({
+            cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dsaegpb70',
+            api_key: process.env.CLOUDINARY_API_KEY || '498614581613933',
+            api_secret: process.env.CLOUDINARY_API_SECRET || 'n2lMcS-svW5-mUh61vt8-4xIGPE',
+          });
+          await cloudinary.uploader.destroy(match[1]);
+        }
+      } catch (e) {
+        console.warn('[Cloudinary] Failed to delete image on banner deletion:', e);
+      }
+    }
+
     await this.prisma.banner.delete({ where: { id } });
     return { success: true, message: 'Banner deleted successfully', id };
   }

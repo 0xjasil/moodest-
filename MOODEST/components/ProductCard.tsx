@@ -71,7 +71,9 @@ export default function ProductCard({ product }: { product: Product }) {
 
         {/* Product image (Primary + Hover Thumbnail) — tall fashion aspect ratio */}
         <div className="relative bg-mb-surface overflow-hidden aspect-[3/4] sm:aspect-[4/5] w-full flex items-center justify-center p-2">
-          <img src={product.image} alt={product.name}
+          <img
+            src={product.image}
+            alt={`${product.name} — ${product.brand || "Modest Studio"} Luxury Designer Abaya`}
             loading="lazy"
             onError={(e) => {
               const target = e.currentTarget;
@@ -84,7 +86,9 @@ export default function ProductCard({ product }: { product: Product }) {
             }`}
           />
           {product.images && product.images[1] && (
-            <img src={product.images[1]} alt={`${product.name} alternate view`}
+            <img
+              src={product.images[1]}
+              alt={`${product.name} — ${product.brand || "Modest Studio"} Detailed Fabric & Silhouette View`}
               loading="lazy"
               onError={(e) => {
                 const target = e.currentTarget;

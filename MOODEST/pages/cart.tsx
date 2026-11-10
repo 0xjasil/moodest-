@@ -77,7 +77,7 @@ export default function Cart() {
                     >
                       <img
                         src={product.image}
-                        alt={product.name}
+                        alt={`${product.name} — Luxury Modest Abaya`}
                         width={100}
                         height={100}
                         loading="lazy"

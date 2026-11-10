@@ -281,6 +281,7 @@ export interface Banner {
   id: string;
   title?: string | null;
   subtitle?: string | null;
+  alt?: string | null;
   tag?: string | null;
   description?: string | null;
   buttonText?: string | null;

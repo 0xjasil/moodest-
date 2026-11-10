@@ -29,7 +29,7 @@ import { type Category } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { apiFetch } from "@/lib/apiFetch";
-import { uploadToCloudinary } from "@/lib/cloudinary";
+import { uploadToCloudinary, deleteFromCloudinary } from "@/lib/cloudinary";
 
 const categorySchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -68,6 +68,11 @@ export const CategoryDialogForm: FC<CategoryDialogFormProps> = ({
       if (values.image instanceof File) {
         toast.loading("Uploading image to Cloudinary...", { id: "cat-dialog-upload" });
         imageUrl = await uploadToCloudinary(values.image, "moodest/categories");
+        // Remove previous Cloudinary image if replaced
+        const oldImage = (category as any)?.image;
+        if (oldImage && typeof oldImage === "string" && oldImage.includes("cloudinary.com")) {
+          deleteFromCloudinary(oldImage);
+        }
         toast.success("Image uploaded successfully!", { id: "cat-dialog-upload" });
       }
 

@@ -16,6 +16,7 @@ import { ProductDetail } from "@/types/product";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/apiFetch";
+import { deleteFromCloudinary } from "@/lib/cloudinary";
 
 interface ProductDeleteDialogProps {
   open: boolean;
@@ -34,6 +35,20 @@ export const ProductDeleteDialog: FC<ProductDeleteDialogProps> = ({
   const handleDelete = async () => {
     setIsExecuting(true);
     try {
+        // Delete all product images from Cloudinary CDN to prevent orphaned storage
+        const prod = product as any;
+        const allImages: string[] = [
+          prod.image,
+          ...(Array.isArray(prod.images) ? prod.images : []),
+          ...(Array.isArray(prod.subimage) ? prod.subimage : []),
+        ].filter(Boolean);
+
+        for (const img of allImages) {
+          if (typeof img === "string" && img.includes("cloudinary.com")) {
+            deleteFromCloudinary(img);
+          }
+        }
+
         const response = await apiFetch(`/products/${product.id}`, {
             method: "DELETE"
         });

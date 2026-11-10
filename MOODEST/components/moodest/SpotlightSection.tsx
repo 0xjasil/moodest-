@@ -36,7 +36,7 @@ export default function SpotlightSection() {
         <Link href="/category/all" className="block">
           <img
             src="/banners/timeless-beauty-banner.jpg"
-            alt="In The Spotlight Modest Wear"
+            alt="In The Spotlight Modest Wear — Luxury Featured Abayas | Modest Studio"
             className="w-full h-auto max-h-[360px] object-cover object-center transition-transform duration-500 group-hover:scale-[1.01]"
             onError={(e) => {
               const target = e.currentTarget;
@@ -63,7 +63,7 @@ export default function SpotlightSection() {
             <div className="relative aspect-[287/322] w-full overflow-hidden bg-[#EEE4D8]">
               <img
                 src={item.img}
-                alt={item.name}
+                alt={`${item.name} — Handcrafted Modest Collection | Modest Studio`}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 onError={(e) => {
                   const target = e.currentTarget;

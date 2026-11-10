@@ -27,8 +27,8 @@ export default function BrandLogo({
   const label =
     alt ??
     (variant === "emblem"
-      ? "Modest Studio emblem"
-      : "Modest Studio");
+      ? "Modest Studio Luxury Abayas Emblem"
+      : "Modest Studio — Luxury Designer Abayas & Modest Wear");
 
   const fallbackPng =
     variant === "emblem"

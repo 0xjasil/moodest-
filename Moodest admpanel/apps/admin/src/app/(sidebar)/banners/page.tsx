@@ -23,10 +23,10 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import {
   ArrowUp, ArrowDown, MoreVertical, ImageIcon,
-  ChevronLeft, ChevronRight, Link as LinkIcon, Eye, EyeOff,
+  ChevronLeft, ChevronRight, Link as LinkIcon, Eye, EyeOff, Globe,
 } from "lucide-react";
 import { apiFetch } from "@/lib/apiFetch";
-import { uploadToCloudinary } from "@/lib/cloudinary";
+import { uploadToCloudinary, deleteFromCloudinary } from "@/lib/cloudinary";
 
 const PAGE_SIZE = 6;
 const MIN_ACTIVE = 1;
@@ -36,6 +36,7 @@ export type Banner = {
   id: string;
   title: string;
   image: string;
+  alt?: string | null;
   tag?: string | null;
   offerPrice?: string | null;
   description?: string | null;
@@ -70,9 +71,13 @@ function DeleteBannerDialog({ open, setOpen, banner, onDeleted }: {
   const handleDelete = async () => {
     setLoading(true);
     try {
+      // Delete image asset from Cloudinary CDN to prevent orphaned storage
+      if (banner.image && banner.image.includes("cloudinary.com")) {
+        await deleteFromCloudinary(banner.image);
+      }
       const res = await apiFetch(`/banners/${banner.id}`, { method: "DELETE" });
       if (!res.ok) throw new Error();
-      toast.success("Banner deleted");
+      toast.success("Banner and Cloudinary image deleted");
       onDeleted();
     } catch { toast.error("Failed to delete banner"); }
     finally { setLoading(false); setOpen(false); }
@@ -83,7 +88,7 @@ function DeleteBannerDialog({ open, setOpen, banner, onDeleted }: {
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Banner</AlertDialogTitle>
           <AlertDialogDescription>
-            Permanently delete <strong>&ldquo;{banner.title || "this banner"}&rdquo;</strong>? This cannot be undone.
+            Permanently delete <strong>&ldquo;{banner.title || "this banner"}&rdquo;</strong> and remove its image from Cloudinary CDN? This cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -167,6 +172,7 @@ function EditBannerDialog({ open, setOpen, banner, onUpdated }: {
   open: boolean; setOpen: (v: boolean) => void; banner: Banner; onUpdated: () => void;
 }) {
   const [title, setTitle] = useState(banner.title || "");
+  const [alt, setAlt] = useState(banner.alt || banner.title || "");
   const [tag, setTag] = useState(banner.tag || "");
   const [offerPrice, setOfferPrice] = useState(banner.offerPrice || "");
   const [description, setDescription] = useState(banner.description || "");
@@ -189,13 +195,20 @@ function EditBannerDialog({ open, setOpen, banner, onUpdated }: {
     try {
       let finalImageUrl = banner.image;
       if (file) {
-        toast.info("Uploading image to Cloudinary CDN...");
-        finalImageUrl = await uploadToCloudinary(file, "moodest/banners");
+        toast.info("Uploading new image to Cloudinary CDN...");
+        const newImageUrl = await uploadToCloudinary(file, "moodest/banners");
+        // Remove previous Cloudinary image to keep cloud storage clean
+        if (banner.image && banner.image.includes("cloudinary.com")) {
+          deleteFromCloudinary(banner.image);
+        }
+        finalImageUrl = newImageUrl;
       }
+      const derivedAlt = alt.trim() || title.trim() || tag.trim() || "Modest Studio Luxury Abaya Hero Banner";
       const res = await apiFetch(`/banners/${banner.id}`, {
         method: "PATCH",
         body: JSON.stringify({
           title: title.trim(),
+          alt: derivedAlt,
           tag: tag.trim(),
           offerPrice: offerPrice.trim(),
           description: description.trim(),
@@ -220,7 +233,7 @@ function EditBannerDialog({ open, setOpen, banner, onUpdated }: {
         <DialogHeader>
           <DialogTitle>Edit Banner</DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
-            Update hero banner details, CTA button, and image settings.
+            Update hero banner image, SEO alt text, CTA button, and typography.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-2">
@@ -234,12 +247,28 @@ function EditBannerDialog({ open, setOpen, banner, onUpdated }: {
               className="relative border-2 border-dashed border-border rounded-xl cursor-pointer overflow-hidden hover:border-primary transition-colors bg-slate-900/40"
               style={{ height: 160 }}
             >
-              <Image src={preview} alt="Preview" fill unoptimized className="object-contain" />
+              <Image src={preview} alt={alt || "Banner Preview"} fill unoptimized className="object-contain" />
               <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity gap-1">
                 <ImageIcon className="w-6 h-6 text-white" />
-                <span className="text-white text-xs font-medium">Click to change image</span>
+                <span className="text-white text-xs font-medium">Click to change image (Cloudinary CDN)</span>
               </div>
             </div>
+          </div>
+
+          {/* SEO Alt Text Option */}
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-1.5">
+              <Globe className="w-3.5 h-3.5 text-primary" />
+              <Label className="text-xs font-medium">Image Alt Text (SEO & Accessibility)</Label>
+            </div>
+            <Input
+              value={alt}
+              onChange={(e) => setAlt(e.target.value)}
+              placeholder="e.g. Luxury Handwork Abaya Editorial Hero Banner - Modest Studio"
+            />
+            <p className="text-[11px] text-muted-foreground">
+              Descriptive text read by Google Image search, social crawlers, and screen readers.
+            </p>
           </div>
 
           {/* Title */}
@@ -303,13 +332,13 @@ function BannerActions({ banner, activeCount, onRefresh }: {
           <Button variant="ghost" className="h-8 w-8 p-0"><MoreVertical className="h-4 w-4" /></Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onSelect={() => setOpenEdit(true)}>Edit Banner</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setOpenEdit(true)}>Edit Banner & SEO Alt</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setOpenToggle(true)}>
             {banner.isActive ? "Hide Banner" : "Activate Banner"}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="text-destructive focus:text-destructive" onSelect={() => setOpenDelete(true)}>
-            Delete Banner
+            Delete Banner (Remove from Cloud)
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -333,6 +362,7 @@ export default function AdminBannersPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [title, setTitle] = useState("");
+  const [alt, setAlt] = useState("");
   const [tag, setTag] = useState("");
   const [offerPrice, setOfferPrice] = useState("");
   const [description, setDescription] = useState("");
@@ -387,10 +417,12 @@ export default function AdminBannersPage() {
         toast.info("Uploading image to Cloudinary CDN...");
         uploadedUrl = await uploadToCloudinary(file, "moodest/banners");
       }
+      const derivedAlt = alt.trim() || title.trim() || tag.trim() || "Modest Studio Luxury Abaya Hero Banner";
       const res = await apiFetch("/banners", {
         method: "POST",
         body: JSON.stringify({
           title: title.trim(),
+          alt: derivedAlt,
           tag: tag.trim(),
           offerPrice: offerPrice.trim(),
           description: description.trim(),
@@ -405,7 +437,7 @@ export default function AdminBannersPage() {
         throw new Error(err.message || err.error || "Failed to add banner");
       }
       toast.success("Banner added successfully");
-      setTitle(""); setTag(""); setOfferPrice(""); setDescription(""); setButtonText(""); setButtonLink("");
+      setTitle(""); setAlt(""); setTag(""); setOfferPrice(""); setDescription(""); setButtonText(""); setButtonLink("");
       setFile(null); setPreview(null);
       fetchBanners();
     } catch (err: unknown) {
@@ -447,7 +479,7 @@ export default function AdminBannersPage() {
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Hero Banners (CMS)</h1>
               <p className="text-muted-foreground text-sm">
-                Manage storefront hero slider banners. Active banners appear automatically on the homepage.
+                Manage storefront hero slider banners. Active banners appear automatically on the homepage with full SEO alt optimization.
               </p>
             </div>
             <div className="flex items-center gap-2 text-sm border border-border rounded-lg px-3 py-1.5">
@@ -470,7 +502,7 @@ export default function AdminBannersPage() {
             <CardHeader>
               <CardTitle>Add New Hero Banner</CardTitle>
               <CardDescription>
-                Upload an image banner. Uploaded images are stored on Cloudinary CDN for instant storefront loading.
+                Upload an image banner. Uploaded images are stored on Cloudinary CDN and will be automatically cleaned up from Cloudinary if deleted.
                 {activeCount >= MAX_ACTIVE && (
                   <span className="ml-2 text-destructive font-medium">— Active limit reached ({MAX_ACTIVE}). Hide one first.</span>
                 )}
@@ -489,7 +521,7 @@ export default function AdminBannersPage() {
                 >
                   {preview ? (
                     <div className="relative w-full h-full">
-                      <Image src={resolveBannerUrl(preview)} alt="Preview" fill unoptimized className="object-cover" />
+                      <Image src={resolveBannerUrl(preview)} alt={alt || "Banner Preview"} fill unoptimized className="object-cover" />
                       <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity gap-2">
                         <ImageIcon className="w-6 h-6 text-white" />
                         <span className="text-white text-xs font-semibold">Click to change image</span>
@@ -505,6 +537,22 @@ export default function AdminBannersPage() {
                     </div>
                   )}
                 </div>
+              </div>
+
+              {/* SEO Alt Text Option */}
+              <div className="space-y-1.5 max-w-lg">
+                <div className="flex items-center gap-1.5">
+                  <Globe className="w-3.5 h-3.5 text-primary" />
+                  <Label className="text-xs font-medium">Image Alt Text (SEO & Accessibility)</Label>
+                </div>
+                <Input
+                  value={alt}
+                  onChange={(e) => setAlt(e.target.value)}
+                  placeholder="e.g. Luxury Handwork Abaya Editorial Hero Banner - Modest Studio"
+                />
+                <p className="text-[11px] text-muted-foreground">
+                  Descriptive alt text indexed by search engines for Google Image rankings.
+                </p>
               </div>
 
               {/* Title */}
@@ -631,11 +679,12 @@ export default function AdminBannersPage() {
                   <div className="space-y-3">
                     {paginatedBanners.map((banner, pageIdx) => {
                       const globalIdx = (currentPage - 1) * PAGE_SIZE + pageIdx;
+                      const bannerAlt = banner.alt || banner.title || "Modest Studio Luxury Abaya Hero Banner";
                       return (
                         <div key={banner.id} className="flex items-center gap-4 border border-border rounded-xl p-3 bg-card hover:bg-muted/30 transition-colors">
                           {/* Thumbnail */}
                           <div className="relative rounded-lg overflow-hidden flex-shrink-0 bg-muted border border-border" style={{ width: 120, height: 64 }}>
-                            <Image src={resolveBannerUrl(banner.image)} alt={banner.title || "Banner"} fill unoptimized className="object-cover" />
+                            <Image src={resolveBannerUrl(banner.image)} alt={bannerAlt} fill unoptimized className="object-cover" />
                           </div>
 
                           {/* Info */}
@@ -643,6 +692,11 @@ export default function AdminBannersPage() {
                             <p className="text-sm font-semibold truncate">
                               {banner.title || <span className="text-muted-foreground italic font-normal">Image Only Banner</span>}
                             </p>
+                            {/* SEO Alt Display */}
+                            <div className="flex items-center gap-1.5 text-xs text-primary/80 truncate">
+                              <Globe className="w-3 h-3 shrink-0" />
+                              <span className="truncate">Alt: <em>{bannerAlt}</em></span>
+                            </div>
                             {banner.buttonText ? (
                               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                 <LinkIcon className="w-3 h-3 shrink-0" />

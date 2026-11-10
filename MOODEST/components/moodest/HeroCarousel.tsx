@@ -8,6 +8,7 @@ export interface HeroSlideItem {
   link: string;
   title?: string | null;
   subtitle?: string | null;
+  alt?: string | null;
   buttonText?: string | null;
 }
 
@@ -15,26 +16,38 @@ export const heroSlides: HeroSlideItem[] = [
   {
     img: "/banners/top-promo-banner.jpg",
     link: "/category/all",
+    title: "New Arrivals Worth The Wait — Luxury Abayas",
+    alt: "New Arrivals Worth The Wait — Luxury Handcrafted Abayas at Modest Studio",
   },
   {
     img: "/banners/category-highlights-banner.jpg",
     link: "/category/all",
+    title: "Match The Mood — Handwork & Bridal Edits",
+    alt: "Luxury Occasion & Bridal Abaya Collection — Handwork Embroidery & Crystals",
   },
   {
     img: "/banners/timeless-beauty-banner.jpg",
     link: "/category/all",
+    title: "Beauty in Modesty — Timeless Elegance",
+    alt: "Modest Studio Atelier — Everyday & Timeless Luxury Abayas",
   },
   {
     img: "/abaya/hero/hero-1.jpg",
     link: "/category/the-classics",
+    title: "The Classics Collection",
+    alt: "The Classics Collection — Pure Black Premium Nidha Abaya",
   },
   {
     img: "/abaya/hero/hero-4.jpg",
     link: "/category/occasion-wear",
+    title: "Occasion Wear Abayas",
+    alt: "Occasion Wear Abaya — Opulent Silk Satin and Beaded Trim",
   },
   {
     img: "/abaya/hero/hero-6.jpg",
     link: "/category/open-abaya-edit",
+    title: "Open Abaya Edit",
+    alt: "Front-Open Kimono Abaya with Tailored Lapels - Modest Studio",
   },
 ];
 
@@ -59,7 +72,7 @@ export default function HeroCarousel({ initialBanners }: HeroCarouselProps) {
     }
   }, [initialBanners]);
 
-  // Map CMS banners to slide objects
+  // Map CMS banners to slide objects with rich SEO alt support
   const cmsSlides: HeroSlideItem[] = banners
     .filter((b) => b.isActive !== false && (b.imageUrl || b.image))
     .map((b) => ({
@@ -67,6 +80,7 @@ export default function HeroCarousel({ initialBanners }: HeroCarouselProps) {
       img: b.imageUrl || b.image || "/banners/top-promo-banner.jpg",
       link: b.buttonLink || b.linkUrl || b.link || "/category/all",
       title: b.title,
+      alt: b.alt || b.title || (b.subtitle ? `${b.subtitle} — Modest Studio Luxury Abaya` : "Modest Studio Luxury Abaya Editorial Slide"),
       subtitle: b.subtitle || b.tag,
       buttonText: b.buttonText,
     }));
@@ -120,7 +134,7 @@ export default function HeroCarousel({ initialBanners }: HeroCarouselProps) {
             >
               <img
                 src={slide.img}
-                alt={slide.title || `Modest Studio Visual ${idx + 1}`}
+                alt={slide.alt || slide.title || `Modest Studio Luxury Abaya Banner ${idx + 1}`}
                 className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-[1.02]"
                 onError={(e) => {
                   const target = e.currentTarget;

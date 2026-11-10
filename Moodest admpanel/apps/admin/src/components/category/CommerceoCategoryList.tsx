@@ -52,7 +52,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { apiFetch, API_URL } from "@/lib/apiFetch";
-import { uploadToCloudinary } from "@/lib/cloudinary";
+import { uploadToCloudinary, deleteFromCloudinary } from "@/lib/cloudinary";
 export interface MockCategory {
   id: string;
   name: string;
@@ -282,9 +282,12 @@ export function CommerceoCategoryList() {
   const handleDeleteConfirm = async () => {
     if (!deletingCategory) return;
     try {
+      if (deletingCategory.image && deletingCategory.image.includes("cloudinary.com")) {
+        deleteFromCloudinary(deletingCategory.image);
+      }
       const res = await apiFetch(`/categories/${deletingCategory.id}`, { method: "DELETE" });
       if (res.ok) {
-        toast.success(`Category "${deletingCategory.name}" deleted`);
+        toast.success(`Category "${deletingCategory.name}" and cloud assets deleted`);
       } else {
         toast.error("Failed to delete category");
       }

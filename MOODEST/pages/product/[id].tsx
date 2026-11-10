@@ -288,7 +288,7 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                       >
                         <img
                           src={imgUrl}
-                          alt={`${product.name} thumbnail ${idx + 1}`}
+                          alt={`${product.name} — ${product.brand || "Modest Studio"} Abaya Detail Photo ${idx + 1}`}
                           className="size-full object-contain"
                         />
                       </button>
@@ -319,7 +319,7 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
 
                 <img
                   src={selectedImage || product.image}
-                  alt={product.name}
+                  alt={`${product.name} — ${product.brand || "Modest Studio"} Luxury Designer Abaya Main View`}
                   loading="eager"
                   fetchPriority="high"
                   className="max-h-[480px] w-auto max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
@@ -431,7 +431,7 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                           {c.image ? (
                             <img
                               src={c.image}
-                              alt={c.name}
+                              alt={`${product.name} — ${c.name} Color Variant`}
                               className="size-5 rounded-full object-cover border border-black/10"
                             />
                           ) : c.hex ? (

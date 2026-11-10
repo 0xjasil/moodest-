@@ -119,7 +119,7 @@ export default function HotListProducts() {
                     <div className="relative aspect-square w-full overflow-hidden rounded-[4px] bg-mb-surface flex items-center justify-center mb-2.5">
                       <img
                         src={product.image}
-                        alt={product.name}
+                        alt={`${product.name} — Handpicked Luxury Abaya Hot List | Modest Studio`}
                         onError={(e) => {
                           const target = e.currentTarget;
                           if (!target.src.includes("/abaya/products/abaya-1.jpg")) {
