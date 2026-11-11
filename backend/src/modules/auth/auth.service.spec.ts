@@ -51,11 +51,24 @@ describe('AuthService (Unit Tests)', () => {
     };
 
     jwtService = {
-      sign: jest.fn().mockReturnValue('mock-jwt-access-token'),
+      sign: jest.fn((payload: any) => {
+        if (payload?.purpose === 'email_otp') {
+          return Buffer.from(JSON.stringify(payload)).toString('base64url');
+        }
+        return 'mock-jwt-access-token';
+      }),
+      verify: jest.fn((token: string) => {
+        try {
+          return JSON.parse(Buffer.from(token, 'base64url').toString('utf8'));
+        } catch {
+          throw new Error('Invalid token');
+        }
+      }),
     };
 
     mailService = {
       sendPasswordResetEmail: jest.fn().mockResolvedValue(undefined),
+      sendVerificationOtpEmail: jest.fn().mockResolvedValue(undefined),
     };
 
     const configService = {
@@ -85,6 +98,44 @@ describe('AuthService (Unit Tests)', () => {
   });
 
   describe('1. Register', () => {
+    const createChallenge = async (email: string) => {
+      let capturedOtp = '';
+      mailService.sendVerificationOtpEmail.mockImplementationOnce(async (_to, otp) => {
+        capturedOtp = otp;
+      });
+      const res = await service.sendVerificationOtp({ email });
+      return { otp: capturedOtp, verificationToken: res.verificationToken };
+    };
+
+    it('rejects disposable email domains during OTP request and registration', async () => {
+      await expect(
+        service.sendVerificationOtp({ email: 'throwaway@mailinator.com' }),
+      ).rejects.toThrow(BadRequestException);
+
+      await expect(
+        service.register({
+          email: 'throwaway@yopmail.com',
+          password: 'Password123!',
+          otp: '123456',
+          verificationToken: 'token',
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('rejects registration when OTP is incorrect', async () => {
+      prisma.user.findUnique.mockResolvedValue(null);
+      const challenge = await createChallenge('verify@test.com');
+
+      await expect(
+        service.register({
+          email: 'verify@test.com',
+          password: 'Password123!',
+          otp: challenge.otp === '000000' ? '111111' : '000000',
+          verificationToken: challenge.verificationToken,
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
+
     it('forces role to CUSTOMER regardless of input and creates account with hashed password', async () => {
       prisma.user.findUnique.mockResolvedValue(null);
       prisma.user.create.mockImplementation(({ data }: any) => ({
@@ -97,10 +148,14 @@ describe('AuthService (Unit Tests)', () => {
       }));
       prisma.refreshToken.create.mockResolvedValue({ id: 'rt-1' });
 
+      const challenge = await createChallenge('customer@test.com');
+
       const res = await service.register({
         email: 'customer@test.com',
         password: 'Password123!',
         name: 'Jane Doe',
+        otp: challenge.otp,
+        verificationToken: challenge.verificationToken,
       });
 
       expect(prisma.user.create).toHaveBeenCalledWith(
@@ -120,12 +175,18 @@ describe('AuthService (Unit Tests)', () => {
     });
 
     it('rejects duplicate email with ConflictException', async () => {
-      prisma.user.findUnique.mockResolvedValue({ id: 'existing-id', email: 'taken@test.com' });
+      prisma.user.findUnique
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce({ id: 'existing-id', email: 'taken@test.com' });
+
+      const challenge = await createChallenge('taken@test.com');
 
       await expect(
         service.register({
           email: 'taken@test.com',
           password: 'Password123!',
+          otp: challenge.otp,
+          verificationToken: challenge.verificationToken,
         }),
       ).rejects.toThrow(ConflictException);
     });
@@ -138,6 +199,8 @@ describe('AuthService (Unit Tests)', () => {
       const validDto = plainToInstance(RegisterDto, {
         email: 'len72@test.com',
         password: valid72,
+        otp: '123456',
+        verificationToken: 'tok',
       });
       const validErrors = await validate(validDto);
       expect(validErrors.filter((e) => e.property === 'password')).toHaveLength(0);
@@ -145,6 +208,8 @@ describe('AuthService (Unit Tests)', () => {
       const invalidDto = plainToInstance(RegisterDto, {
         email: 'len73@test.com',
         password: invalid73,
+        otp: '123456',
+        verificationToken: 'tok',
       });
       const invalidErrors = await validate(invalidDto);
       const pwError = invalidErrors.find((e) => e.property === 'password');

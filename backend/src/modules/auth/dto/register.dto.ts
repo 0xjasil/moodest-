@@ -24,4 +24,13 @@ export class RegisterDto {
   @IsOptional()
   @IsString()
   phone?: string;
+
+  @IsString({ message: 'Verification code is required' })
+  @IsNotEmpty({ message: 'Verification code is required' })
+  @Matches(/^\d{6}$/, { message: 'Verification code must be a 6-digit number' })
+  otp: string;
+
+  @IsString({ message: 'Verification token is required' })
+  @IsNotEmpty({ message: 'Verification token is required' })
+  verificationToken: string;
 }

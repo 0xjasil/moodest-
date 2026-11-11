@@ -16,6 +16,8 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { SendVerificationOtpDto } from './dto/send-otp.dto';
+import { assertDeliverableEmail } from './email-validation';
 import { IMailService, MAIL_SERVICE } from './mail.service';
 import { Role } from '../../common/constants';
 
@@ -66,9 +68,81 @@ export class AuthService {
     return crypto.createHash('sha256').update(token).digest('hex');
   }
 
-  async register(dto: RegisterDto) {
+  private verifyEmailOtpChallenge(email: string, otp: string, verificationToken: string) {
+    try {
+      const payload = this.jwtService.verify<{
+        purpose?: string;
+        email?: string;
+        otpHash?: string;
+      }>(verificationToken);
+
+      if (
+        payload?.purpose !== 'email_otp' ||
+        payload?.email !== email ||
+        typeof payload?.otpHash !== 'string'
+      ) {
+        throw new BadRequestException('Invalid or expired verification code');
+      }
+
+      const expectedBuf = Buffer.from(this.hashToken(`${email}:${otp.trim()}`), 'utf8');
+      const actualBuf = Buffer.from(payload.otpHash, 'utf8');
+      if (expectedBuf.length !== actualBuf.length || !crypto.timingSafeEqual(expectedBuf, actualBuf)) {
+        throw new BadRequestException('Invalid verification code');
+      }
+    } catch (err) {
+      if (err instanceof BadRequestException) {
+        throw err;
+      }
+      throw new BadRequestException('Invalid or expired verification code. Please request a new one.');
+    }
+  }
+
+  async sendVerificationOtp(dto: SendVerificationOtpDto) {
+    const email = dto.email.trim().toLowerCase();
+
+    await assertDeliverableEmail(email);
+
     const existing = await this.prisma.user.findUnique({
-      where: { email: dto.email },
+      where: { email },
+      select: { id: true },
+    });
+
+    if (existing) {
+      throw new ConflictException('Email is already registered');
+    }
+
+    const otp = crypto.randomInt(100000, 1000000).toString();
+    const otpHash = this.hashToken(`${email}:${otp}`);
+    const verificationToken = this.jwtService.sign(
+      {
+        purpose: 'email_otp',
+        email,
+        otpHash,
+      },
+      { expiresIn: '10m' },
+    );
+
+    await this.mailService.sendVerificationOtpEmail(email, otp);
+
+    return {
+      message: 'Verification code sent to your email.',
+      verificationToken,
+      expiresInSeconds: 600,
+      data: {
+        verificationToken,
+        expiresInSeconds: 600,
+      },
+    };
+  }
+
+  async register(dto: RegisterDto) {
+    const email = dto.email.trim().toLowerCase();
+
+    await assertDeliverableEmail(email);
+    this.verifyEmailOtpChallenge(email, dto.otp, dto.verificationToken);
+
+    const existing = await this.prisma.user.findUnique({
+      where: { email },
     });
 
     if (existing) {
@@ -79,7 +153,7 @@ export class AuthService {
 
     const user = await this.prisma.user.create({
       data: {
-        email: dto.email,
+        email,
         passwordHash,
         name: dto.name || null,
         phone: dto.phone || null,

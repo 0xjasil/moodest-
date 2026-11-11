@@ -4,6 +4,7 @@ import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/database/prisma.service';
 import { StockReservationService } from '../src/inventory/stock-reservation.service';
+import { MAIL_SERVICE, IMailService } from '../src/modules/auth/mail.service';
 import { Role, OrderStatus, PaymentStatus, ReservationStatus } from '@prisma/client';
 import * as crypto from 'crypto';
 
@@ -187,6 +188,23 @@ describe('Full Integration QA & Production Business Flow Verification (Real Isol
     const customerPassword = 'CustomerSecure123!';
 
     it('Step 1: Customer registers a new account', async () => {
+      const mailService = app.get<IMailService>(MAIL_SERVICE);
+      let capturedOtp = '';
+      const spy = jest
+        .spyOn(mailService, 'sendVerificationOtpEmail')
+        .mockImplementationOnce(async (_to, otp) => {
+          capturedOtp = otp;
+        });
+
+      const otpRes = await request(app.getHttpServer())
+        .post('/api/auth/send-verification-otp')
+        .send({ email: customerEmail })
+        .expect(200);
+      spy.mockRestore();
+
+      const verificationToken =
+        otpRes.body.verificationToken || otpRes.body.data?.verificationToken;
+
       const res = await request(app.getHttpServer())
         .post('/api/auth/register')
         .send({
@@ -194,6 +212,8 @@ describe('Full Integration QA & Production Business Flow Verification (Real Isol
           password: customerPassword,
           name: 'Aisha Al-Mansoor',
           phone: '+919876543210',
+          otp: capturedOtp,
+          verificationToken,
         })
         .expect(201);
 
