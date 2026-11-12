@@ -10,18 +10,18 @@ import AddressList from '@/components/AddressList';
 
 export default function AddressesPage() {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { addresses, fetchAddresses, isLoading } = useAddress();
 
   const [showForm, setShowForm] = useState(false);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | string | null>(null);
 
   // Redirect if not logged in
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/login');
+    if (!authLoading && !isAuthenticated) {
+      router.push('/login?redirect=/addresses');
     }
-  }, [isAuthenticated, router]);
+  }, [authLoading, isAuthenticated, router]);
 
   // Fetch addresses on mount
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function AddressesPage() {
     }
   }, [isAuthenticated, fetchAddresses]);
 
-  if (!isAuthenticated) {
+  if (authLoading || !isAuthenticated) {
     return null;
   }
 

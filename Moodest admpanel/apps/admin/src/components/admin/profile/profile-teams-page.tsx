@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Star, MoreVertical, ShieldCheck, ExternalLink } from "lucide-react";
+import { Star, MoreVertical, ShieldCheck, ExternalLink } from "@/components/ui/icon";
 import { ProfileHeader } from "./profile-header";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -185,7 +185,7 @@ export function ProfileTeamsPage() {
                     <h3 className="text-sm font-bold text-gray-900 dark:text-white leading-tight">
                       {team.name}
                     </h3>
-                    <p className="text-[11px] text-gray-400 font-medium">Moodest Boutique Operations</p>
+                    <p className="text-[11px] text-gray-400 font-medium">Modest Boutique Operations</p>
                   </div>
                 </div>
 

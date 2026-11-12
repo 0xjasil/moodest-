@@ -25,7 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Search } from "lucide-react";
+import { Search } from "@/components/ui/icon";
 import { useState } from "react";
 import { SubCategoryWithCategory } from "@/types/subcategory";
 

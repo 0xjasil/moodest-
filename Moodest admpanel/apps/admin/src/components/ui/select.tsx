@@ -2,7 +2,11 @@
 
 import * as React from "react"
 import * as SelectPrimitive from "@radix-ui/react-select"
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
+import { Icon } from "@iconify/react"
+
+const CheckIcon = ({ className }: { className?: string }) => <Icon icon="lucide:check" className={className || "size-4"} />;
+const ChevronDownIcon = ({ className }: { className?: string }) => <Icon icon="lucide:chevron-down" className={className || "size-4"} />;
+const ChevronUpIcon = ({ className }: { className?: string }) => <Icon icon="lucide:chevron-up" className={className || "size-4"} />;
 
 import { cn } from "@/lib/utils"
 

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { exportOrdersPDF } from "@/components/admin/analytics/analytic-pdf";
 import AdminLoader from "@/components/admin/AdminLoader";
-import { IconDownload, IconFileSpreadsheet } from "@tabler/icons-react";
+import { IconDownload, IconFileSpreadsheet } from "@/components/ui/icon";
 import { toast } from "sonner";
 
 interface OrderSummary {

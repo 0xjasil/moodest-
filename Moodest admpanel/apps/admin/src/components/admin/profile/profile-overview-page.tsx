@@ -21,7 +21,7 @@ import {
   ArrowUpRight,
   Database,
   Activity,
-} from "lucide-react";
+} from "@/components/ui/icon";
 import { ProfileHeader } from "./profile-header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -40,7 +40,7 @@ export function ProfileOverviewPage() {
     ? user.role.replace(/_/g, " ")
     : "ADMINISTRATOR";
 
-  const userEmail = user?.email || "admin@moodest.com";
+  const userEmail = user?.email || "admin@modest.com";
   const userPhone = user?.phone || "+91 (Boutique Operations)";
   const userAvatar = user?.avatar || user?.image || null;
 
@@ -100,7 +100,7 @@ export function ProfileOverviewPage() {
     { title: "Atomic Stock Reservations", desc: "Prevents overselling during customer checkout flows" },
     { title: "Order Lifecycle & Tracking", desc: "Process payments, mark dispatched, enter live tracking numbers" },
     { title: "Customer Security & RBAC", desc: "Role-based authorization protecting admin endpoints & customer PII" },
-    { title: "Single-Brand Exclusivity", desc: "Tailored specifically for Moodest modest luxury fashion operations" },
+    { title: "Single-Brand Exclusivity", desc: "Tailored specifically for Modest luxury fashion operations" },
   ];
 
   const auditEvents = [
@@ -175,7 +175,7 @@ export function ProfileOverviewPage() {
                 <div className="flex items-center gap-2.5 text-gray-700 dark:text-gray-300">
                   <MapPin className="size-4 text-gray-400 shrink-0" />
                   <span className="font-medium text-gray-500 dark:text-gray-400">Store Domain:</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">Moodest Luxury Abayas</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">Modest Luxury Abayas</span>
                 </div>
               </div>
             </div>
@@ -246,7 +246,7 @@ export function ProfileOverviewPage() {
                   Store Management Dashboard
                 </h2>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  Direct operational controls for Moodest modest boutique catalog and orders.
+                  Direct operational controls for Modest boutique catalog and orders.
                 </p>
               </div>
               <Sparkles className="size-5 text-indigo-500 shrink-0" />

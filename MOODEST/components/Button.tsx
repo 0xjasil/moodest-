@@ -11,7 +11,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const BASE =
-  "inline-flex items-center justify-center font-medium rounded-[10px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-mb-accent disabled:opacity-50 disabled:pointer-events-none";
+  "inline-flex items-center justify-center font-medium rounded-[2px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-mb-accent disabled:opacity-50 disabled:pointer-events-none";
 
 const VARIANTS: Record<string, string> = {
   primary:   "bg-mb-primary text-mb-bg font-semibold hover:bg-mb-primary-hover shadow-sm",

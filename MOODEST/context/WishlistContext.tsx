@@ -152,13 +152,13 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
       dispatch({ type: "TOGGLE", product });
 
       if (isAuthenticated) {
-        const productId = product.backendId || Number(product.id);
-        if (productId && !isNaN(Number(productId))) {
+        const productId = product.backendId || product.id;
+        if (productId !== undefined && productId !== null && String(productId).trim() !== "") {
           try {
             if (isCurrentlyWishlisted) {
-              await wishlistAPI.remove(Number(productId));
+              await wishlistAPI.remove(productId);
             } else {
-              await wishlistAPI.add(Number(productId));
+              await wishlistAPI.add(productId);
             }
           } catch {
             // Revert on error

@@ -1,6 +1,6 @@
 export const APP_CONFIG = {
-  name: "Admin Panel",
-  description: "E-commerce admin dashboard",
+  name: "Modest Studio Admin",
+  description: "Modest Studio Premium Abaya & Modest Wears Admin Dashboard",
   version: "1.0.0",
 
   // Theme and UI settings

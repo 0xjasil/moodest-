@@ -2,7 +2,9 @@
 
 import * as React from "react"
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
-import { CircleIcon } from "lucide-react"
+import { Icon } from "@iconify/react"
+
+const CircleIcon = ({ className }: { className?: string }) => <Icon icon="lucide:circle" className={className || "size-2 fill-current"} />;
 
 import { cn } from "@/lib/utils"
 

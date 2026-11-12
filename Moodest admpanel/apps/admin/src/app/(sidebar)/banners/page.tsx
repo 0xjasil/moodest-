@@ -21,10 +21,22 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import {
-  ArrowUp, ArrowDown, MoreVertical, ImageIcon,
-  ChevronLeft, ChevronRight, Link as LinkIcon, Eye, EyeOff, Globe,
-} from "lucide-react";
+import { Icon } from "@iconify/react";
+
+const makeIcon = (iconName: string) => function BannerIcon({ className }: { className?: string }) {
+  return <Icon icon={iconName} className={className} />;
+};
+
+const ArrowUp = makeIcon("lucide:arrow-up");
+const ArrowDown = makeIcon("lucide:arrow-down");
+const MoreVertical = makeIcon("lucide:more-vertical");
+const ImageIcon = makeIcon("lucide:image");
+const ChevronLeft = makeIcon("lucide:chevron-left");
+const ChevronRight = makeIcon("lucide:chevron-right");
+const LinkIcon = makeIcon("lucide:link");
+const Eye = makeIcon("lucide:eye");
+const EyeOff = makeIcon("lucide:eye-off");
+const Globe = makeIcon("lucide:globe");
 import { apiFetch } from "@/lib/apiFetch";
 import { uploadToCloudinary, deleteFromCloudinary } from "@/lib/cloudinary";
 
@@ -391,7 +403,9 @@ export default function AdminBannersPage() {
       const res = await apiFetch("/banners?all=true");
       if (res.ok) {
         const json = await res.json();
-        const data = Array.isArray(json) ? json : json.data || json.banners || [];
+        const data = (Array.isArray(json) ? json : json.data || json.banners || []).filter(
+          (b: Banner) => !(b.tag?.toUpperCase().startsWith("GALLERY_") || b.alt?.toUpperCase().startsWith("GALLERY_"))
+        );
         setBanners(data);
       }
     } catch (e) {

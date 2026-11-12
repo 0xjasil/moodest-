@@ -4,25 +4,29 @@ import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import {
-  Users,
-  Package,
-  UserPlus,
-  UserCheck,
-  Search,
-  Upload,
-  Plus,
-  MoreVertical,
-  Eye,
-  Pencil,
-  Trash2,
-  Home,
-  ChevronLeft,
-  ChevronRight,
-  X,
-  Check,
-  Download,
-} from "lucide-react";
+import { Icon } from "@iconify/react";
+
+const makeIcon = (iconName: string) => function CustIcon({ className }: { className?: string }) {
+  return <Icon icon={iconName} className={className} />;
+};
+
+const Users = makeIcon("lucide:users");
+const Package = makeIcon("lucide:package");
+const UserPlus = makeIcon("lucide:user-plus");
+const UserCheck = makeIcon("lucide:user-check");
+const Search = makeIcon("lucide:search");
+const Upload = makeIcon("lucide:upload");
+const Plus = makeIcon("lucide:plus");
+const MoreVertical = makeIcon("lucide:more-vertical");
+const Eye = makeIcon("lucide:eye");
+const Pencil = makeIcon("lucide:pencil");
+const Trash2 = makeIcon("lucide:trash-2");
+const Home = makeIcon("lucide:home");
+const ChevronLeft = makeIcon("lucide:chevron-left");
+const ChevronRight = makeIcon("lucide:chevron-right");
+const X = makeIcon("lucide:x");
+const Check = makeIcon("lucide:check");
+const Download = makeIcon("lucide:download");
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -68,7 +72,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { API_URL } from "@/lib/api-client";
+import { apiFetch } from "@/lib/apiFetch";
 import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
 
 export interface CustomerItem {
@@ -98,6 +102,8 @@ interface BackendRawUser {
   name?: string;
   email: string;
   phone?: string;
+  role?: string;
+  isActive?: boolean;
   avatar?: string;
   country?: string;
   ordersCount?: number;
@@ -111,6 +117,23 @@ interface BackendRawUser {
   _count?: { orders?: number };
 }
 
+interface BackendRawOrder {
+  userId?: string | number;
+  status?: string;
+  orderStatus?: string;
+  total?: number | string;
+  totalAmount?: number | string;
+}
+
+function formatCustomerCode(id: number | string, idx: number): string {
+  const num = Number(id);
+  if (!Number.isNaN(num) && Number.isFinite(num)) {
+    return `#${100000 + num}`;
+  }
+  const str = String(id || idx + 1).trim();
+  return `#${str.slice(-6).toUpperCase()}`;
+}
+
 export function CustomerListPage() {
   const router = useRouter();
 
@@ -122,40 +145,71 @@ export function CustomerListPage() {
     const fetchCustomers = async () => {
       try {
         setLoading(true);
-        // Use same-origin proxy to prevent CORS issues
-        const res = await fetch(`/api/admin/users?limit=100`).catch(() =>
-          fetch(`${API_URL}/admin/users?limit=100`)
-        );
-        if (res.ok) {
-          const json = await res.json();
-          const list: BackendRawUser[] = Array.isArray(json) ? json : (json.data || []);
-          if (list.length > 0) {
-            const mapped: CustomerItem[] = list.map((u: BackendRawUser, idx: number) => {
-              const fullName = [u.firstName, u.lastName].filter(Boolean).join(" ") || u.name || u.email;
+        const [usersRes, ordersRes] = await Promise.all([
+          apiFetch(`/api/admin/users?limit=100`),
+          apiFetch(`/api/admin/orders?limit=100`).catch(() => null),
+        ]);
+
+        const orderStats = new Map<string, { count: number; spent: number }>();
+        if (ordersRes && ordersRes.ok) {
+          const ordersJson = await ordersRes.json();
+          const ordersList: BackendRawOrder[] = Array.isArray(ordersJson)
+            ? ordersJson
+            : ordersJson.data || ordersJson.items || [];
+          for (const ord of ordersList) {
+            const uid = ord.userId ? String(ord.userId) : "";
+            if (!uid) continue;
+            const prev = orderStats.get(uid) || { count: 0, spent: 0 };
+            const status = String(ord.status || ord.orderStatus || "").toUpperCase();
+            const amount = Number(ord.totalAmount ?? ord.total ?? 0);
+            prev.count += 1;
+            if (status !== "CANCELLED" && !Number.isNaN(amount)) {
+              prev.spent += amount;
+            }
+            orderStats.set(uid, prev);
+          }
+        }
+
+        if (usersRes.ok) {
+          const json = await usersRes.json();
+          const list: BackendRawUser[] = Array.isArray(json)
+            ? json
+            : json.data || json.items || [];
+          const customerUsers = list.filter(
+            (u) => !u.role || u.role.toUpperCase() === "CUSTOMER"
+          );
+
+          const mapped: CustomerItem[] = customerUsers.map(
+            (u: BackendRawUser, idx: number) => {
+              const fullName =
+                [u.firstName, u.lastName].filter(Boolean).join(" ") ||
+                u.name ||
+                u.email.split("@")[0] ||
+                "Customer";
+              const stats = orderStats.get(String(u.id));
               return {
                 id: String(u.id),
-                customerId: `#${100000 + Number(u.id || idx + 1)}`,
+                customerId: formatCustomerCode(u.id, idx),
                 name: fullName,
                 email: u.email,
-                phone: u.phone || "+971 50 123 4567",
+                phone: u.phone || "—",
                 avatar: u.avatar || undefined,
-                country: u.country || "United Arab Emirates",
-                ordersCount: u.ordersCount || u._count?.orders || 0,
-                totalSpent: u.totalSpent || 0,
-                status: "Active",
+                country: u.country || "India",
+                ordersCount: u.ordersCount ?? u._count?.orders ?? stats?.count ?? 0,
+                totalSpent: u.totalSpent ?? stats?.spent ?? 0,
+                status: u.isActive === false ? "Inactive" : "Active",
                 addressLine1: u.addressLine1 || "",
                 town: u.town || "",
                 state: u.state || "",
                 postcode: u.postcode || "",
-                createdAt: u.createdAt ? u.createdAt.split("T")[0] : new Date().toISOString().split("T")[0],
+                createdAt: u.createdAt
+                  ? u.createdAt.split("T")[0]
+                  : new Date().toISOString().split("T")[0],
               };
-            });
-            setCustomers(mapped);
-            return;
-          } else {
-            setCustomers([]);
-            return;
-          }
+            }
+          );
+          setCustomers(mapped);
+          return;
         }
         setCustomers([]);
       } catch (err) {
@@ -398,7 +452,7 @@ export function CustomerListPage() {
           <div className="flex items-center justify-between pr-0 md:pr-6">
             <div>
               <p className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-                15,678
+                {customers.length.toLocaleString()}
               </p>
               <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 font-medium">
                 Total Customers
@@ -413,10 +467,13 @@ export function CustomerListPage() {
           <div className="flex items-center justify-between md:border-l border-gray-200/70 dark:border-white/10 md:pl-6">
             <div>
               <p className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-                $75
+                ₹{(
+                  customers.reduce((sum, c) => sum + (c.totalSpent || 0), 0) /
+                  Math.max(1, customers.reduce((sum, c) => sum + (c.ordersCount || 0), 0))
+                ).toFixed(2)}
               </p>
               <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 font-medium">
-                Average Order
+                Average Order Value
               </p>
             </div>
             <div className="size-11 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200/80 dark:border-white/10 flex items-center justify-center text-gray-700 dark:text-gray-300 shadow-2xs">
@@ -425,14 +482,14 @@ export function CustomerListPage() {
           </div>
 
           {/* Divider on MD: bottom rows */}
-          {/* Bottom Left: New Customers */}
+          {/* Bottom Left: Total Orders */}
           <div className="flex items-center justify-between pt-6 border-t border-gray-200/70 dark:border-white/10 pr-0 md:pr-6">
             <div>
               <p className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-                560
+                {customers.reduce((sum, c) => sum + (c.ordersCount || 0), 0).toLocaleString()}
               </p>
               <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 font-medium">
-                New Customers
+                Total Orders Placed
               </p>
             </div>
             <div className="size-11 rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200/80 dark:border-white/10 flex items-center justify-center text-gray-700 dark:text-gray-300 shadow-2xs">
@@ -444,7 +501,7 @@ export function CustomerListPage() {
           <div className="flex items-center justify-between pt-6 border-t md:border-l border-gray-200/70 dark:border-white/10 md:pl-6">
             <div>
               <p className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-                3,432
+                {customers.filter((c) => c.status === "Active").length.toLocaleString()}
               </p>
               <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 font-medium">
                 Active Customers
@@ -584,7 +641,9 @@ export function CustomerListPage() {
                     colSpan={7}
                     className="py-12 text-center text-sm text-gray-500 dark:text-gray-400"
                   >
-                    No customers found matching &quot;{searchQuery}&quot;.
+                    {searchQuery.trim()
+                      ? `No customers found matching "${searchQuery}".`
+                      : "No registered customers found yet."}
                   </td>
                 </tr>
               ) : (
@@ -651,7 +710,7 @@ export function CustomerListPage() {
 
                       {/* Total Spent */}
                       <td className="px-3 py-3.5 text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">
-                        ${customer.totalSpent.toLocaleString(undefined, {
+                        ₹{customer.totalSpent.toLocaleString("en-IN", {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
                         })}

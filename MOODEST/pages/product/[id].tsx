@@ -234,7 +234,7 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
         />
       </Head>
       <Header />
-      <main id="main-content" className="min-h-screen bg-mb-bg py-6 sm:py-8">
+      <main id="main-content" className="min-h-screen bg-mb-bg py-3 sm:py-8">
         <div className="mx-auto max-w-[1280px] px-4 md:px-6">
 
           {/* Breadcrumb */}
@@ -259,15 +259,15 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
           </nav>
 
           {/* Flipkart-Style Main Grid: Gallery on Left, Details on Right */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 items-start">
 
-            {/* ── Left Side: Flipkart Gallery (Vertical Thumbnails + Main Viewport) ── */}
-            <div className="lg:col-span-6 flex flex-col-reverse md:flex-row gap-4 sticky top-20">
+            {/* ── Left Side: Modern Luxury Fashion Gallery ── */}
+            <div className="lg:col-span-6 flex flex-col-reverse md:flex-row gap-3 sm:gap-4 sticky top-20">
 
-              {/* Vertical Thumbnail Strip (Flipkart style on desktop) */}
+              {/* Thumbnail Strip */}
               {allGalleryImages.length > 1 && (
                 <div
-                  className="flex md:flex-col gap-2.5 overflow-x-auto md:overflow-y-auto max-h-[520px] no-scrollbar shrink-0"
+                  className="flex md:flex-col gap-2 overflow-x-auto md:overflow-y-auto max-h-[520px] no-scrollbar shrink-0 py-0.5"
                   role="tablist"
                   aria-label="Product thumbnails"
                 >
@@ -280,16 +280,16 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                         onMouseEnter={() => setSelectedImage(imgUrl)}
                         onClick={() => setSelectedImage(imgUrl)}
                         aria-label={`View photo ${idx + 1}`}
-                        className={`size-16 sm:size-20 rounded-[6px] border p-1 shrink-0 overflow-hidden bg-white transition-all ${
+                        className={`size-14 sm:size-20 rounded-[2px] border p-0.5 shrink-0 overflow-hidden bg-mb-surface transition-all ${
                           isSelected
-                            ? "border-[#5C1A24] ring-2 ring-[#5C1A24]/30 shadow-xs"
-                            : "border-gray-200 hover:border-[#5C1A24]/60 opacity-80 hover:opacity-100"
+                            ? "border-[#5C1A24] ring-1 ring-[#5C1A24] shadow-xs"
+                            : "border-mb-border hover:border-[#5C1A24]/60 opacity-75 hover:opacity-100"
                         }`}
                       >
                         <img
                           src={imgUrl}
                           alt={`${product.name} — ${product.brand || "Modest Studio"} Abaya Detail Photo ${idx + 1}`}
-                          className="size-full object-contain"
+                          className="size-full object-cover object-top"
                         />
                       </button>
                     );
@@ -297,10 +297,10 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                 </div>
               )}
 
-              {/* Main Image Viewport with zoom preview */}
-              <div className="flex-1 bg-white rounded-[8px] border border-mb-border shadow-card p-6 sm:p-8 flex items-center justify-center min-h-[420px] sm:min-h-[520px] relative overflow-hidden group">
+              {/* Main Image Viewport — Mobile Aspect Ratio [3/4] & Modern Fashion Elevation */}
+              <div className="flex-1 bg-mb-surface rounded-[2px] border border-mb-border shadow-2xs aspect-[3/4] sm:aspect-auto sm:min-h-[520px] relative overflow-hidden group flex items-center justify-center">
                 {wishlisted && (
-                  <span className="absolute top-4 left-4 z-10 bg-[#5C1A24] text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-xs uppercase tracking-wider">
+                  <span className="absolute top-3 left-3 z-10 bg-[#5C1A24] text-white text-[10px] font-bold px-2 py-0.5 rounded-[2px] shadow-xs uppercase tracking-wider">
                     Wishlisted
                   </span>
                 )}
@@ -308,13 +308,13 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                   type="button"
                   aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
                   onClick={() => toggleWishlist(product)}
-                  className={`absolute top-4 right-4 z-10 size-9 rounded-full border flex items-center justify-center transition-all shadow-xs ${
+                  className={`absolute top-3 right-3 z-10 size-8 sm:size-9 rounded-full border flex items-center justify-center transition-all shadow-xs ${
                     wishlisted
-                      ? "bg-[#5C1A24] border-[#5C1A24] text-white"
-                      : "bg-white/90 border-gray-200 text-gray-500 hover:text-[#5C1A24] hover:bg-white"
+                      ? "bg-mb-primary border-mb-primary text-white"
+                      : "bg-mb-surface/95 border-mb-border text-mb-text hover:text-mb-primary hover:bg-mb-surface"
                   }`}
                 >
-                  <span className="text-lg leading-none">{wishlisted ? "♥" : "♡"}</span>
+                  <span className="text-base sm:text-lg leading-none">{wishlisted ? "♥" : "♡"}</span>
                 </button>
 
                 <img
@@ -322,7 +322,7 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                   alt={`${product.name} — ${product.brand || "Modest Studio"} Luxury Designer Abaya Main View`}
                   loading="eager"
                   fetchPriority="high"
-                  className="max-h-[480px] w-auto max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-cover sm:object-contain object-top transition-transform duration-500 group-hover:scale-105"
                   onError={(e) => {
                     const target = e.currentTarget;
                     if (!target.src.includes("unsplash.com")) {
@@ -333,8 +333,8 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
               </div>
             </div>
 
-            {/* ── Right Side: Flipkart Style Product Info & Selectors ── */}
-            <div className="lg:col-span-6 flex flex-col gap-5 bg-mb-surface rounded-[8px] border border-mb-border shadow-card p-6 sm:p-8">
+            {/* ── Right Side: Product Details & Selectors ── */}
+            <div className="lg:col-span-6 flex flex-col gap-4 sm:gap-5 bg-mb-surface rounded-[2px] border border-mb-border shadow-2xs p-4 sm:p-8">
 
               {/* Brand & Title */}
               <div>
@@ -348,14 +348,14 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                     </span>
                   )}
                 </div>
-                <h1 className="font-serif text-2xl sm:text-3xl font-semibold text-mb-text leading-snug">
+                <h1 className="font-serif text-xl sm:text-3xl font-semibold text-mb-text leading-snug">
                   {product.name}
                 </h1>
 
                 {/* Rating & Review Counter */}
-                <div className="flex items-center gap-3 mt-2.5">
+                <div className="flex items-center gap-3 mt-2">
                   <span
-                    className="flex items-center gap-1 bg-[#5C1A24] text-white text-xs font-bold px-2 py-0.5 rounded leading-none"
+                    className="flex items-center gap-1 bg-[#5C1A24] text-white text-xs font-bold px-2 py-0.5 rounded-[2px] leading-none"
                     aria-label={`${product.rating} out of 5 stars`}
                   >
                     {product.rating} ★
@@ -367,19 +367,19 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
               </div>
 
               {/* Flipkart Price Display */}
-              <div className="border-y border-mb-border py-4">
-                <div className="flex items-baseline gap-3">
-                  <span className="text-3xl sm:text-4xl font-bold text-mb-text">
+              <div className="border-y border-mb-border py-3 sm:py-4">
+                <div className="flex items-baseline gap-3 flex-wrap">
+                  <span className="text-2xl sm:text-4xl font-bold text-mb-text">
                     ₹{Number(displayPrice).toLocaleString()}
                   </span>
                   {displayOriginalPrice && Number(displayOriginalPrice) > Number(displayPrice) && (
-                    <span className="text-base text-gray-400 line-through">
+                    <span className="text-sm sm:text-base text-gray-400 line-through">
                       ₹{Number(displayOriginalPrice).toLocaleString()}
                     </span>
                   )}
                   {discountPct && discountPct > 0 ? (
-                    <span className="text-base font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
-                      {discountPct}% off
+                    <span className="text-xs sm:text-sm font-bold text-[#b03a2e] bg-[#b03a2e]/10 px-2 py-0.5 rounded-[2px]">
+                      {discountPct}% OFF
                     </span>
                   ) : null}
                 </div>
@@ -388,17 +388,17 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                 {/* Stock Status Badge */}
                 <div className="mt-2.5 flex items-center gap-2">
                   {currentStock > 5 ? (
-                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded">
+                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-[2px]">
                       <span className="size-1.5 rounded-full bg-emerald-600" />
                       In Stock ({currentStock} available)
                     </span>
                   ) : currentStock > 0 ? (
-                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-700 bg-amber-50 px-2.5 py-1 rounded">
+                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-[2px]">
                       <span className="size-1.5 rounded-full bg-amber-600" />
                       Only {currentStock} left in stock - order soon!
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-700 bg-red-50 px-2.5 py-1 rounded">
+                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-700 bg-red-50 px-2.5 py-1 rounded-[2px]">
                       <span className="size-1.5 rounded-full bg-red-600" />
                       Out of Stock
                     </span>
@@ -414,7 +414,7 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                       Color: <strong className="text-mb-text capitalize">{selectedColor}</strong>
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-2.5">
+                  <div className="flex flex-wrap gap-2">
                     {colors.map((c) => {
                       const isSelected = c.name.toLowerCase() === selectedColor.toLowerCase();
                       return (
@@ -422,10 +422,10 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                           key={c.name}
                           type="button"
                           onClick={() => handleSelectColor(c.name)}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-[6px] border text-xs font-medium transition-all ${
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-[2px] border text-xs font-medium transition-all ${
                             isSelected
-                              ? "border-[#5C1A24] bg-[#5C1A24]/5 text-[#5C1A24] ring-2 ring-[#5C1A24]/30 font-semibold"
-                              : "border-gray-200 bg-white hover:border-[#5C1A24]/50 text-gray-700"
+                              ? "border-[#5C1A24] bg-[#5C1A24]/5 text-[#5C1A24] ring-1 ring-[#5C1A24] font-semibold"
+                              : "border-mb-border bg-mb-surface hover:border-[#5C1A24]/50 text-gray-700"
                           }`}
                         >
                           {c.image ? (
@@ -464,7 +464,7 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                     </button>
                   </div>
 
-                  <div className="flex flex-wrap gap-2.5">
+                  <div className="flex flex-wrap gap-2">
                     {sizes.map((s) => {
                       const isSelected = String(s) === String(selectedSize);
                       // Find variant for price difference preview
@@ -475,10 +475,10 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                           key={s}
                           type="button"
                           onClick={() => handleSelectSize(s)}
-                          className={`min-w-[64px] px-3.5 py-2 rounded-[6px] border text-xs font-bold transition-all text-center flex flex-col items-center justify-center ${
+                          className={`min-w-[60px] px-3 py-2 rounded-[2px] border text-xs font-bold transition-all text-center flex flex-col items-center justify-center ${
                             isSelected
                               ? "border-[#5C1A24] bg-[#5C1A24] text-white shadow-xs"
-                              : "border-gray-200 bg-white hover:border-[#5C1A24]/60 text-gray-800 hover:bg-gray-50"
+                              : "border-mb-border bg-mb-surface hover:border-[#5C1A24]/60 text-mb-text hover:bg-gray-50"
                           }`}
                         >
                           <span>Size {s}</span>
@@ -494,7 +494,7 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
 
                   {/* Size Guide Collapsible Modal */}
                   {showSizeGuide && (
-                    <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-xs space-y-1.5 animate-in fade-in duration-200">
+                    <div className="p-3 bg-mb-surface rounded-[2px] border border-mb-border text-xs space-y-1.5 animate-in fade-in duration-200">
                       <p className="font-bold text-gray-900">Abaya Length Recommendation Guide:</p>
                       <ul className="grid grid-cols-2 gap-1 text-[11px] text-gray-600">
                         <li>• Size 50: Height 5&apos;0&quot; - 5&apos;1&quot;</li>
@@ -513,7 +513,7 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
               <div className="flex items-center gap-3 pt-1">
                 <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Quantity:</span>
                 <div
-                  className="flex items-center border border-gray-300 bg-white rounded-[6px] overflow-hidden"
+                  className="flex items-center border border-mb-border bg-mb-surface rounded-[2px] overflow-hidden"
                   role="group"
                   aria-label="Select quantity"
                 >
@@ -525,7 +525,7 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                   >
                     −
                   </button>
-                  <span className="px-3.5 py-1.5 text-xs font-bold text-gray-900 border-x border-gray-300 min-w-[36px] text-center">
+                  <span className="px-3.5 py-1.5 text-xs font-bold text-gray-900 border-x border-mb-border min-w-[36px] text-center">
                     {qty}
                   </span>
                   <button
@@ -539,13 +539,13 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                 </div>
               </div>
 
-              {/* ── Flipkart Action Buttons: Add to Bag & Buy Now ── */}
+              {/* ── Action Buttons: Add to Bag & Buy Now ── */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                 <button
                   type="button"
                   onClick={handleAddToCart}
                   disabled={currentStock <= 0}
-                  className={`w-full py-3.5 px-4 text-sm font-bold rounded-[8px] transition-all flex items-center justify-center gap-2 shadow-sm ${
+                  className={`w-full py-3.5 px-4 text-sm font-bold rounded-[2px] transition-all flex items-center justify-center gap-2 shadow-xs ${
                     currentStock <= 0
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                       : flash || inCart
@@ -565,7 +565,7 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                   type="button"
                   onClick={handleBuyNow}
                   disabled={currentStock <= 0}
-                  className={`w-full py-3.5 px-4 text-sm font-bold rounded-[8px] transition-all flex items-center justify-center gap-2 shadow-sm ${
+                  className={`w-full py-3.5 px-4 text-sm font-bold rounded-[2px] transition-all flex items-center justify-center gap-2 shadow-xs ${
                     currentStock <= 0
                       ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                       : "bg-[#C6A477] hover:bg-[#B59366] text-white"
@@ -578,8 +578,8 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                 </button>
               </div>
 
-              {/* Flipkart Delivery Pincode Checker */}
-              <div className="border border-gray-200 bg-gray-50/70 rounded-lg p-3.5 space-y-2 mt-2">
+              {/* Delivery Pincode Checker */}
+              <div className="border border-mb-border bg-mb-surface rounded-[2px] p-3.5 space-y-2 mt-2">
                 <span className="text-xs font-semibold text-gray-700 block">Delivery Options &amp; Services:</span>
                 <form onSubmit={handlePincodeCheck} className="flex gap-2">
                   <input
@@ -588,11 +588,11 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                     placeholder="Enter 6-digit Pincode"
                     value={pincode}
                     onChange={(e) => setPincode(e.target.value.replace(/\D/g, ""))}
-                    className="flex-1 px-3 py-1.5 text-xs bg-white border border-gray-300 rounded focus:outline-none focus:border-[#5C1A24]"
+                    className="flex-1 px-3 py-1.5 text-xs bg-white border border-mb-border rounded-[2px] focus:outline-none focus:border-[#5C1A24]"
                   />
                   <button
                     type="submit"
-                    className="px-4 py-1.5 text-xs font-bold text-[#5C1A24] bg-white border border-[#5C1A24] hover:bg-[#5C1A24] hover:text-white rounded transition-colors"
+                    className="px-4 py-1.5 text-xs font-bold text-[#5C1A24] bg-white border border-[#5C1A24] hover:bg-[#5C1A24] hover:text-white rounded-[2px] transition-colors"
                   >
                     Check
                   </button>
@@ -610,31 +610,31 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
                 </div>
               </div>
 
-              {/* Description & Specifications Table (Flipkart style) */}
-              <div className="border-t border-gray-200 pt-4 space-y-3">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-900">Product Specifications</h3>
-                <div className="border border-gray-200 rounded-lg overflow-hidden text-xs">
-                  <div className="grid grid-cols-3 p-2.5 bg-gray-50 border-b border-gray-200">
-                    <span className="text-gray-500">Fabric</span>
-                    <span className="col-span-2 font-medium text-gray-900 capitalize">{product.fabric || "Premium Crepe / Linen"}</span>
+              {/* Description & Specifications Table (Brand Theme) */}
+              <div className="border-t border-mb-border pt-4 space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-mb-text">Product Specifications</h3>
+                <div className="border border-mb-border rounded-[2px] overflow-hidden text-xs">
+                  <div className="grid grid-cols-3 p-2.5 bg-mb-surface-strong/30 border-b border-mb-border">
+                    <span className="text-mb-muted">Fabric</span>
+                    <span className="col-span-2 font-medium text-mb-text capitalize">{product.fabric || "Premium Crepe / Linen"}</span>
                   </div>
-                  <div className="grid grid-cols-3 p-2.5 bg-white border-b border-gray-200">
-                    <span className="text-gray-500">Style / Category</span>
-                    <span className="col-span-2 font-medium text-gray-900 capitalize">{product.category}</span>
+                  <div className="grid grid-cols-3 p-2.5 bg-mb-surface border-b border-mb-border">
+                    <span className="text-mb-muted">Style / Category</span>
+                    <span className="col-span-2 font-medium text-mb-text capitalize">{product.category}</span>
                   </div>
-                  <div className="grid grid-cols-3 p-2.5 bg-gray-50 border-b border-gray-200">
-                    <span className="text-gray-500">Colorway</span>
-                    <span className="col-span-2 font-medium text-gray-900 capitalize">{selectedColor || "Standard"}</span>
+                  <div className="grid grid-cols-3 p-2.5 bg-mb-surface-strong/30 border-b border-mb-border">
+                    <span className="text-mb-muted">Colorway</span>
+                    <span className="col-span-2 font-medium text-mb-text capitalize">{selectedColor || "Standard"}</span>
                   </div>
-                  <div className="grid grid-cols-3 p-2.5 bg-white">
-                    <span className="text-gray-500">Care Instructions</span>
-                    <span className="col-span-2 font-medium text-gray-900">Dry Clean or Gentle Machine Wash</span>
+                  <div className="grid grid-cols-3 p-2.5 bg-mb-surface">
+                    <span className="text-mb-muted">Care Instructions</span>
+                    <span className="col-span-2 font-medium text-mb-text">Dry Clean or Gentle Machine Wash</span>
                   </div>
                 </div>
 
                 {product.description && (
-                  <div className="text-xs text-gray-600 leading-relaxed pt-2">
-                    <strong className="text-gray-900 block mb-1">Product Details:</strong>
+                  <div className="text-xs text-mb-body leading-relaxed pt-2">
+                    <strong className="text-mb-text block mb-1">Product Details:</strong>
                     {product.description}
                   </div>
                 )}
@@ -644,7 +644,7 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
           </div>
 
           {/* Customer Reviews Section */}
-          <div className="mt-12 bg-mb-surface rounded-[8px] border border-mb-border shadow-card p-6 sm:p-8">
+          <div className="mt-8 sm:mt-12 bg-mb-surface rounded-[2px] border border-mb-border shadow-2xs p-4 sm:p-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-mb-border-lite">
               <div>
                 <h2 className="font-serif text-xl sm:text-2xl font-semibold text-mb-text">
@@ -657,7 +657,7 @@ export default function ProductDetail({ initialProduct = null }: { initialProduc
               <button
                 type="button"
                 onClick={() => setShowReviewForm((v) => !v)}
-                className="px-4 py-2 text-xs font-semibold rounded-md border border-[#5C1A24] text-[#5C1A24] hover:bg-[#5C1A24] hover:text-white transition-colors self-start sm:self-auto"
+                className="px-4 py-2 text-xs font-semibold rounded-[2px] border border-mb-primary text-mb-primary hover:bg-mb-primary hover:text-white transition-colors self-start sm:self-auto"
               >
                 {showReviewForm ? "Close Review Form" : "Write a Review"}
               </button>

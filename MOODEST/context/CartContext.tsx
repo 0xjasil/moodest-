@@ -15,7 +15,7 @@ import type { CreatedReservation } from "@/lib/types";
 export interface CartItem {
   product: Product;
   qty: number;
-  serverItemId?: number;
+  serverItemId?: number | string;
 }
 
 interface CartState {
@@ -137,23 +137,56 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const serverCart = await cartAPI.get();
       if (serverCart && Array.isArray(serverCart.items)) {
         const mappedItems: CartItem[] = serverCart.items.map((ci) => {
-          const product = ci.variant?.product
-            ? mapBackendProductToProduct(ci.variant.product)
-            : {
-                id: String(ci.variant?.productId || ci.variantId),
-                name: "Product",
-                price: 0,
-                rating: 4.5,
-                reviewCount: 0,
-                image: "/placeholder.png",
-                category: "makeup" as const,
-                brand: "Moryelle",
-                variantId: ci.variantId,
-              };
+          const variantPrice =
+            ci.variant?.offerPrice != null
+              ? Number(ci.variant.offerPrice)
+              : ci.variant?.price != null
+              ? Number(ci.variant.price)
+              : undefined;
+          const unitPrice = Number(ci.price ?? variantPrice ?? 0);
+          const baseMrp = ci.variant?.price != null ? Number(ci.variant.price) : undefined;
+          const originalPrice =
+            baseMrp && baseMrp > unitPrice ? baseMrp : undefined;
+          const discount =
+            originalPrice && originalPrice > unitPrice
+              ? Math.round(((originalPrice - unitPrice) / originalPrice) * 100)
+              : undefined;
 
-          // Retain variantId
-          if (ci.variantId) {
-            product.variantId = ci.variantId;
+          const siblingProduct = ci.product;
+          const nestedProduct = ci.variant?.product;
+
+          let product: Product;
+          if (nestedProduct) {
+            const mapped = mapBackendProductToProduct(nestedProduct);
+            product = {
+              ...mapped,
+              price: unitPrice > 0 ? unitPrice : mapped.price,
+              originalPrice: originalPrice ?? mapped.originalPrice,
+              discount: discount ?? mapped.discount,
+              variantId: ci.variantId,
+            };
+          } else {
+            product = {
+              id: String(
+                siblingProduct?.id || ci.productId || ci.variant?.productId || ci.variantId
+              ),
+              backendId: siblingProduct?.id || ci.productId || ci.variant?.productId,
+              name: siblingProduct?.name || "Modest Studio Creation",
+              price: unitPrice,
+              originalPrice,
+              discount,
+              rating: siblingProduct?.avgRating ?? 4.5,
+              reviewCount: siblingProduct?.reviewCount ?? 0,
+              image: siblingProduct?.image || siblingProduct?.images?.[0] || "/placeholder.png",
+              images: siblingProduct?.images,
+              category:
+                siblingProduct?.category?.slug ||
+                siblingProduct?.category?.name?.toLowerCase() ||
+                "abayas",
+              brand: siblingProduct?.brand?.name || "Modest Studio",
+              variantId: ci.variantId,
+              variants: ci.variant ? [ci.variant] : undefined,
+            };
           }
 
           return {
@@ -185,14 +218,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
         if (raw) {
           const localItems = JSON.parse(raw) as CartItem[];
           if (Array.isArray(localItems) && localItems.length > 0) {
-            // Push guest items with variantId to server
+            // Push only unsynced guest items with variantId to server
             for (const item of localItems) {
+              if (item.serverItemId) continue;
               const variantId =
                 item.product.variantId ||
                 item.product.variants?.[0]?.id ||
-                Number(item.product.id);
-              if (variantId && !isNaN(Number(variantId))) {
-                await cartAPI.addItem(Number(variantId), item.qty).catch(() => {});
+                item.product.backendId ||
+                item.product.id;
+              if (variantId !== undefined && variantId !== null && String(variantId).trim() !== "") {
+                await cartAPI.addItem(variantId, item.qty).catch(() => {});
               }
             }
           }
@@ -221,9 +256,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
         const variantId =
           product.variantId ||
           product.variants?.[0]?.id ||
-          Number(product.id);
-        if (variantId && !isNaN(Number(variantId))) {
-          await cartAPI.addItem(Number(variantId), 1).catch(() => {});
+          product.backendId ||
+          product.id;
+        if (variantId !== undefined && variantId !== null && String(variantId).trim() !== "") {
+          await cartAPI.addItem(variantId, 1).catch(() => {});
           await refreshCart();
         }
       }

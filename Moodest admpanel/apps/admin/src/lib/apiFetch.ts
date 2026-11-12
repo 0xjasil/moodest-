@@ -34,7 +34,7 @@ async function refreshAccessToken(): Promise<string | null> {
     const res = await fetch(`${API_URL}/auth/refresh`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refresh_token: refreshToken }),
+      body: JSON.stringify({ refreshToken }),
     });
 
     if (!res.ok) {
@@ -45,11 +45,46 @@ async function refreshAccessToken(): Promise<string | null> {
       return null;
     }
 
-    const { access_token } = await res.json();
-    if (typeof window !== "undefined") {
-      localStorage.setItem(TOKEN_KEY, access_token);
+    const payload = (await res.json()) as {
+      access_token?: string;
+      accessToken?: string;
+      refresh_token?: string;
+      refreshToken?: string;
+      data?: {
+        access_token?: string;
+        accessToken?: string;
+        refresh_token?: string;
+        refreshToken?: string;
+      };
+    };
+    const nextAccess =
+      payload.access_token ||
+      payload.accessToken ||
+      payload.data?.access_token ||
+      payload.data?.accessToken;
+    const nextRefresh =
+      payload.refresh_token ||
+      payload.refreshToken ||
+      payload.data?.refresh_token ||
+      payload.data?.refreshToken;
+
+    if (!nextAccess) {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(REFRESH_TOKEN_KEY);
+      }
+      return null;
     }
-    return access_token;
+
+    if (typeof window !== "undefined") {
+      localStorage.setItem(TOKEN_KEY, nextAccess);
+      if (nextRefresh) {
+        localStorage.setItem(REFRESH_TOKEN_KEY, nextRefresh);
+      }
+      const isSecure = window.location.protocol === "https:";
+      document.cookie = `${TOKEN_KEY}=${nextAccess}; path=/; SameSite=Strict; max-age=900${isSecure ? "; Secure" : ""}`;
+    }
+    return nextAccess;
   } catch (error) {
     console.error("[apiFetch] Token refresh error:", error);
     return null;

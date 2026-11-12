@@ -16,7 +16,19 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Filter, X } from "lucide-react";
+import { Icon } from "@iconify/react";
+
+const makeIcon = (iconName: string) => function PTabIcon({ className }: { className?: string }) {
+  return <Icon icon={iconName} className={className} />;
+};
+
+const Search = makeIcon("lucide:search");
+const ChevronLeft = makeIcon("lucide:chevron-left");
+const ChevronRight = makeIcon("lucide:chevron-right");
+const ChevronsLeft = makeIcon("lucide:chevrons-left");
+const ChevronsRight = makeIcon("lucide:chevrons-right");
+const Filter = makeIcon("lucide:filter");
+const X = makeIcon("lucide:x");
 import {
   Table,
   TableHeader,

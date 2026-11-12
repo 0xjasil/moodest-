@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Copy, Gift, Users } from "lucide-react";
+import { Copy, Gift, Users } from "@/components/ui/icon";
 
 const stats = [
   { title: "Total Referrals", value: "284", hint: "All time sign-ups" },

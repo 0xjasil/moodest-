@@ -38,8 +38,8 @@ type AddressAction =
   | { type: "FETCH_ERROR"; error: string }
   | { type: "ADD_ADDRESS"; address: Address }
   | { type: "UPDATE_ADDRESS"; address: Address }
-  | { type: "DELETE_ADDRESS"; id: number }
-  | { type: "SET_DEFAULT"; id: number }
+  | { type: "DELETE_ADDRESS"; id: number | string }
+  | { type: "SET_DEFAULT"; id: number | string }
   | { type: "SELECT_ADDRESS"; address: Address }
   | { type: "LOAD_SHIPPING"; options: ShippingOption[] }
   | { type: "SELECT_SHIPPING"; option: ShippingOption }
@@ -57,11 +57,11 @@ export interface AddressContextValue {
   // Actions
   fetchAddresses(): Promise<void>;
   createAddress(data: Partial<Address> & { fullName?: string; phone?: string; line1?: string; city?: string; state?: string; pincode?: string }): Promise<Address>;
-  updateAddress(id: number, data: Partial<Address>): Promise<Address>;
-  deleteAddress(id: number): Promise<void>;
-  setDefaultAddress(id: number): Promise<void>;
+  updateAddress(id: number | string, data: Partial<Address>): Promise<Address>;
+  deleteAddress(id: number | string): Promise<void>;
+  setDefaultAddress(id: number | string): Promise<void>;
   selectAddress(address: Address): void;
-  getShippingOptions(pincode: string): Promise<ShippingOption[]>;
+  getShippingOptions(pincode: string, subtotal?: number): Promise<ShippingOption[]>;
   selectShipping(option: ShippingOption): void;
   clearError(): void;
 }
@@ -83,25 +83,24 @@ function normalizeAddress(a: any): Address {
   };
 }
 
-/* ── Standard Store Shipping Rules (NestJS internal store shipping) ──── */
-const STANDARD_SHIPPING_OPTIONS: ShippingOption[] = [
-  {
-    id: "standard",
-    name: "Standard Delivery",
-    description: "Complimentary luxury delivery on orders over ₹999",
-    estimatedDays: 4,
-    cost: 0,
-    carrier: "Moryelle Express",
-  },
-  {
-    id: "express",
-    name: "Express Priority",
-    description: "Guaranteed 1-2 business day delivery",
-    estimatedDays: 2,
-    cost: 199,
-    carrier: "Moryelle Air Express",
-  },
-];
+/* ── Standard Store Shipping Rules (Matches OrdersService: subtotal > 1500 ? 0 : 99) ──── */
+function buildShippingOptions(subtotal?: number): ShippingOption[] {
+  const isComplimentary = (subtotal ?? 0) > 1500;
+  return [
+    {
+      id: "standard",
+      name: "Standard Delivery",
+      description: isComplimentary
+        ? "Complimentary delivery applied on orders above ₹1,500"
+        : "Complimentary delivery on orders above ₹1,500 (₹99 standard fee)",
+      estimatedDays: 4,
+      cost: isComplimentary ? 0 : 99,
+      carrier: "Modest Studio Courier",
+    },
+  ];
+}
+
+const STANDARD_SHIPPING_OPTIONS: ShippingOption[] = buildShippingOptions(0);
 
 /* ── Reducer ──────────────────────────────────────────────────── */
 function reducer(state: AddressState, action: AddressAction): AddressState {
@@ -167,7 +166,11 @@ function reducer(state: AddressState, action: AddressAction): AddressState {
       return { ...state, selectedAddress: action.address };
 
     case "LOAD_SHIPPING":
-      return { ...state, shippingOptions: action.options };
+      return {
+        ...state,
+        shippingOptions: action.options,
+        selectedShipping: action.options[0] || state.selectedShipping,
+      };
 
     case "SELECT_SHIPPING":
       return { ...state, selectedShipping: action.option };
@@ -241,7 +244,7 @@ export function AddressProvider({ children }: { children: ReactNode }) {
   );
 
   const updateAddress = useCallback(
-    async (id: number, data: Partial<Address>) => {
+    async (id: number | string, data: Partial<Address>) => {
       try {
         dispatch({ type: "SET_LOADING", isLoading: true });
         const dto: Partial<CreateAddressDto> = {
@@ -270,7 +273,7 @@ export function AddressProvider({ children }: { children: ReactNode }) {
     []
   );
 
-  const deleteAddress = useCallback(async (id: number) => {
+  const deleteAddress = useCallback(async (id: number | string) => {
     try {
       dispatch({ type: "SET_LOADING", isLoading: true });
       await addressAPI.delete(id);
@@ -285,7 +288,7 @@ export function AddressProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const setDefaultAddress = useCallback(async (id: number) => {
+  const setDefaultAddress = useCallback(async (id: number | string) => {
     try {
       dispatch({ type: "SET_LOADING", isLoading: true });
       const raw = await addressAPI.setDefault(id);
@@ -306,9 +309,10 @@ export function AddressProvider({ children }: { children: ReactNode }) {
     dispatch({ type: "SELECT_ADDRESS", address });
   }, []);
 
-  const getShippingOptions = useCallback(async (_pincode: string) => {
-    dispatch({ type: "LOAD_SHIPPING", options: STANDARD_SHIPPING_OPTIONS });
-    return STANDARD_SHIPPING_OPTIONS;
+  const getShippingOptions = useCallback(async (_pincode: string, subtotal?: number) => {
+    const options = buildShippingOptions(subtotal);
+    dispatch({ type: "LOAD_SHIPPING", options });
+    return options;
   }, []);
 
   const selectShipping = useCallback((option: ShippingOption) => {

@@ -116,38 +116,52 @@ export interface Product {
 }
 
 export interface CartItem {
-  id: number;
-  cartId: number;
-  variantId: number;
+  id: number | string;
+  cartId?: number | string;
+  productId?: number | string;
+  variantId: number | string;
   quantity: number;
+  price?: number;
+  total?: number;
+  product?: Partial<BackendProduct> & {
+    id?: number | string;
+    name?: string;
+    slug?: string;
+    image?: string;
+  };
   variant?: Variant & {
     product?: BackendProduct;
   };
 }
 
 export interface Cart {
-  id: number;
-  userId: number;
+  id: number | string;
+  userId: number | string;
   items: CartItem[];
+  subtotal?: number;
+  total?: number;
+  itemCount?: number;
   createdAt?: string;
   updatedAt?: string;
 }
 
 export interface CreatedReservation {
-  reservationId: number;
+  id?: string | number;
+  reservationId: number | string;
+  orderId?: number | string;
   expiresAt: string | Date;
   items: {
-    variantId: number;
+    variantId: number | string;
     quantity: number;
     lockedPrice: number;
     lockedMrp: number;
   }[];
-  subtotal: number;
+  subtotal?: number;
 }
 
 export interface Address {
-  id: number;
-  userId?: number;
+  id: number | string;
+  userId?: number | string;
   fullName: string;
   phone: string;
   line1: string;
@@ -173,9 +187,9 @@ export type OrderStatus =
   | "CANCELLED";
 
 export interface OrderItem {
-  id: number;
-  orderId: number;
-  variantId: number;
+  id: number | string;
+  orderId: number | string;
+  variantId: number | string;
   quantity: number;
   price: number;
   variant?: Variant & {
@@ -184,17 +198,18 @@ export interface OrderItem {
 }
 
 export interface Order {
-  id: number;
-  userId: number;
-  addressId: number;
-  reservationId?: number | null;
+  id: number | string;
+  orderNumber?: string;
+  userId: number | string;
+  addressId: number | string;
+  reservationId?: number | string | null;
   status: OrderStatus;
   subtotal: number;
   tax: number;
   shippingFee: number;
   discount: number;
   total: number;
-  currency: string;
+  currency?: string;
   paymentStatus: "PENDING" | "PAID" | "FAILED" | "REFUNDED";
   paymentId?: string | null;
   couponCode?: string | null;
@@ -273,8 +288,39 @@ export interface WalletTransaction {
 }
 
 export interface PaymentIntentResult {
-  clientSecret: string;
-  amount: number;
+  orderId?: string;
+  razorpayOrderId?: string;
+  amount?: number;
+  amountInPaise?: number;
+  currency?: string;
+  keyId?: string;
+  alreadyPaid?: boolean;
+  message?: string;
+  data?: {
+    orderId?: string;
+    razorpayOrderId?: string;
+    amount?: number;
+    amountInPaise?: number;
+    currency?: string;
+    keyId?: string;
+    alreadyPaid?: boolean;
+  };
+}
+
+export interface VerifyPaymentPayload {
+  orderId: string;
+  razorpayPaymentId: string;
+  razorpayOrderId: string;
+  razorpaySignature: string;
+}
+
+export interface VerifyPaymentResult {
+  orderId: string;
+  gatewayEventId?: string;
+  isDuplicate?: boolean;
+  status: string;
+  stockAllocated?: boolean;
+  message?: string;
 }
 
 export interface Banner {

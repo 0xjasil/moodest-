@@ -21,9 +21,9 @@ export default function OrdersPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { orders, isLoading, error, fetchOrders, cancelOrder } = useOrder();
 
-  const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
-  const [cancelingId, setCancelingId] = useState<number | null>(null);
-  const [returningId, setReturningId] = useState<number | null>(null);
+  const [selectedOrderId, setSelectedOrderId] = useState<number | string | null>(null);
+  const [cancelingId, setCancelingId] = useState<number | string | null>(null);
+  const [returningId, setReturningId] = useState<number | string | null>(null);
   const [isDownloadingInvoice, setIsDownloadingInvoice] = useState(false);
   const [actionMessage, setActionMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -32,7 +32,7 @@ export default function OrdersPage() {
   // Redirect if not logged in
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      router.push("/login");
+      router.push("/login?redirect=/orders");
     }
   }, [isAuthenticated, authLoading, router]);
 
@@ -46,14 +46,14 @@ export default function OrdersPage() {
   // If orderId is in query params, select it
   useEffect(() => {
     if (orderId) {
-      const parsed = parseInt(orderId as string, 10);
-      if (!isNaN(parsed)) {
-        setSelectedOrderId(parsed);
+      const val = Array.isArray(orderId) ? orderId[0] : orderId;
+      if (val) {
+        setSelectedOrderId(val);
       }
     }
   }, [orderId]);
 
-  const handleCancelOrder = async (orderIdToCancel: number) => {
+  const handleCancelOrder = async (orderIdToCancel: number | string) => {
     if (!confirm("Are you sure you want to cancel this order?")) {
       return;
     }
@@ -70,7 +70,7 @@ export default function OrdersPage() {
     }
   };
 
-  const handleRequestReturn = async (orderIdToReturn: number) => {
+  const handleRequestReturn = async (orderIdToReturn: number | string) => {
     if (!confirm("Are you sure you want to request a return for this delivered order?")) {
       return;
     }
@@ -87,7 +87,7 @@ export default function OrdersPage() {
     }
   };
 
-  const handleDownloadInvoice = async (orderIdToDownload: number) => {
+  const handleDownloadInvoice = async (orderIdToDownload: number | string) => {
     setIsDownloadingInvoice(true);
     setActionMessage(null);
     try {

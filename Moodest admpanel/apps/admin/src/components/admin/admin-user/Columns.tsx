@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

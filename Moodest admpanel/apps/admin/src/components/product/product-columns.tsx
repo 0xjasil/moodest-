@@ -12,15 +12,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  ArrowDown,
-  ArrowUp,
-  ArrowUpDown,
-  Edit2,
-  Eye,
-  MoreHorizontal,
-  Trash2,
-} from "lucide-react";
+import { Icon } from "@iconify/react";
+
+const makeIcon = (iconName: string) => function PColIcon({ className }: { className?: string }) {
+  return <Icon icon={iconName} className={className} />;
+};
+
+const ArrowDown = makeIcon("lucide:arrow-down");
+const ArrowUp = makeIcon("lucide:arrow-up");
+const ArrowUpDown = makeIcon("lucide:arrow-up-down");
+const Edit2 = makeIcon("lucide:pencil");
+const Eye = makeIcon("lucide:eye");
+const MoreHorizontal = makeIcon("lucide:more-horizontal");
+const Trash2 = makeIcon("lucide:trash-2");
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useEffect, useState } from "react";

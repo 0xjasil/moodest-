@@ -3,23 +3,27 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Plus,
-  Trash2,
-  Copy,
-  Layers,
-  AlertCircle,
-  Sparkles,
-  Edit2,
-  RefreshCw,
-  Package,
-  Eye,
-  ExternalLink,
-  Check,
-  X,
-  Image as ImageIcon,
-  ImagePlus,
-} from "lucide-react";
+import { Icon } from "@iconify/react";
+
+const makeIcon = (iconName: string) => function VarIcon({ className }: { className?: string }) {
+  return <Icon icon={iconName} className={className} />;
+};
+
+const Plus = makeIcon("lucide:plus");
+const Trash2 = makeIcon("lucide:trash-2");
+const Copy = makeIcon("lucide:copy");
+const Layers = makeIcon("lucide:layers");
+const AlertCircle = makeIcon("lucide:alert-circle");
+const Sparkles = makeIcon("lucide:sparkles");
+const Edit2 = makeIcon("lucide:pencil");
+const RefreshCw = makeIcon("lucide:refresh-cw");
+const Package = makeIcon("lucide:package");
+const Eye = makeIcon("lucide:eye");
+const ExternalLink = makeIcon("lucide:external-link");
+const Check = makeIcon("lucide:check");
+const X = makeIcon("lucide:x");
+const ImageIcon = makeIcon("lucide:image");
+const ImagePlus = makeIcon("lucide:image-plus");
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

@@ -13,7 +13,9 @@ import {
 } from "@tanstack/react-table";
 import { type Category } from "@/lib/api";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Icon } from "@iconify/react";
+
+const Search = ({ className }: { className?: string }) => <Icon icon="lucide:search" className={className} />;
 import {
   Card,
   CardHeader,

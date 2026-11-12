@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { exportCustomersPDF, CustomerSummary } from "@/components/admin/analytics/analytic-pdf";
 import AdminLoader from "@/components/admin/AdminLoader";
-import { IconDownload } from "@tabler/icons-react";
+import { IconDownload } from "@/components/ui/icon";
 
 export default function CustomerReportsPage() {
   const [customers, setCustomers] = useState<CustomerSummary[]>([]);

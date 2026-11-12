@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Edit, MoreVertical, Trash2, ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
+import { Edit, MoreVertical, Trash2, ArrowUp, ArrowDown, ArrowUpDown } from "@/components/ui/icon";
 import { SubcategoryDialogForm } from "./subcategory-dialog-form";
 import { DeleteSubcategoryDialog } from "./delete-subcategory-dialog";
 import { SubCategoryWithCategory } from "@/types/subcategory";

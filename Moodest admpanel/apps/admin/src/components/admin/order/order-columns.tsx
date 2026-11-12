@@ -34,7 +34,7 @@ import {
   CheckCircle,
   XCircle,
   Truck
-} from "lucide-react";
+} from "@/components/ui/icon";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { rupee } from "@/constants/values";

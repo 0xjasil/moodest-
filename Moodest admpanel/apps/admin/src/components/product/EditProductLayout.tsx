@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Icon } from "@iconify/react";
+const Loader2 = ({ className }: { className?: string }) => <Icon icon="lucide:loader-2" className={className} />;
 import { toast } from "sonner";
 import { EditProductProvider, useEditProduct } from "@/context/EcitProductContext";
 import type { ProductDetail } from "@/types/product";

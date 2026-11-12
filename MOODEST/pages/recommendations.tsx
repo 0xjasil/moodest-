@@ -9,7 +9,7 @@ import Footer from "@/components/Footer";
 
 export default function RecommendationsPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const {
     recommendations,
     isLoading,
@@ -22,12 +22,13 @@ export default function RecommendationsPage() {
   );
 
   useEffect(() => {
+    if (authLoading) return;
     if (!user) {
-      router.push("/login");
+      router.push("/login?redirect=/recommendations");
       return;
     }
     loadRecommendations();
-  }, [user, router]);
+  }, [user, authLoading, router]);
 
   const loadRecommendations = async () => {
     try {

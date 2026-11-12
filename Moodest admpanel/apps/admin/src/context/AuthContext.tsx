@@ -107,16 +107,29 @@ function reducer(state: AuthState, action: AuthAction): AuthState {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 /* ── Token refresh helper ────────────────────────────────────── */
-async function attemptTokenRefresh(refreshToken: string): Promise<string | null> {
+async function attemptTokenRefresh(
+  refreshToken: string
+): Promise<{ accessToken: string; refreshToken?: string } | null> {
   try {
     const res = await fetch(`${API_URL}/auth/refresh`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken, refresh_token: refreshToken }),
+      body: JSON.stringify({ refreshToken }),
     });
     if (!res.ok) return null;
     const body = (await res.json()) as any;
-    return body.access_token || body.data?.access_token || body.data?.accessToken || null;
+    const nextAccess =
+      body.access_token ||
+      body.accessToken ||
+      body.data?.access_token ||
+      body.data?.accessToken;
+    const nextRefresh =
+      body.refresh_token ||
+      body.refreshToken ||
+      body.data?.refresh_token ||
+      body.data?.refreshToken;
+    if (!nextAccess) return null;
+    return { accessToken: nextAccess, refreshToken: nextRefresh };
   } catch {
     return null;
   }
@@ -159,18 +172,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         // Access token expired — try refresh
         if (res.status === 401) {
-          const newToken = await attemptTokenRefresh(storedRefreshToken);
-          if (newToken) {
-            localStorage.setItem(TOKEN_KEY, newToken);
-            setTokenCookie(newToken);
+          const refreshed = await attemptTokenRefresh(storedRefreshToken);
+          if (refreshed?.accessToken) {
+            localStorage.setItem(TOKEN_KEY, refreshed.accessToken);
+            if (refreshed.refreshToken) {
+              localStorage.setItem(REFRESH_TOKEN_KEY, refreshed.refreshToken);
+            }
+            setTokenCookie(refreshed.accessToken);
 
             const meRes = await fetch(`${API_URL}/users/me`, {
-              headers: { Authorization: `Bearer ${newToken}` },
+              headers: { Authorization: `Bearer ${refreshed.accessToken}` },
             });
             if (meRes.ok) {
               const rawMe = (await meRes.json()) as any;
               const user: AdminUser = rawMe.data || rawMe;
-              dispatch({ type: "LOGIN_SUCCESS", user, token: newToken, refreshToken: storedRefreshToken });
+              dispatch({
+                type: "LOGIN_SUCCESS",
+                user,
+                token: refreshed.accessToken,
+                refreshToken: refreshed.refreshToken || storedRefreshToken,
+              });
               return;
             }
           }

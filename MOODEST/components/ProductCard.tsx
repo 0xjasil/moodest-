@@ -1,24 +1,19 @@
 import React from "react";
 import Link from "next/link";
+import { Icon } from "@iconify/react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 
 import type { Product } from "@/lib/types";
 export type { Product };
 
-const StarIcon = () => (
-  <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-  </svg>
-);
+const StarIcon = () => <Icon icon="lucide:star" className="w-2.5 h-2.5 fill-current" />;
 
 const HeartIcon = ({ filled }: { filled: boolean }) => (
-  <svg width="17" height="17" viewBox="0 0 24 24"
-    fill={filled ? "#e11d48" : "none"}
-    stroke={filled ? "#e11d48" : "currentColor"}
-    strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
-  </svg>
+  <Icon
+    icon="lucide:heart"
+    className={`w-3.5 h-3.5 ${filled ? "fill-current" : ""}`}
+  />
 );
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -30,44 +25,42 @@ export default function ProductCard({ product }: { product: Product }) {
   const onAdd = (e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); addItem(product); };
   const onWish = (e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); toggleWishlist(product); };
 
-  const salePrice = product.discount
-    ? Math.round(product.price * (1 - (product.discount * 0.12) / 100))
-    : null;
+  const formatPrice = (val: number) => `Rs. ${val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
   return (
-    <article className="group relative flex flex-col bg-mb-surface border border-mb-border rounded-[20px] sm:rounded-[24px] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+    <article className="group relative flex flex-col bg-mb-surface border border-mb-border rounded-[2px] transition-all overflow-hidden select-none shadow-2xs hover:border-mb-accent/60">
 
-      {/* ── Badges [e.g. 10% OFF / BESTSELLER] matching Reference ── */}
-      <div className="absolute top-3 left-3 z-20 flex flex-col gap-1">
+      {/* ── Top Image Container ───────────────────────────────── */}
+      <div className="relative aspect-[3/4] w-full overflow-hidden bg-mb-surface border-b border-mb-border/60">
+        
+        {/* Top-Left: Badge following brand palette (2px subtle border radius) */}
         {product.discount ? (
-          <span className="bg-black/90 backdrop-blur-xs text-white text-[11px] font-bold uppercase tracking-wider px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-sm">
+          <span className="absolute top-2 sm:top-2.5 left-2 sm:left-2.5 z-10 bg-mb-accent-deep text-white text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-[2px] uppercase tracking-wider shadow-xs pointer-events-none">
             {product.discount}% OFF
           </span>
         ) : product.badge ? (
-          <span className="bg-black/90 backdrop-blur-xs text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-sm">
+          <span className="absolute top-2 sm:top-2.5 left-2 sm:left-2.5 z-10 bg-mb-accent-deep text-white text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-[2px] uppercase tracking-wider shadow-xs pointer-events-none">
             {product.badge}
           </span>
         ) : null}
-      </div>
 
-      {/* ── Wishlist circular white button matching Reference ──── */}
-      <button
-        type="button"
-        aria-label={wishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
-        aria-pressed={wishlisted}
-        onClick={onWish}
-        className="absolute top-3 right-3 z-20 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-white text-neutral-900 rounded-full shadow-md transition-all hover:scale-110 active:scale-95 focus-visible:outline-none"
-      >
-        <HeartIcon filled={wishlisted} />
-      </button>
+        {/* Top-Right: Brand Theme Circular Wishlist Button */}
+        <button
+          type="button"
+          aria-label={wishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
+          aria-pressed={wishlisted}
+          onClick={onWish}
+          className="absolute top-2 sm:top-2.5 right-2 sm:right-2.5 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-mb-surface text-mb-text border border-mb-border shadow-xs flex items-center justify-center transition-transform hover:scale-110 active:scale-95 focus-visible:outline-none"
+        >
+          <HeartIcon filled={wishlisted} />
+        </button>
 
-      {/* ── Link: image + details ──────────────────────────────── */}
-      <Link href={`/product/${product.id}`}
-        aria-label={`${product.brand} ${product.name}, ₹${product.price.toLocaleString()}`}
-        className="flex flex-col flex-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-mb-accent">
-
-        {/* Product image (Primary + Hover Thumbnail) — tall fashion aspect ratio */}
-        <div className="relative bg-mb-surface overflow-hidden aspect-[3/4] sm:aspect-[4/5] w-full">
+        {/* Link wrapping image only */}
+        <Link
+          href={`/product/${product.id}`}
+          aria-label={`${product.brand} ${product.name}, ${formatPrice(product.price)}`}
+          className="block w-full h-full relative cursor-pointer"
+        >
           <img
             src={product.image}
             alt={`${product.name} — ${product.brand || "Modest Studio"} Luxury Designer Abaya`}
@@ -96,80 +89,54 @@ export default function ProductCard({ product }: { product: Product }) {
               className="absolute inset-0 w-full h-full object-cover object-top opacity-0 group-hover:opacity-100 transition-opacity duration-500"
             />
           )}
-        </div>
+        </Link>
+      </div>
 
-        {/* Info block */}
-        <div className="flex flex-col flex-1 p-3 pt-2">
-
-          {/* Brand — Jost uppercase light tracking */}
-          <p className="text-[11px] font-medium text-mb-muted uppercase tracking-[0.15em] truncate mb-1">
-            {product.brand}
-          </p>
-
-          {/* Title — Luxury Serif */}
-          <h2 className="font-serif text-[14px] font-semibold text-mb-text line-clamp-2 mb-1.5 leading-snug"
-            title={product.name}>
+      {/* ── Product Details Below Image (Exact Reference Image Typography & Plus Button) ───────────────── */}
+      <div className="p-2 sm:p-2.5 flex items-start justify-between gap-1.5 bg-mb-surface flex-1">
+        <Link href={`/product/${product.id}`} className="flex-1 min-w-0 group/link">
+          {/* Title: Decreased font size, clean & modern */}
+          <h2 className="text-xs sm:text-[13px] font-medium text-mb-text group-hover/link:text-mb-primary line-clamp-1 mb-0.5 transition-colors">
             {product.name}
           </h2>
 
-          {/* Prices */}
-          <div aria-hidden="true" className="flex items-baseline gap-2 flex-wrap mb-1.5">
-            <span className="text-[14px] font-bold text-mb-text">
-              ₹{product.price.toLocaleString()}
-            </span>
-            {product.originalPrice && (
-              <span className="text-[12px] text-mb-muted line-through">
-                ₹{product.originalPrice.toLocaleString()}
-              </span>
-            )}
-            {product.discount && (
-              <span className="text-[11px] text-mb-accent-deep font-bold">
-                {product.discount}% Off
-              </span>
-            )}
-          </div>
+          {/* Regular Price */}
+          <p className="text-xs sm:text-[13px] font-semibold text-mb-text leading-tight">
+            {formatPrice(product.price)}
+          </p>
 
-          <span className="sr-only">
-            {product.originalPrice
-              ? `Regular price ₹${product.originalPrice.toLocaleString()}. Discounted price ₹${product.price.toLocaleString()}. ${product.discount}% Off.`
-              : `Price ₹${product.price.toLocaleString()}.`}
-          </span>
-
-          {/* Star rating — Gold Deep badge */}
-          <div className="flex items-center gap-1.5 mb-2"
-            aria-label={`${product.rating} out of 5 star rating`}>
-            <span className="flex items-center gap-1 bg-mb-gold-deep text-mb-bg text-[10px] font-bold px-1.5 py-0.5 rounded-[4px] leading-none">
-              {product.rating} <StarIcon />
-            </span>
-            <span className="text-[11px] text-mb-muted">
-              ({product.reviewCount.toLocaleString()})
-            </span>
-          </div>
-
-          {/* Sale price secondary row */}
-          {salePrice && product.discount && (
-            <div className="flex items-center gap-1.5 px-2 py-1 mt-auto bg-mb-bg border border-mb-border-lite rounded-[6px]">
-              <span className="text-[10px] text-mb-muted uppercase tracking-wider">Sale</span>
-              <span className="text-[12px] font-bold text-mb-text">₹{salePrice.toLocaleString()}</span>
-              <span className="text-[10px] text-mb-accent-deep font-semibold">
-                {Math.min(product.discount + 5, 65)}% Off
-              </span>
-            </div>
+          {/* Strikethrough Original Price */}
+          {product.originalPrice && (
+            <p className="text-[10px] sm:text-[11px] text-mb-muted line-through leading-tight mt-0.5">
+              {formatPrice(product.originalPrice)}
+            </p>
           )}
-        </div>
-      </Link>
 
-      {/* ── Add to Bag CTA ─────────────────────────────────────── */}
-      <div className="p-3 pt-0">
-        <button type="button"
-          aria-label={inCart ? `${product.name} added to bag` : `Add ${product.name} to bag`}
+          {/* Red/Rust Discount Percentage (Brand Theme --color-error / #A83A45) */}
+          {product.discount && (
+            <p className="text-[10px] sm:text-[11px] font-bold text-mb-error leading-tight mt-0.5">
+              {product.discount}% OFF
+            </p>
+          )}
+        </Link>
+
+        {/* Circular Plus Button (Brand Theme Palette) */}
+        <button
+          type="button"
           onClick={onAdd}
-          className={`w-full py-2 text-[12px] font-semibold rounded-[4px] sm:rounded-[6px] transition-all shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-mb-accent ${
+          aria-label={inCart ? `${product.name} in bag` : `Add ${product.name} to bag`}
+          title={inCart ? "In Bag" : "Add to Bag"}
+          className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center transition-all flex-shrink-0 mt-0.5 shadow-2xs ${
             inCart
-              ? "bg-mb-primary text-mb-bg border border-mb-primary"
-              : "bg-mb-primary hover:bg-mb-primary-hover text-mb-bg"
-          }`}>
-          {inCart ? "✓ Added to Bag" : "Add to Bag"}
+              ? "bg-mb-primary text-white border-mb-primary"
+              : "border-mb-border bg-mb-surface text-mb-text hover:border-mb-primary hover:text-mb-primary hover:scale-105"
+          }`}
+        >
+          {inCart ? (
+            <Icon icon="lucide:check" className="w-3.5 h-3.5" />
+          ) : (
+            <Icon icon="lucide:plus" className="w-3.5 h-3.5" />
+          )}
         </button>
       </div>
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
-import { Plus, RefreshCcw, X, Image as ImageIcon } from 'lucide-react';
+import { Plus, RefreshCcw, X, Image as ImageIcon } from "@/components/ui/icon";
 import Image from 'next/image';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';

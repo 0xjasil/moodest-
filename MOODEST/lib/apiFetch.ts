@@ -38,10 +38,13 @@ function canUseStorage() {
   return typeof window !== "undefined";
 }
 
-export function clearAuthTokens() {
+export function clearAuthTokens(notify: boolean = true) {
   if (!canUseStorage()) return;
   localStorage.removeItem(ACCESS_TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
+  if (notify) {
+    window.dispatchEvent(new Event("moryelle:auth-cleared"));
+  }
 }
 
 let inFlightRefresh: Promise<string | null> | null = null;
@@ -60,19 +63,44 @@ async function refreshAccessToken(): Promise<string | null> {
       const response = await fetch(apiUrl("/auth/refresh"), {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ refresh_token: refreshToken }),
+        body: JSON.stringify({ refreshToken }),
       });
       if (!response.ok) {
         clearAuthTokens();
         return null;
       }
-      const payload = await response.json() as { access_token?: string };
-      if (!payload.access_token) {
+      const payload = (await response.json()) as {
+        access_token?: string;
+        accessToken?: string;
+        refresh_token?: string;
+        refreshToken?: string;
+        data?: {
+          access_token?: string;
+          accessToken?: string;
+          refresh_token?: string;
+          refreshToken?: string;
+        };
+      };
+      const nextAccessToken =
+        payload.access_token ||
+        payload.accessToken ||
+        payload.data?.access_token ||
+        payload.data?.accessToken;
+      const nextRefreshToken =
+        payload.refresh_token ||
+        payload.refreshToken ||
+        payload.data?.refresh_token ||
+        payload.data?.refreshToken;
+
+      if (!nextAccessToken) {
         clearAuthTokens();
         return null;
       }
-      localStorage.setItem(ACCESS_TOKEN_KEY, payload.access_token);
-      return payload.access_token;
+      localStorage.setItem(ACCESS_TOKEN_KEY, nextAccessToken);
+      if (nextRefreshToken) {
+        localStorage.setItem(REFRESH_TOKEN_KEY, nextRefreshToken);
+      }
+      return nextAccessToken;
     } catch {
       return null;
     } finally {

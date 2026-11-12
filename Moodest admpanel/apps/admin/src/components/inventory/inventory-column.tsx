@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency, cn } from "@/lib/utils";
 import Image from "next/image";
-import { ArrowDown, ArrowUp, ArrowUpDown, Edit3 } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Edit3 } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import { InventoryActionMenu } from "./inventory-action-menu";
 

@@ -12,14 +12,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import {
-  ArrowUp,
-  ArrowDown,
-  ArrowUpDown,
-  Edit,
-  MoreVertical,
-  Trash2
-} from "lucide-react";
+import { Icon } from "@iconify/react";
+
+const makeIcon = (iconName: string) => function ColIcon({ className }: { className?: string }) {
+  return <Icon icon={iconName} className={className} />;
+};
+
+const ArrowUp = makeIcon("lucide:arrow-up");
+const ArrowDown = makeIcon("lucide:arrow-down");
+const ArrowUpDown = makeIcon("lucide:arrow-up-down");
+const Edit = makeIcon("lucide:pencil");
+const MoreVertical = makeIcon("lucide:more-vertical");
+const Trash2 = makeIcon("lucide:trash-2");
 import { CategoryDialogForm } from "./category-dialog-form";
 import { DeleteCategoryDialog } from "./delete-category-dialog";
 

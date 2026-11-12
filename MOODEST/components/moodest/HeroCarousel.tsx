@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { Icon } from "@iconify/react";
 import { bannerAPI } from "@/lib/api";
 import type { Banner } from "@/lib/types";
 
@@ -90,9 +91,16 @@ export default function HeroCarousel({ initialBanners }: HeroCarouselProps) {
     }
   }, [initialBanners]);
 
-  // Map CMS banners to slide objects with rich SEO alt support
+  // Map CMS banners to slide objects with rich SEO alt support (excluding GALLERY_* slots)
   const cmsSlides: HeroSlideItem[] = banners
-    .filter((b) => b.isActive !== false && (b.imageUrl || b.image))
+    .filter((b) => {
+      if (b.isActive === false) return false;
+      const isGallery =
+        (b.tag && b.tag.toUpperCase().startsWith("GALLERY_")) ||
+        (b.alt && b.alt.toUpperCase().startsWith("GALLERY_"));
+      if (isGallery) return false;
+      return Boolean(b.imageUrl || b.image);
+    })
     .map((b) => ({
       id: b.id,
       img: b.imageUrl || b.image || "/banners/top-promo-banner.jpg",
@@ -132,7 +140,7 @@ export default function HeroCarousel({ initialBanners }: HeroCarouselProps) {
 
   return (
     <div
-      className="relative w-full h-[55vh] sm:h-[65vh] md:h-[75vh] lg:h-[82vh] min-h-[380px] sm:min-h-[460px] md:min-h-[520px] max-h-[840px] overflow-hidden select-none bg-neutral-950"
+      className="relative w-full h-[62vh] sm:h-[70vh] md:h-[78vh] lg:h-[84vh] min-h-[440px] sm:min-h-[500px] md:min-h-[540px] max-h-[840px] overflow-hidden select-none bg-mb-surface-strong"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       role="region"
@@ -145,22 +153,16 @@ export default function HeroCarousel({ initialBanners }: HeroCarouselProps) {
       >
         {slides.map((slide, idx) => (
           <div key={slide.id || idx} className="relative w-full h-full flex-shrink-0 overflow-hidden">
-            {/* Ambient blurred backdrop for seamless contain filling */}
-            <div
-              className="absolute inset-0 bg-cover bg-center blur-3xl opacity-35 scale-110 pointer-events-none transition-all duration-700"
-              style={{ backgroundImage: `url(${slide.img})` }}
-              aria-hidden="true"
-            />
-
             <Link
               href={slide.link}
-              className="block w-full h-full relative cursor-pointer group z-10"
+              className="block w-full h-full relative cursor-pointer group"
               aria-label={slide.title || `Featured Collection Slide ${idx + 1}`}
             >
+              {/* Full Bleed Fill Image — exactly like attached reference image */}
               <img
                 src={slide.img}
                 alt={slide.alt || slide.title || `Modest Studio Luxury Abaya Banner ${idx + 1}`}
-                className="w-full h-full object-contain object-center transition-transform duration-1000 group-hover:scale-[1.01]"
+                className="w-full h-full object-cover object-top sm:object-center transition-transform duration-1000 group-hover:scale-[1.02]"
                 onError={(e) => {
                   const target = e.currentTarget;
                   if (!target.src.includes("/banners/top-promo-banner.jpg")) {
@@ -168,44 +170,40 @@ export default function HeroCarousel({ initialBanners }: HeroCarouselProps) {
                   }
                 }}
               />
-              {/* Subtle top/bottom luxury vignette overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/15 pointer-events-none" />
+              {/* Subtle luxury bottom vignette overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 pointer-events-none" />
             </Link>
           </div>
         ))}
       </div>
 
-      {/* Prev Navigation Arrow */}
+      {/* Prev Navigation Arrow — hidden on mobile for clean full-bleed reference look */}
       {total > 1 && (
         <button
           type="button"
           onClick={prevSlide}
           aria-label="Previous Hero Image"
-          className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 hover:bg-white text-neutral-900 shadow-xl backdrop-blur-sm flex items-center justify-center transition-all hover:scale-105 active:scale-95 focus:outline-none"
+          className="hidden sm:flex absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-mb-surface/90 hover:bg-mb-surface text-mb-text border border-mb-border shadow-xl backdrop-blur-sm items-center justify-center transition-all hover:scale-105 active:scale-95 focus:outline-none cursor-pointer"
         >
-          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-          </svg>
+          <Icon icon="lucide:chevron-left" className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
         </button>
       )}
 
-      {/* Next Navigation Arrow */}
+      {/* Next Navigation Arrow — hidden on mobile */}
       {total > 1 && (
         <button
           type="button"
           onClick={nextSlide}
           aria-label="Next Hero Image"
-          className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 hover:bg-white text-neutral-900 shadow-xl backdrop-blur-sm flex items-center justify-center transition-all hover:scale-105 active:scale-95 focus:outline-none"
+          className="hidden sm:flex absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-mb-surface/90 hover:bg-mb-surface text-mb-text border border-mb-border shadow-xl backdrop-blur-sm items-center justify-center transition-all hover:scale-105 active:scale-95 focus:outline-none cursor-pointer"
         >
-          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-          </svg>
+          <Icon icon="lucide:chevron-right" className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
         </button>
       )}
 
-      {/* Slide Indicators */}
+      {/* Slide Indicators — Reference Image Floating Capsule & Dot Indicator */}
       {total > 1 && (
-        <div className="absolute bottom-5 sm:bottom-7 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+        <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 sm:gap-2">
           {slides.map((_, i) => (
             <button
               key={i}
@@ -213,8 +211,8 @@ export default function HeroCarousel({ initialBanners }: HeroCarouselProps) {
               aria-label={`Go to slide ${i + 1}`}
               className={`transition-all duration-300 rounded-full ${
                 current === i
-                  ? "w-8 h-2 bg-white shadow-md"
-                  : "w-2 h-2 bg-white/50 hover:bg-white/80"
+                  ? "w-6 sm:w-8 h-1.5 sm:h-2 bg-white shadow-md"
+                  : "w-1.5 sm:w-2 h-1.5 sm:h-2 bg-white/60 hover:bg-white"
               }`}
             />
           ))}

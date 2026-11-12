@@ -19,7 +19,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Filter,
-} from "lucide-react";
+} from "@/components/ui/icon";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

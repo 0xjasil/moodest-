@@ -49,7 +49,9 @@ export interface AuthContextValue {
     email: string,
     password: string,
     firstName?: string,
-    lastName?: string
+    lastName?: string,
+    otp?: string,
+    verificationToken?: string
   ): Promise<void>;
   logout(): void;
   me(): Promise<void>;
@@ -126,6 +128,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   /* Auto-login on mount by fetching current user if token exists */
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    const handleAuthCleared = () => {
+      dispatch({ type: "LOGOUT" });
+    };
+    window.addEventListener("moryelle:auth-cleared", handleAuthCleared);
+
     const storedToken = localStorage.getItem(ACCESS_TOKEN_KEY);
     const storedRefreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
 
@@ -133,15 +141,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       (async () => {
         try {
           const user = await authAPI.me();
+          const latestToken =
+            localStorage.getItem(ACCESS_TOKEN_KEY) || storedToken;
+          const latestRefreshToken =
+            localStorage.getItem(REFRESH_TOKEN_KEY) || storedRefreshToken || "";
           dispatch({
             type: "LOGIN_SUCCESS",
             user,
-            token: storedToken,
-            refreshToken: storedRefreshToken || "",
+            token: latestToken,
+            refreshToken: latestRefreshToken,
           });
         } catch {
           // Token invalid or refresh failed
-          clearAuthTokens();
+          clearAuthTokens(false);
           dispatch({ type: "LOGOUT" });
         } finally {
           dispatch({ type: "SET_LOADING", isLoading: false });
@@ -150,19 +162,53 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } else {
       dispatch({ type: "SET_LOADING", isLoading: false });
     }
+
+    return () => {
+      window.removeEventListener("moryelle:auth-cleared", handleAuthCleared);
+    };
   }, []);
+
+  const extractTokens = (payload: {
+    access_token?: string;
+    accessToken?: string;
+    refresh_token?: string;
+    refreshToken?: string;
+    data?: {
+      access_token?: string;
+      accessToken?: string;
+      refresh_token?: string;
+      refreshToken?: string;
+    };
+  }) => {
+    const accessToken =
+      payload.access_token ||
+      payload.accessToken ||
+      payload.data?.access_token ||
+      payload.data?.accessToken ||
+      "";
+    const refreshToken =
+      payload.refresh_token ||
+      payload.refreshToken ||
+      payload.data?.refresh_token ||
+      payload.data?.refreshToken ||
+      "";
+    return { accessToken, refreshToken };
+  };
 
   const login = useCallback(async (email: string, password: string) => {
     dispatch({ type: "LOGIN_START" });
     try {
-      const { access_token, refresh_token } = await authAPI.login(
-        email,
-        password
-      );
+      const response = await authAPI.login(email, password);
+      const { accessToken, refreshToken } = extractTokens(response);
+      if (!accessToken) {
+        throw new Error("Authentication response did not include an access token");
+      }
 
       if (typeof window !== "undefined") {
-        localStorage.setItem(ACCESS_TOKEN_KEY, access_token);
-        localStorage.setItem(REFRESH_TOKEN_KEY, refresh_token);
+        localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+        if (refreshToken) {
+          localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+        }
       }
 
       // Fetch user profile from /api/users/me
@@ -171,11 +217,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       dispatch({
         type: "LOGIN_SUCCESS",
         user,
-        token: access_token,
-        refreshToken: refresh_token,
+        token: accessToken,
+        refreshToken,
       });
     } catch (error) {
-      clearAuthTokens();
+      clearAuthTokens(false);
       const message =
         error instanceof Error ? error.message : "Login failed";
       dispatch({ type: "LOGIN_ERROR", error: message });
@@ -188,14 +234,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email: string,
       password: string,
       firstName?: string,
-      lastName?: string
+      lastName?: string,
+      otp?: string,
+      verificationToken?: string
     ) => {
       dispatch({ type: "LOGIN_START" });
       try {
-        await authAPI.register(email, password, firstName, lastName);
-        // Automatically log in after registration
-        await login(email, password);
+        const response = await authAPI.register(
+          email,
+          password,
+          firstName,
+          lastName,
+          otp,
+          verificationToken
+        );
+        const { accessToken, refreshToken } = extractTokens(response);
+        if (accessToken) {
+          if (typeof window !== "undefined") {
+            localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+            if (refreshToken) {
+              localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+            }
+          }
+          const user = await authAPI.me();
+          dispatch({
+            type: "LOGIN_SUCCESS",
+            user,
+            token: accessToken,
+            refreshToken,
+          });
+        } else {
+          await login(email, password);
+        }
       } catch (error) {
+        clearAuthTokens(false);
         const message =
           error instanceof Error ? error.message : "Registration failed";
         dispatch({ type: "LOGIN_ERROR", error: message });
@@ -206,8 +278,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const logout = useCallback(() => {
-    clearAuthTokens();
+    const refreshToken =
+      typeof window !== "undefined"
+        ? localStorage.getItem(REFRESH_TOKEN_KEY) || undefined
+        : undefined;
+    clearAuthTokens(false);
     dispatch({ type: "LOGOUT" });
+    authAPI.logout(refreshToken).catch(() => {});
   }, []);
 
   const me = useCallback(async () => {

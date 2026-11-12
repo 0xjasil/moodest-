@@ -52,7 +52,11 @@ export default function Home({
         <NewArrivalsSection initialProducts={initialProducts} />
 
         {/* 3. Small Gallery Section — Full Viewport Width */}
-        <EditorialGalleryBanner />
+        <EditorialGalleryBanner
+          initialBanners={initialBanners}
+          initialCategories={initialCategories}
+          initialProducts={initialProducts}
+        />
 
         {/* 4. Trending Now Section — With Discover More Link */}
         <TrendingNowSection initialProducts={initialProducts} />

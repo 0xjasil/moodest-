@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAddress, type Address } from '@/context/AddressContext';
+import { useAuth } from '@/context/AuthContext';
 
 interface AddressFormProps {
   address?: Address;
@@ -11,13 +12,14 @@ interface AddressFormProps {
 
 export default function AddressForm({ address, onSuccess, onCancel }: AddressFormProps) {
   const { createAddress, updateAddress, isLoading, error, clearError } = useAddress();
+  const { user } = useAuth();
 
   const [formData, setFormData] = useState({
-    name: address?.name || '',
-    phone: address?.phone || '',
-    email: address?.email || '',
-    addressLine1: address?.addressLine1 || '',
-    addressLine2: address?.addressLine2 || '',
+    name: address?.name || address?.fullName || '',
+    phone: address?.phone || user?.phone || '',
+    email: address?.email || user?.email || '',
+    addressLine1: address?.addressLine1 || address?.line1 || '',
+    addressLine2: address?.addressLine2 || address?.line2 || '',
     city: address?.city || '',
     state: address?.state || '',
     pincode: address?.pincode || '',
@@ -96,18 +98,22 @@ export default function AddressForm({ address, onSuccess, onCancel }: AddressFor
 
   const displayError = localError || error;
 
+  const inputClass =
+    'w-full px-3.5 py-2.5 bg-mb-bg border border-mb-border rounded-[8px] text-sm text-mb-text placeholder:text-mb-muted focus:border-mb-primary focus:outline-none focus:ring-1 focus:ring-mb-accent transition-colors';
+  const labelClass = 'block text-xs font-semibold uppercase tracking-[0.06em] text-mb-body mb-1.5';
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {displayError && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-700">{displayError}</p>
+        <div className="p-3 bg-mb-error/10 border border-mb-error/30 rounded-[8px]">
+          <p className="text-sm text-mb-error font-medium">{displayError}</p>
         </div>
       )}
 
       <div className="grid md:grid-cols-2 gap-4">
         {/* Name */}
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-[#000000] mb-1.5">
+          <label htmlFor="name" className={labelClass}>
             Full Name *
           </label>
           <input
@@ -118,13 +124,13 @@ export default function AddressForm({ address, onSuccess, onCancel }: AddressFor
             value={formData.name}
             onChange={handleChange}
             placeholder="Enter full name"
-            className="w-full px-3 py-2 border border-[#CDD3D8] rounded-lg focus:border-[#E80071] focus:outline-none focus:ring-1 focus:ring-[#E80071]"
+            className={inputClass}
           />
         </div>
 
         {/* Phone */}
         <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-[#000000] mb-1.5">
+          <label htmlFor="phone" className={labelClass}>
             Phone Number *
           </label>
           <input
@@ -136,14 +142,14 @@ export default function AddressForm({ address, onSuccess, onCancel }: AddressFor
             onChange={handleChange}
             placeholder="10-digit mobile number"
             maxLength={10}
-            className="w-full px-3 py-2 border border-[#CDD3D8] rounded-lg focus:border-[#E80071] focus:outline-none focus:ring-1 focus:ring-[#E80071]"
+            className={inputClass}
           />
         </div>
       </div>
 
       {/* Email */}
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-[#000000] mb-1.5">
+        <label htmlFor="email" className={labelClass}>
           Email Address *
         </label>
         <input
@@ -154,13 +160,13 @@ export default function AddressForm({ address, onSuccess, onCancel }: AddressFor
           value={formData.email}
           onChange={handleChange}
           placeholder="your@email.com"
-          className="w-full px-3 py-2 border border-[#CDD3D8] rounded-lg focus:border-[#E80071] focus:outline-none focus:ring-1 focus:ring-[#E80071]"
+          className={inputClass}
         />
       </div>
 
       {/* Address Line 1 */}
       <div>
-        <label htmlFor="addressLine1" className="block text-sm font-medium text-[#000000] mb-1.5">
+        <label htmlFor="addressLine1" className={labelClass}>
           Address Line 1 *
         </label>
         <input
@@ -171,13 +177,13 @@ export default function AddressForm({ address, onSuccess, onCancel }: AddressFor
           value={formData.addressLine1}
           onChange={handleChange}
           placeholder="House No., Building Name"
-          className="w-full px-3 py-2 border border-[#CDD3D8] rounded-lg focus:border-[#E80071] focus:outline-none focus:ring-1 focus:ring-[#E80071]"
+          className={inputClass}
         />
       </div>
 
       {/* Address Line 2 */}
       <div>
-        <label htmlFor="addressLine2" className="block text-sm font-medium text-[#000000] mb-1.5">
+        <label htmlFor="addressLine2" className={labelClass}>
           Address Line 2 (Optional)
         </label>
         <input
@@ -187,14 +193,14 @@ export default function AddressForm({ address, onSuccess, onCancel }: AddressFor
           value={formData.addressLine2}
           onChange={handleChange}
           placeholder="Road name, Area, Colony"
-          className="w-full px-3 py-2 border border-[#CDD3D8] rounded-lg focus:border-[#E80071] focus:outline-none focus:ring-1 focus:ring-[#E80071]"
+          className={inputClass}
         />
       </div>
 
       <div className="grid md:grid-cols-3 gap-4">
         {/* City */}
         <div>
-          <label htmlFor="city" className="block text-sm font-medium text-[#000000] mb-1.5">
+          <label htmlFor="city" className={labelClass}>
             City *
           </label>
           <input
@@ -205,13 +211,13 @@ export default function AddressForm({ address, onSuccess, onCancel }: AddressFor
             value={formData.city}
             onChange={handleChange}
             placeholder="City"
-            className="w-full px-3 py-2 border border-[#CDD3D8] rounded-lg focus:border-[#E80071] focus:outline-none focus:ring-1 focus:ring-[#E80071]"
+            className={inputClass}
           />
         </div>
 
         {/* State */}
         <div>
-          <label htmlFor="state" className="block text-sm font-medium text-[#000000] mb-1.5">
+          <label htmlFor="state" className={labelClass}>
             State *
           </label>
           <input
@@ -222,13 +228,13 @@ export default function AddressForm({ address, onSuccess, onCancel }: AddressFor
             value={formData.state}
             onChange={handleChange}
             placeholder="State"
-            className="w-full px-3 py-2 border border-[#CDD3D8] rounded-lg focus:border-[#E80071] focus:outline-none focus:ring-1 focus:ring-[#E80071]"
+            className={inputClass}
           />
         </div>
 
         {/* Pincode */}
         <div>
-          <label htmlFor="pincode" className="block text-sm font-medium text-[#000000] mb-1.5">
+          <label htmlFor="pincode" className={labelClass}>
             Pincode *
           </label>
           <input
@@ -240,14 +246,14 @@ export default function AddressForm({ address, onSuccess, onCancel }: AddressFor
             onChange={handleChange}
             placeholder="6-digit pincode"
             maxLength={6}
-            className="w-full px-3 py-2 border border-[#CDD3D8] rounded-lg focus:border-[#E80071] focus:outline-none focus:ring-1 focus:ring-[#E80071]"
+            className={inputClass}
           />
         </div>
       </div>
 
       {/* Type */}
       <div>
-        <label htmlFor="type" className="block text-sm font-medium text-[#000000] mb-1.5">
+        <label htmlFor="type" className={labelClass}>
           Address Type *
         </label>
         <select
@@ -255,7 +261,7 @@ export default function AddressForm({ address, onSuccess, onCancel }: AddressFor
           name="type"
           value={formData.type}
           onChange={handleChange}
-          className="w-full px-3 py-2 border border-[#CDD3D8] rounded-lg focus:border-[#E80071] focus:outline-none focus:ring-1 focus:ring-[#E80071]"
+          className={inputClass}
         >
           <option value="HOME">Home</option>
           <option value="WORK">Work</option>
@@ -264,31 +270,31 @@ export default function AddressForm({ address, onSuccess, onCancel }: AddressFor
       </div>
 
       {/* Set as Default */}
-      <label className="flex items-center gap-2 p-3 border border-[#CDD3D8] rounded-lg hover:bg-[#F4F4F4] cursor-pointer transition-colors">
+      <label className="flex items-center gap-2.5 p-3 bg-mb-bg border border-mb-border rounded-[8px] hover:border-mb-accent cursor-pointer transition-colors">
         <input
           type="checkbox"
           name="isDefault"
           checked={formData.isDefault}
           onChange={handleChange}
-          className="w-4 h-4 rounded border-[#CDD3D8]"
+          className="w-4 h-4 rounded border-mb-border accent-mb-primary"
         />
-        <span className="text-sm font-medium text-[#000000]">Set as default address</span>
+        <span className="text-sm font-medium text-mb-text">Set as default address</span>
       </label>
 
       {/* Actions */}
-      <div className="flex gap-3 pt-4">
+      <div className="flex gap-3 pt-2">
         <button
           type="submit"
           disabled={isLoading}
-          className="flex-1 py-2.5 bg-[#E80071] text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-50 transition-opacity"
+          className="flex-1 py-2.5 bg-mb-primary hover:bg-mb-primary-hover text-mb-bg text-sm font-semibold rounded-[10px] disabled:opacity-50 transition-colors"
         >
-          {isLoading ? 'Saving...' : address ? 'Update Address' : 'Add Address'}
+          {isLoading ? 'Saving...' : address ? 'Update Address' : 'Save Address'}
         </button>
         <button
           type="button"
           onClick={onCancel}
           disabled={isLoading}
-          className="flex-1 py-2.5 border border-[#CDD3D8] text-[#000000] font-medium rounded-lg hover:bg-[#F4F4F4] disabled:opacity-50 transition-colors"
+          className="flex-1 py-2.5 border border-mb-border text-mb-text text-sm font-semibold rounded-[10px] hover:bg-mb-bg disabled:opacity-50 transition-colors"
         >
           Cancel
         </button>

@@ -15,7 +15,7 @@ import {
   Edit,
   MoreVertical,
   Trash2,
-} from "lucide-react";
+} from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";

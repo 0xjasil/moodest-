@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { MapPin, Plus, Search } from "lucide-react";
+import { MapPin, Plus, Search } from "@/components/ui/icon";
 
 const initialLocations = [
   {

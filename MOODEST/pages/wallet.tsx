@@ -8,17 +8,17 @@ import Footer from "@/components/Footer";
 
 export default function WalletPage() {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { wallet, transactions, isLoading, error, fetchWallet, clearError } = useWallet();
 
   const [showAddMoneyInfo, setShowAddMoneyInfo] = useState(false);
 
   // Redirect if not logged in
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/login");
+    if (!authLoading && !isAuthenticated) {
+      router.push("/login?redirect=/wallet");
     }
-  }, [isAuthenticated, router]);
+  }, [authLoading, isAuthenticated, router]);
 
   // Fetch wallet on mount
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function WalletPage() {
 
 
 
-  if (!isAuthenticated) {
+  if (authLoading || !isAuthenticated) {
     return null; // Redirect is in progress
   }
 

@@ -10,15 +10,15 @@ import {
   CardHeader, 
   CardTitle 
 } from '@/components/ui/card';
-import { 
-  Pencil, 
-  Trash2, 
-  Loader2, 
-  Boxes, 
+import {
+  Pencil,
+  Trash2,
+  Loader2,
+  Boxes,
   IndianRupee,
   Info,
-  ImageIcon
-} from 'lucide-react';
+  Image as ImageIcon,
+} from "@/components/ui/icon";
 import { toast } from 'sonner';
 import { ProductDetail, VariantDetail, AttributeWithValues } from '@/types/product';
 import { rupee } from '@/constants/values';

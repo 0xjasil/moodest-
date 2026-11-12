@@ -1,15 +1,23 @@
-import {
-  Home,
-  ShoppingCart,
-  Tag,
-  Users,
-  Megaphone,
-  BarChart3,
-  ScrollText,
-  Settings,
-  FileText,
-  type LucideIcon,
-} from "lucide-react";
+import React from "react";
+import { Icon } from "@iconify/react";
+
+export type IconComponent = React.ComponentType<{ className?: string; [key: string]: any }>;
+
+const makeIcon = (iconName: string): IconComponent => {
+  return function NavIcon({ className = "size-5", ...props }: { className?: string; [key: string]: any }) {
+    return React.createElement(Icon, { icon: iconName, className, ...props });
+  };
+};
+
+const Home = makeIcon("lucide:home");
+const ShoppingCart = makeIcon("lucide:shopping-cart");
+const Tag = makeIcon("lucide:tag");
+const Users = makeIcon("lucide:users");
+const Megaphone = makeIcon("lucide:megaphone");
+const BarChart3 = makeIcon("lucide:bar-chart-3");
+const ScrollText = makeIcon("lucide:scroll-text");
+const Settings = makeIcon("lucide:settings");
+const FileText = makeIcon("lucide:file-text");
 
 export type Role =
   | "super_admin"
@@ -35,7 +43,7 @@ export interface NavItem {
   id: string;
   title: string;
   href?: string;
-  icon: LucideIcon;
+  icon: IconComponent;
   badge?: string | number;
   badgeVariant?: "default" | "warning" | "destructive" | "secondary";
   children?: NavChildItem[];
@@ -81,6 +89,11 @@ export const navigationConfig: NavItem[] = [
         href: "/banners",
       },
       {
+        id: "editorial-gallery",
+        title: "Visual Gallery",
+        href: "/gallery",
+      },
+      {
         id: "discount-coupons",
         title: "Discount Coupons",
         href: "/products/discount-coupons",
@@ -117,33 +130,6 @@ export const navigationConfig: NavItem[] = [
     title: "Customers",
     href: "/customers",
     icon: Users,
-    children: [
-      {
-        id: "all-customers",
-        title: "All Customers",
-        href: "/customers",
-      },
-      {
-        id: "customer-overview",
-        title: "Customer Overview",
-        href: "/customers/overview",
-      },
-      {
-        id: "customer-security",
-        title: "Security",
-        href: "/customers/security",
-      },
-      {
-        id: "customer-address",
-        title: "Address & Billing",
-        href: "/customers/address-billing",
-      },
-      {
-        id: "customer-notifications",
-        title: "Notifications",
-        href: "/customers/notifications",
-      },
-    ],
   },
   {
     id: "marketing",
@@ -168,23 +154,6 @@ export const navigationConfig: NavItem[] = [
     title: "Analytics",
     href: "/analytics",
     icon: BarChart3,
-    children: [
-      {
-        id: "analytics-overview",
-        title: "Overview",
-        href: "/analytics",
-      },
-      {
-        id: "order-reports",
-        title: "Order Reports",
-        href: "/reports/order-reports",
-      },
-      {
-        id: "customer-reports",
-        title: "Customer Reports",
-        href: "/reports/customer-reports",
-      },
-    ],
   },
   {
     id: "logs",

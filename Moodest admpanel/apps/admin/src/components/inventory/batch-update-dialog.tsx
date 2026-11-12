@@ -16,7 +16,7 @@ import { apiFetch } from "@/lib/api-client";
 import { ProductWithRelations } from "./inventory-table";
 import z from "zod";
 import { Button } from "../ui/button";
-import { Edit } from "lucide-react";
+import { Edit } from "@/components/ui/icon";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
 

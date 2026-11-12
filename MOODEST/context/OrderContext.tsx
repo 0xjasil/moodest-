@@ -63,7 +63,7 @@ export interface OrderContextValue {
 
   // Actions
   fetchOrders(): Promise<void>;
-  getOrderById(id: number): Order | null;
+  getOrderById(id: number | string): Order | null;
   placeOrder(
     payloadOrItems:
       | PlaceOrderPayload
@@ -72,7 +72,7 @@ export interface OrderContextValue {
     paymentMethodOrUndefined?: "WALLET" | "CARD" | "RAZORPAY" | "UPI",
     notesOrUndefined?: string
   ): Promise<Order>;
-  cancelOrder(orderId: number): Promise<void>;
+  cancelOrder(orderId: number | string): Promise<void>;
   fetchReviews(productId: number): Promise<Review[]>;
   submitReview(
     productId: number,
@@ -201,8 +201,8 @@ export function OrderProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const getOrderById = useCallback(
-    (id: number): Order | null => {
-      return state.orders.find((o) => o.id === id) || null;
+    (id: number | string): Order | null => {
+      return state.orders.find((o) => String(o.id) === String(id)) || null;
     },
     [state.orders]
   );
@@ -242,7 +242,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     []
   );
 
-  const cancelOrder = useCallback(async (orderId: number) => {
+  const cancelOrder = useCallback(async (orderId: number | string) => {
     try {
       dispatch({ type: "SET_LOADING", isLoading: true });
       const raw = await orderAPI.cancelOrder(orderId);

@@ -9,18 +9,19 @@ import Footer from "@/components/Footer";
 
 export default function NotificationsPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const { notifications, unreadCount, fetchNotifications, markAsRead, deleteNotification, markAllAsRead } = useNotification();
   const [filterType, setFilterType] = useState<"all" | "unread" | "info" | "success" | "warning" | "error">("all");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (authLoading) return;
     if (!user) {
-      router.push("/login");
+      router.push("/login?redirect=/notifications");
       return;
     }
     loadNotifications();
-  }, [user, router]);
+  }, [user, authLoading, router]);
 
   const loadNotifications = async () => {
     setLoading(true);

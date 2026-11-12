@@ -1,7 +1,10 @@
 "use client";
 
 import { FC } from "react";
-import { ToggleLeft, ToggleRight } from "lucide-react";
+import { Icon } from "@iconify/react";
+
+const ToggleLeft = ({ className }: { className?: string }) => <Icon icon="lucide:toggle-left" className={className} />;
+const ToggleRight = ({ className }: { className?: string }) => <Icon icon="lucide:toggle-right" className={className} />;
 
 interface ToggleRowProps {
   label: string;

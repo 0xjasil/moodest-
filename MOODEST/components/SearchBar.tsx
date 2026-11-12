@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
+import { Icon } from '@iconify/react';
 import { useSearch } from '@/context/SearchContext';
 
 interface SearchBarProps {
@@ -86,19 +87,10 @@ export default function SearchBar({
           />
           <button
             type="submit"
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#595E63] hover:text-[#E80071] transition-colors"
+            aria-label="Search"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#595E63] hover:text-[#E80071] transition-colors cursor-pointer"
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <circle cx="8" cy="8" r="6" />
-              <path d="M13 13l4 4" />
-            </svg>
+            <Icon icon="lucide:search" className="w-5 h-5" />
           </button>
         </div>
       </form>

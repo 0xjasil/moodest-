@@ -20,7 +20,7 @@ import {
   CardContent
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search } from "@/components/ui/icon";
 import {
   Table,
   TableHeader,

@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Icon } from '@iconify/react';
 import { useAddress, type Address } from '@/context/AddressContext';
 
 interface AddressListProps {
   onSelect: (address: Address) => void;
-  selectedId?: number;
+  selectedId?: number | string;
 }
 
 export default function AddressList({ onSelect, selectedId }: AddressListProps) {
@@ -16,9 +17,9 @@ export default function AddressList({ onSelect, selectedId }: AddressListProps) 
     isLoading,
   } = useAddress();
 
-  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState<number | string | null>(null);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: number | string) => {
     if (!confirm('Are you sure you want to delete this address?')) return;
 
     setDeletingId(id);
@@ -29,7 +30,7 @@ export default function AddressList({ onSelect, selectedId }: AddressListProps) 
     }
   };
 
-  const handleSetDefault = async (id: number) => {
+  const handleSetDefault = async (id: number | string) => {
     try {
       await setDefaultAddress(id);
     } catch {
@@ -39,84 +40,97 @@ export default function AddressList({ onSelect, selectedId }: AddressListProps) 
 
   if (addresses.length === 0) {
     return (
-      <div className="p-6 bg-[#F4F4F4] border border-[#CDD3D8] rounded-lg text-center">
-        <p className="text-[#595E63]">No addresses added yet</p>
+      <div className="p-6 bg-mb-bg border border-mb-border rounded-[8px] text-center">
+        <p className="text-sm text-mb-body">No addresses added yet</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-3">
-      {addresses.map((address) => (
-        <div
-          key={address.id}
-          className={`p-4 border-2 rounded-lg transition-all cursor-pointer ${
-            selectedId === address.id
-              ? 'border-[#E80071] bg-[#FFF0F6]'
-              : 'border-[#CDD3D8] hover:border-[#E80071] bg-white'
-          }`}
-          onClick={() => onSelect(address)}
-        >
-          <div className="flex justify-between items-start gap-4">
-            <div className="flex-1">
-              {/* Address Type Badge */}
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs font-semibold px-2 py-1 bg-[#E80071] text-white rounded">
-                  {address.type}
-                </span>
-                {address.isDefault && (
-                  <span className="text-xs font-semibold px-2 py-1 bg-green-100 text-green-800 rounded">
-                    DEFAULT
+      {addresses.map((address) => {
+        const isSelected = selectedId === address.id;
+        return (
+          <div
+            key={address.id}
+            className={`p-4 border-2 rounded-[8px] transition-all cursor-pointer ${
+              isSelected
+                ? 'border-mb-primary bg-mb-bg shadow-sm'
+                : 'border-mb-border-lite hover:border-mb-accent bg-mb-surface'
+            }`}
+            onClick={() => onSelect(address)}
+          >
+            <div className="flex justify-between items-start gap-4">
+              <div className="flex-1 min-w-0">
+                {/* Address Type Badge */}
+                <div className="flex flex-wrap items-center gap-2 mb-2">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.06em] px-2.5 py-0.5 bg-mb-primary text-mb-bg rounded-[6px]">
+                    {address.type || 'HOME'}
                   </span>
+                  {address.isDefault && (
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.06em] px-2.5 py-0.5 bg-mb-success/15 text-mb-success rounded-[6px]">
+                      DEFAULT
+                    </span>
+                  )}
+                </div>
+
+                {/* Address Details */}
+                <p className="font-semibold text-mb-text">{address.name || address.fullName}</p>
+                <p className="text-sm text-mb-body mt-1">{address.addressLine1 || address.line1}</p>
+                {(address.addressLine2 || address.line2) && (
+                  <p className="text-sm text-mb-body">{address.addressLine2 || address.line2}</p>
                 )}
+                <p className="text-sm text-mb-body mt-1">
+                  {address.city}, {address.state} {address.pincode}
+                </p>
+                <p className="text-sm text-mb-muted">{address.country || 'India'}</p>
+
+                {/* Contact Details */}
+                <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-mb-muted">
+                  <p className="inline-flex items-center gap-1">
+                    <Icon icon="lucide:phone" className="w-3.5 h-3.5 text-mb-primary" />
+                    <span>{address.phone}</span>
+                  </p>
+                  {address.email && (
+                    <p className="inline-flex items-center gap-1">
+                      <Icon icon="lucide:mail" className="w-3.5 h-3.5 text-mb-primary" />
+                      <span>{address.email}</span>
+                    </p>
+                  )}
+                </div>
               </div>
 
-              {/* Address Details */}
-              <p className="font-semibold text-[#000000]">{address.name}</p>
-              <p className="text-sm text-[#595E63] mt-1">{address.addressLine1}</p>
-              {address.addressLine2 && (
-                <p className="text-sm text-[#595E63]">{address.addressLine2}</p>
-              )}
-              <p className="text-sm text-[#595E63] mt-1">
-                {address.city}, {address.state} {address.pincode}
-              </p>
-              <p className="text-sm text-[#595E63]">{address.country}</p>
-
-              {/* Contact Details */}
-              <div className="mt-2 space-y-0.5 text-xs text-[#595E63]">
-                <p>📞 {address.phone}</p>
-                <p>📧 {address.email}</p>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-col gap-2">
-              {!address.isDefault && (
+              {/* Action Buttons */}
+              <div className="flex flex-col gap-2 shrink-0">
+                {!address.isDefault && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSetDefault(address.id);
+                    }}
+                    disabled={isLoading}
+                    className="text-xs font-semibold px-3 py-1.5 border border-mb-primary text-mb-primary rounded-[8px] hover:bg-mb-primary/5 disabled:opacity-50 transition-colors"
+                  >
+                    Set Default
+                  </button>
+                )}
                 <button
+                  type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleSetDefault(address.id);
+                    handleDelete(address.id);
                   }}
-                  disabled={isLoading}
-                  className="text-xs px-3 py-1.5 border border-[#E80071] text-[#E80071] rounded hover:bg-[#FFF0F6] disabled:opacity-50 transition-colors"
+                  disabled={isLoading || deletingId === address.id}
+                  className="text-xs font-semibold px-3 py-1.5 border border-mb-error/40 text-mb-error rounded-[8px] hover:bg-mb-error/10 disabled:opacity-50 transition-colors"
                 >
-                  Set Default
+                  {deletingId === address.id ? 'Deleting...' : 'Delete'}
                 </button>
-              )}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete(address.id);
-                }}
-                disabled={isLoading || deletingId === address.id}
-                className="text-xs px-3 py-1.5 border border-red-300 text-red-600 rounded hover:bg-red-50 disabled:opacity-50 transition-colors"
-              >
-                {deletingId === address.id ? 'Deleting...' : 'Delete'}
-              </button>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

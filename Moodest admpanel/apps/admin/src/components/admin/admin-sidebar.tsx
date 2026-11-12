@@ -4,12 +4,12 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import {
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Menu,
-} from "lucide-react";
+import { Icon } from "@iconify/react";
+
+const ChevronDown = ({ className }: { className?: string }) => <Icon icon="lucide:chevron-down" className={className} />;
+const ChevronLeft = ({ className }: { className?: string }) => <Icon icon="lucide:chevron-left" className={className} />;
+const ChevronRight = ({ className }: { className?: string }) => <Icon icon="lucide:chevron-right" className={className} />;
+const Menu = ({ className }: { className?: string }) => <Icon icon="lucide:menu" className={className} />;
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import {
   Tooltip,
@@ -48,16 +48,29 @@ export function AdminSidebar({
 }: AdminSidebarProps) {
   const pathname = usePathname();
   const { user } = useAuth();
+  const [customAvatar, setCustomAvatar] = useState<string | null>(null);
+
+  useEffect(() => {
+    const syncAvatar = () => {
+      try {
+        const stored = localStorage.getItem("admin_avatar");
+        if (stored) setCustomAvatar(stored);
+      } catch {}
+    };
+    syncAvatar();
+    window.addEventListener("admin_avatar_updated", syncAvatar);
+    return () => window.removeEventListener("admin_avatar_updated", syncAvatar);
+  }, []);
 
   const displayName = user
     ? [user.firstName, user.lastName].filter(Boolean).join(" ") || user.email.split("@")[0]
-    : "Moodest Admin";
+    : "Modest Admin";
 
   const displayRole = user?.role
     ? user.role.replace("_", " ")
     : "ADMINISTRATOR";
 
-  const userAvatar = user?.avatar || user?.image || null;
+  const userAvatar = customAvatar || user?.avatar || user?.image || "/images/avatars/1.webp";
 
   const {
     isCollapsed,

@@ -34,7 +34,7 @@ import {
   X,
   RefreshCw,
   Edit3,
-} from "lucide-react";
+} from "@/components/ui/icon";
 import {
   Table,
   TableHeader,

@@ -22,10 +22,9 @@ import {
 import { loginSchema } from "@/schema/user-schema";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, IconLogout } from "@/components/ui/icon";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginData } from "@/types/auth";
-import { IconLogout } from "@tabler/icons-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 

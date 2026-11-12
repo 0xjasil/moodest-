@@ -2,7 +2,11 @@
 
 import * as React from "react"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
-import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
+import { Icon } from "@iconify/react"
+
+const CheckIcon = ({ className }: { className?: string }) => <Icon icon="lucide:check" className={className || "size-4"} />;
+const ChevronRightIcon = ({ className }: { className?: string }) => <Icon icon="lucide:chevron-right" className={className || "size-4"} />;
+const CircleIcon = ({ className }: { className?: string }) => <Icon icon="lucide:circle" className={className || "size-2 fill-current"} />;
 
 import { cn } from "@/lib/utils"
 

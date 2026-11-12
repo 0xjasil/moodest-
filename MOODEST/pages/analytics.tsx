@@ -39,7 +39,7 @@ interface AnalyticsData {
 
 export default function Analytics() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [timePeriod, setTimePeriod] = useState<"7days" | "30days" | "90days">(
@@ -48,12 +48,13 @@ export default function Analytics() {
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
 
   useEffect(() => {
+    if (authLoading) return;
     if (!user) {
-      router.push("/login");
+      router.push("/login?redirect=/analytics");
       return;
     }
     fetchAnalytics();
-  }, [user, router, timePeriod]);
+  }, [user, authLoading, router, timePeriod]);
 
   const fetchAnalytics = async () => {
     setLoading(true);

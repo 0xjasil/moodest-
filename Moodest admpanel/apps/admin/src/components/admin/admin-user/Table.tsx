@@ -28,7 +28,7 @@ import {
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, X } from "lucide-react";
+import { CalendarIcon, X } from "@/components/ui/icon";
 import { format } from "date-fns";
 import { API_URL } from "@/lib/api-client";
 

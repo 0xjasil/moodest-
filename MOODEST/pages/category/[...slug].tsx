@@ -374,7 +374,7 @@ export default function Category({
             <div className="flex-1 min-w-0">
 
               {/* Sort selector bar */}
-              <div className="flex items-center justify-between bg-mb-surface border border-mb-border rounded-[8px] px-4 py-2.5 mb-6 shadow-card">
+              <div className="flex items-center justify-between bg-mb-surface border border-mb-border rounded-[2px] px-4 py-2.5 mb-6 shadow-2xs">
                 <div className="text-xs text-mb-muted font-medium">
                   Showing <span className="font-bold text-mb-text">{sorted.length}</span> results
                 </div>
@@ -386,7 +386,7 @@ export default function Category({
                     id="sort-select"
                     value={sortBy}
                     onChange={e => setSortBy(e.target.value)}
-                    className="text-xs font-semibold bg-transparent text-[#5C1A24] border border-mb-border rounded-[6px] px-2.5 py-1.5 focus:outline-none focus:border-[#5C1A24] cursor-pointer">
+                    className="text-xs font-semibold bg-transparent text-mb-primary border border-mb-border rounded-[2px] px-2.5 py-1.5 focus:outline-none focus:border-mb-primary cursor-pointer">
                     {SORT_OPTIONS.map(o => (
                       <option key={o.value} value={o.value}>
                         {o.label}
@@ -397,11 +397,11 @@ export default function Category({
               </div>
 
               {sorted.length === 0 ? (
-                <div className="bg-mb-surface border border-mb-border rounded-[8px] shadow-card p-12 text-center">
+                <div className="bg-mb-surface border border-mb-border rounded-[2px] shadow-2xs p-12 text-center">
                   <p className="text-sm text-mb-body font-medium">No designs found matching your selection.</p>
                   <button
                     onClick={() => { setPriceRangeIndex(0); setMinRating(null); }}
-                    className="inline-block mt-4 text-xs font-semibold bg-[#5C1A24] hover:bg-[#42121B] text-white px-5 py-2.5 rounded-[8px] shadow-sm transition-colors">
+                    className="inline-block mt-4 text-xs font-semibold bg-mb-primary hover:bg-mb-primary-hover text-white px-5 py-2.5 rounded-[2px] shadow-xs transition-colors">
                     Clear Filters
                   </button>
                 </div>

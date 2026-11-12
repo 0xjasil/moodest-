@@ -20,7 +20,7 @@ import {
   MapPin,
   Mail,
   Phone,
-} from "lucide-react";
+} from "@/components/ui/icon";
 import { OrderDetailed, OrderItem } from "@/types/order";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

@@ -7,6 +7,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { Icon } from "@iconify/react";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
@@ -14,35 +15,11 @@ import BrandLogo from "@/components/BrandLogo";
 import { categoryAPI, productAPI, mapBackendProductToProduct } from "@/lib/api";
 import type { Product } from "@/components/ProductCard";
 
-/* ── SVG icons ────────────────────────────────────────────────── */
-const MobileIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
-    <line x1="12" y1="18" x2="12.01" y2="18" />
-  </svg>
-);
-const LocationIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-    <circle cx="12" cy="10" r="3" />
-  </svg>
-);
-const GiftCardIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <polyline points="20 12 20 22 4 22 4 12" />
-    <rect x="2" y="7" width="20" height="5" />
-    <line x1="12" y1="22" x2="12" y2="7" />
-    <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
-    <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
-  </svg>
-);
-const HelpIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <circle cx="12" cy="12" r="10" />
-    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-    <line x1="12" y1="17" x2="12.01" y2="17" />
-  </svg>
-);
+/* ── Iconify icons ────────────────────────────────────────────── */
+const MobileIcon = () => <Icon icon="lucide:smartphone" className="w-3 h-3" />;
+const LocationIcon = () => <Icon icon="lucide:map-pin" className="w-3 h-3" />;
+const GiftCardIcon = () => <Icon icon="lucide:gift" className="w-3 h-3" />;
+const HelpIcon = () => <Icon icon="lucide:help-circle" className="w-3 h-3" />;
 
 /* ── Data — exact Modest Studio labels from snapshots ─────────────────── */
 const TOP_LINKS = [
@@ -69,38 +46,11 @@ const DEFAULT_CATEGORY_NAV: NavCategoryItem[] = [
   { label: "Open Abaya Edit", href: "/category/open-abaya-edit" },
   { label: "All Collections", href: "/category/all", accent: true },
 ];
-const SearchIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-  </svg>
-);
-const BagIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-    <line x1="3" y1="6" x2="21" y2="6" />
-    <path d="M16 10a4 4 0 01-8 0" />
-  </svg>
-);
-const ChevronDown = () => (
-  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <polyline points="6 9 12 15 18 9" />
-  </svg>
-);
-const CloseIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-);
-const MenuIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
-  </svg>
-);
+const SearchIcon = () => <Icon icon="lucide:search" className="w-4 h-4" />;
+const BagIcon = () => <Icon icon="lucide:shopping-bag" className="w-[18px] h-[18px]" />;
+const ChevronDown = () => <Icon icon="lucide:chevron-down" className="w-2.5 h-2.5" />;
+const CloseIcon = () => <Icon icon="lucide:x" className="w-[18px] h-[18px]" />;
+const MenuIcon = () => <Icon icon="lucide:menu" className="w-5 h-5" />;
 
 /* ── Component ────────────────────────────────────────────────── */
 export default function Header() {
@@ -221,7 +171,7 @@ export default function Header() {
         Skip to main content
       </a>
 
-      <header className="sticky top-0 z-50 bg-mb-bg shadow-sm" role="banner">
+      <header className="sticky top-0 z-50 bg-mb-bg shadow-sm w-full max-w-full overflow-x-clip" role="banner">
 
         {/* ══ TIER 1: Announcement + top utility links (hidden on mobile) ═════════ */}
         <div className="hidden sm:block bg-mb-surface text-mb-primary border-b border-mb-border">
@@ -254,17 +204,17 @@ export default function Header() {
         </div>
 
         {/* ══ TIER 2: Logo | Search | Actions ════ */}
-        <div className="bg-mb-bg border-b border-mb-border">
-          <div className="mx-auto max-w-content px-4 md:px-6 h-14 flex items-center gap-4">
+        <div className="bg-mb-bg border-b border-mb-border w-full max-w-full overflow-x-clip">
+          <div className="mx-auto max-w-content px-3 sm:px-4 md:px-6 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4 md:gap-6 lg:gap-8 w-full">
 
-            {/* Logo — brand sheet logo: 40px mobile / 44px desktop */}
+            {/* Logo — brand sheet logo */}
             <Link href="/" aria-label="Modest Studio — homepage"
-              className="flex-shrink-0 mr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded flex items-center">
-              <BrandLogo variant="secondary" className="h-10 md:h-12 w-auto min-w-[140px] max-w-[220px] md:max-w-[260px]" />
+              className="flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded flex items-center">
+              <BrandLogo variant="secondary" className="h-9 sm:h-10 md:h-11 w-auto max-w-[155px] sm:max-w-[185px] md:max-w-[220px] object-contain object-left" />
             </Link>
 
             {/* Search — "Search on Modest Studio" placeholder from snapshot */}
-            <div ref={searchContainerRef} className="flex-1 hidden md:block max-w-2xl mx-auto relative">
+            <div ref={searchContainerRef} className="flex-1 hidden md:block min-w-0 relative">
               <form
                 onSubmit={handleSearchSubmit}
                 className="flex items-center bg-mb-surface border border-mb-border rounded h-9 focus-within:border-mb-accent focus-within:ring-2 focus-within:ring-mb-accent transition-colors"
@@ -344,97 +294,122 @@ export default function Header() {
               )}
             </div>
 
-            {/* Right actions: Sign in + Shopping Bag (exact labels from snapshot) */}
-            <div className="flex items-center gap-1 ml-auto md:ml-0">
-
-              {/* Mobile search */}
-              <button type="button" aria-label="Search"
-                className="md:hidden p-2 text-mb-body hover:text-mb-accent-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded">
-                <SearchIcon />
-              </button>
+            {/* Right actions: Sign in + Wishlist + Shopping Bag */}
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
 
               {/* Authenticated user menu or Sign in link */}
               {isAuthenticated && user ? (
-                <div ref={userDropdownRef} className="relative hidden md:block">
-                  <button
-                    type="button"
-                    onClick={() => setUserDropdownOpen((v) => !v)}
-                    aria-expanded={userDropdownOpen}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-semibold text-mb-text bg-mb-surface hover:bg-mb-surface-hover border border-mb-border rounded shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent"
-                  >
-                    <span className="w-5 h-5 rounded-full bg-mb-primary text-mb-bg text-[10px] font-bold flex items-center justify-center">
-                      {(user.firstName || user.email || "U")[0].toUpperCase()}
-                    </span>
-                    <span className="max-w-[100px] truncate">{user.firstName || "Account"}</span>
-                    <ChevronDown />
-                  </button>
+                <>
+                  {/* Desktop user dropdown */}
+                  <div ref={userDropdownRef} className="relative hidden md:block">
+                    <button
+                      type="button"
+                      onClick={() => setUserDropdownOpen((v) => !v)}
+                      aria-expanded={userDropdownOpen}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-semibold text-mb-text bg-mb-surface hover:bg-mb-surface-hover border border-mb-border rounded-[2px] shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent"
+                    >
+                      <span className="w-5 h-5 rounded-full bg-mb-primary text-mb-bg text-[10px] font-bold flex items-center justify-center">
+                        {(user.firstName || user.email || "U")[0].toUpperCase()}
+                      </span>
+                      <span className="max-w-[100px] truncate">{user.firstName || "Account"}</span>
+                      <ChevronDown />
+                    </button>
 
-                  {userDropdownOpen && (
-                    <div className="absolute right-0 top-full mt-1.5 w-48 bg-white border border-mb-border rounded-md shadow-lg py-1 z-50 text-xs">
-                      <div className="px-3 py-2 border-b border-mb-border-lite">
-                        <p className="font-semibold text-mb-text truncate">{user.firstName ? `${user.firstName} ${user.lastName || ""}`.trim() : (user.email.split('@')[0] || "Customer")}</p>
-                        <p className="text-[11px] text-mb-placeholder truncate">{user.email}</p>
+                    {userDropdownOpen && (
+                      <div className="absolute right-0 top-full mt-1.5 w-48 bg-white border border-mb-border rounded-[2px] shadow-lg py-1 z-50 text-xs">
+                        <div className="px-3 py-2 border-b border-mb-border-lite">
+                          <p className="font-semibold text-mb-text truncate">{user.firstName ? `${user.firstName} ${user.lastName || ""}`.trim() : (user.email.split('@')[0] || "Customer")}</p>
+                          <p className="text-[11px] text-mb-placeholder truncate">{user.email}</p>
+                        </div>
+                        <Link
+                          href="/profile"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="block px-3 py-2 text-mb-text hover:bg-mb-surface hover:text-mb-accent-deep transition-colors"
+                        >
+                          My Profile
+                        </Link>
+                        <Link
+                          href="/orders"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="block px-3 py-2 text-mb-text hover:bg-mb-surface hover:text-mb-accent-deep transition-colors"
+                        >
+                          My Orders
+                        </Link>
+                        <Link
+                          href="/addresses"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="block px-3 py-2 text-mb-text hover:bg-mb-surface hover:text-mb-accent-deep transition-colors"
+                        >
+                          Saved Addresses
+                        </Link>
+                        <Link
+                          href="/wallet"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="block px-3 py-2 text-mb-text hover:bg-mb-surface hover:text-mb-accent-deep transition-colors"
+                        >
+                          My Wallet
+                        </Link>
+                        <Link
+                          href="/wishlist"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="block px-3 py-2 text-mb-text hover:bg-mb-surface hover:text-mb-accent-deep transition-colors"
+                        >
+                          Wishlist ({wishlistCount})
+                        </Link>
+                        <div className="border-t border-mb-border-lite my-1" />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setUserDropdownOpen(false);
+                            logout();
+                            router.push("/");
+                          }}
+                          className="w-full text-left px-3 py-2 text-red-600 hover:bg-red-50 transition-colors font-medium"
+                        >
+                          Sign Out
+                        </button>
                       </div>
-                      <Link
-                        href="/orders"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="block px-3 py-2 text-mb-text hover:bg-mb-surface hover:text-mb-accent-deep transition-colors"
-                      >
-                        My Orders
-                      </Link>
-                      <Link
-                        href="/addresses"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="block px-3 py-2 text-mb-text hover:bg-mb-surface hover:text-mb-accent-deep transition-colors"
-                      >
-                        Saved Addresses
-                      </Link>
-                      <Link
-                        href="/wallet"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="block px-3 py-2 text-mb-text hover:bg-mb-surface hover:text-mb-accent-deep transition-colors"
-                      >
-                        My Wallet
-                      </Link>
-                      <Link
-                        href="/wishlist"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="block px-3 py-2 text-mb-text hover:bg-mb-surface hover:text-mb-accent-deep transition-colors"
-                      >
-                        Wishlist ({wishlistCount})
-                      </Link>
-                      <div className="border-t border-mb-border-lite my-1" />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setUserDropdownOpen(false);
-                          logout();
-                          router.push("/");
-                        }}
-                        className="w-full text-left px-3 py-2 text-red-600 hover:bg-red-50 transition-colors font-medium"
-                      >
-                        Sign Out
-                      </button>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+
+                  {/* Mobile user icon button */}
+                  <Link
+                    href="/profile"
+                    aria-label="My Account"
+                    className="md:hidden p-1.5 text-mb-body hover:text-mb-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded-[2px] flex-shrink-0"
+                  >
+                    <Icon icon="lucide:user" className="w-5 h-5" />
+                  </Link>
+                </>
               ) : (
-                <Link
-                  href="/login"
-                  className="hidden md:inline-flex items-center justify-center px-4 py-1.5 text-[13px] font-semibold text-mb-bg bg-mb-primary hover:bg-mb-primary-hover transition-colors rounded shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent"
-                >
-                  Sign in
-                </Link>
+                <>
+                  {/* Desktop Sign in button */}
+                  <Link
+                    href="/login"
+                    aria-label="Sign in"
+                    className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[13px] font-semibold text-mb-bg bg-mb-primary hover:bg-mb-primary-hover transition-colors rounded-[2px] shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent flex-shrink-0 whitespace-nowrap"
+                  >
+                    <Icon icon="lucide:user" className="w-3.5 h-3.5" />
+                    <span>Sign in</span>
+                  </Link>
+
+                  {/* Mobile Sign in — Suitable user silhouette symbol */}
+                  <Link
+                    href="/login"
+                    aria-label="Sign in"
+                    className="md:hidden p-1.5 text-mb-body hover:text-mb-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded-[2px] flex-shrink-0"
+                  >
+                    <Icon icon="lucide:user" className="w-5 h-5" />
+                    <span className="sr-only">Sign in</span>
+                  </Link>
+                </>
               )}
 
               {/* Wishlist */}
               <Link href="/wishlist"
                 aria-label={`Wishlist, ${wishlistCount} items`}
                 className="relative hidden md:flex p-2 text-mb-body hover:text-mb-accent-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                </svg>
+                <Icon icon="lucide:heart" className="w-[18px] h-[18px]" />
                 {wishlistCount > 0 && (
                   <span aria-hidden="true"
                     className="absolute top-0 right-0 w-4 h-4 bg-mb-primary text-mb-bg text-[9px] font-bold rounded-full flex items-center justify-center">
@@ -446,7 +421,7 @@ export default function Header() {
               {/* Shopping Bag — exact label from snapshot */}
               <Link href="/cart"
                 aria-label={`Shopping Bag, ${itemCount} items`}
-                className="relative flex items-center gap-1.5 p-2 text-mb-body hover:text-mb-accent-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded">
+                className="relative flex items-center gap-1.5 p-1.5 sm:p-2 text-mb-body hover:text-mb-accent-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded flex-shrink-0">
                 <BagIcon />
                 <span aria-hidden="true"
                   className="absolute top-0 right-0 w-4 h-4 bg-mb-primary text-mb-bg text-[9px] font-bold rounded-full flex items-center justify-center">
@@ -460,10 +435,33 @@ export default function Header() {
                 aria-expanded={menuOpen}
                 aria-controls="mobile-nav"
                 onClick={() => setMenuOpen(v => !v)}
-                className="lg:hidden p-2 text-mb-body hover:text-mb-accent-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded">
+                className="lg:hidden p-1.5 sm:p-2 text-mb-body hover:text-mb-accent-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent rounded flex-shrink-0">
                 {menuOpen ? <CloseIcon /> : <MenuIcon />}
               </button>
             </div>
+          </div>
+
+          {/* Mobile Search Capsule Bar (Matches Our Brand Theme) */}
+          <div className="md:hidden px-3.5 pb-2.5 pt-0.5 bg-mb-bg">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="flex items-center bg-mb-surface text-mb-text rounded-full px-3.5 h-10 border border-mb-border shadow-2xs focus-within:ring-2 focus-within:ring-mb-accent/60 transition-all"
+            >
+              <span className="text-mb-primary mr-2 flex-shrink-0">
+                <SearchIcon />
+              </span>
+              <input
+                type="search"
+                name="q"
+                placeholder="What are you looking for?"
+                value={searchVal}
+                onChange={(e) => setSearchVal(e.target.value)}
+                className="flex-1 min-w-0 bg-transparent text-xs text-mb-text placeholder-mb-placeholder outline-none"
+              />
+              <button type="button" aria-label="Visual Search" className="text-mb-primary hover:text-mb-accent-deep transition-colors p-1 flex-shrink-0">
+                <Icon icon="lucide:camera" className="w-4 h-4" />
+              </button>
+            </form>
           </div>
         </div>
 
@@ -600,6 +598,11 @@ export default function Header() {
                       Hi, {user.firstName || user.email.split('@')[0] || "Customer"}
                     </p>
                     <p className="text-[11px] text-mb-placeholder truncate">{user.email}</p>
+                  </li>
+                  <li role="listitem">
+                    <Link href="/profile" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-[13px] font-medium border-b border-mb-border-lite hover:bg-mb-surface">
+                      My Profile
+                    </Link>
                   </li>
                   <li role="listitem">
                     <Link href="/orders" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-[13px] font-medium border-b border-mb-border-lite hover:bg-mb-surface">

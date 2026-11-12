@@ -1,20 +1,25 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import {
-  LayoutDashboard,
-  Tag,
-  Layers,
-  Package,
-  Users,
-  Settings,
-  BarChart3,
-  ShoppingCart,
-  FileText,
-  ChevronRight,
-  Boxes,
-} from "lucide-react";
+import { Icon } from "@iconify/react";
+
+const makeIcon = (iconName: string) => function HeaderIcon({ className }: { className?: string }) {
+  return <Icon icon={iconName} className={className} />;
+};
+
+const LayoutDashboard = makeIcon("lucide:layout-dashboard");
+const Tag = makeIcon("lucide:tag");
+const Layers = makeIcon("lucide:layers");
+const Package = makeIcon("lucide:package");
+const Users = makeIcon("lucide:users");
+const Settings = makeIcon("lucide:settings");
+const BarChart3 = makeIcon("lucide:bar-chart-3");
+const ShoppingCart = makeIcon("lucide:shopping-cart");
+const FileText = makeIcon("lucide:file-text");
+const ChevronRight = makeIcon("lucide:chevron-right");
+const Boxes = makeIcon("lucide:boxes");
 
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import { useAuth } from "@/context/AuthContext";
@@ -87,6 +92,19 @@ const pageMap: Record<string, PageInfo> = {
 export function AdminHeader({ className }: AdminHeaderProps) {
   const pathname = usePathname();
   const { user } = useAuth();
+  const [customAvatar, setCustomAvatar] = useState<string | null>(null);
+
+  useEffect(() => {
+    const syncAvatar = () => {
+      try {
+        const stored = localStorage.getItem("admin_avatar");
+        if (stored) setCustomAvatar(stored);
+      } catch {}
+    };
+    syncAvatar();
+    window.addEventListener("admin_avatar_updated", syncAvatar);
+    return () => window.removeEventListener("admin_avatar_updated", syncAvatar);
+  }, []);
   
   // Get current page info or default to dashboard
   const currentPage = pageMap[pathname] || pageMap["/"];
@@ -95,7 +113,7 @@ export function AdminHeader({ className }: AdminHeaderProps) {
   const displayName = user
     ? [user.firstName, user.lastName].filter(Boolean).join(" ") || user.email.split("@")[0]
     : "Admin";
-  const userAvatar = user?.avatar || user?.image || null;
+  const userAvatar = customAvatar || user?.avatar || user?.image || "/images/avatars/1.webp";
 
   return (
     <header className={cn(

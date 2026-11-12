@@ -10,7 +10,7 @@ const API_SECRET = process.env.CLOUDINARY_API_SECRET || "n2lMcS-svW5-mUh61vt8-4x
  * e.g. https://res.cloudinary.com/dsaegpb70/image/upload/v1794240615/moodest/categories/yjzxcj73fypiu5u4s3v1.jpg
  * => moodest/categories/yjzxcj73fypiu5u4s3v1
  */
-export function extractCloudinaryPublicId(url: string): string | null {
+function extractCloudinaryPublicId(url: string): string | null {
   if (!url || typeof url !== "string" || !url.includes("cloudinary.com")) {
     return null;
   }

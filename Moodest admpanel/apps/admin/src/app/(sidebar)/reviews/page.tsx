@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Loader2, Search, Star } from "lucide-react";
+import { Loader2, Search, Star } from "@/components/ui/icon";
 import { API_URL } from "@/lib/api-client";
 
 interface Review {

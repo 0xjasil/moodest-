@@ -61,34 +61,34 @@ export default function NewArrivalsSection({ initialProducts }: NewArrivalsSecti
   }, []);
 
   return (
-    <section className="w-full px-3 sm:px-6 my-10 sm:my-14" aria-label="New Arrivals">
-      {/* Section Header */}
-      <div className="flex items-center justify-between mb-4 sm:mb-6">
+    <section className="w-full max-w-full px-3 sm:px-6 my-10 overflow-hidden" aria-label="New Arrivals">
+      {/* Section Header with Refined Header Size & Underlined DISCOVER MORE */}
+      <div className="flex items-center justify-between mb-3.5 sm:mb-6">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-mb-text">
+          <h2 className="font-serif text-lg sm:text-2xl md:text-3xl font-bold text-mb-text tracking-tight">
             New Arrivals
           </h2>
-          <p className="text-xs sm:text-sm text-mb-muted mt-0.5">
+          <p className="text-[11px] sm:text-sm text-mb-muted mt-0.5 sm:mt-1">
             Fresh drops and latest additions to the collection
           </p>
         </div>
         <Link
           href="/category/all?sort=newest"
-          className="font-bold text-xs sm:text-sm uppercase tracking-wider text-neutral-900 hover:text-mb-primary transition-colors underline underline-offset-4 decoration-[1.5px]"
+          className="text-[11px] sm:text-sm font-bold uppercase tracking-wider text-mb-text hover:text-mb-primary underline underline-offset-4 decoration-1 decoration-mb-text/80 transition-colors"
         >
           DISCOVER MORE
         </Link>
       </div>
 
-      {/* 2 Rows Grid with Elevated Fashion Card Height */}
+      {/* 2 Rows Grid with Elevated Fashion Card Height: 2 cols on mobile, 4 on desktop */}
       {loading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4.5">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="aspect-[3/4] rounded-[8px] bg-mb-surface border border-mb-border animate-pulse" />
+            <div key={i} className="aspect-[3/4] rounded-[2px] bg-mb-surface border border-mb-border animate-pulse" />
           ))}
         </div>
       ) : products.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4.5">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

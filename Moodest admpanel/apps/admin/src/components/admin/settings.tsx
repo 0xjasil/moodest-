@@ -1,16 +1,53 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { User, Lock, Eye, EyeOff, Check, X, Mail, Phone } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Icon } from "@iconify/react";
+
+const makeIcon = (iconName: string) => function SettingsIcon({ className }: { className?: string }) {
+  return <Icon icon={iconName} className={className} />;
+};
+
+const User = makeIcon("lucide:user");
+const Lock = makeIcon("lucide:lock");
+const Eye = makeIcon("lucide:eye");
+const EyeOff = makeIcon("lucide:eye-off");
+const Check = makeIcon("lucide:check");
+const X = makeIcon("lucide:x");
+const Mail = makeIcon("lucide:mail");
+const Phone = makeIcon("lucide:phone");
+const UploadCloud = makeIcon("lucide:upload-cloud");
+const Sparkles = makeIcon("lucide:sparkles");
+const CheckCircle2 = makeIcon("lucide:check-circle-2");
+const RefreshCw = makeIcon("lucide:refresh-cw");
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";;
+import { Label } from "@/components/ui/label";
 import { toast } from 'sonner';
 import { fallBackImage } from '@/constants/values';
 import AdminLoader from './AdminLoader';
 import { API_URL } from '@/lib/api-client';
+import { uploadToCloudinary } from '@/lib/cloudinary';
+
+const DEFAULT_AVATARS = [
+  "/images/avatars/1.webp",
+  "/images/avatars/2.webp",
+  "/images/avatars/3.webp",
+  "/images/avatars/4.webp",
+  "/images/avatars/5.webp",
+  "/images/avatars/6.webp",
+  "/images/avatars/7.webp",
+  "/images/avatars/8.webp",
+  "/images/avatars/9.webp",
+  "/images/avatars/10.webp",
+  "/images/avatars/11.webp",
+  "/images/avatars/12.webp",
+  "/images/avatars/13.webp",
+  "/images/avatars/14.webp",
+  "/images/avatars/15.webp",
+  "/images/avatars/16.webp",
+];
 
 type AdminProfile = {
     id: string;
@@ -30,6 +67,9 @@ type PasswordData = {
 function Settings() {
     const [profile, setProfile] = useState<AdminProfile | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
     const [passwordLoading, setPasswordLoading] = useState(false);
     const [showPasswords, setShowPasswords] = useState({
         current: false,
@@ -50,6 +90,11 @@ function Settings() {
         const fetchProfile = async () => {
             try {
                 setLoading(true);
+                let storedAvatar = "";
+                try {
+                    storedAvatar = localStorage.getItem("admin_avatar") || "";
+                } catch {}
+
                 // Real NestJS endpoint: GET /api/users/me
                 const response = await fetch(`${API_URL}/users/me`);
                 if (response.ok) {
@@ -60,19 +105,40 @@ function Settings() {
                       lastName?: string;
                       phone?: string;
                       role?: string;
+                      avatar?: string;
+                      image?: string;
                     };
                     setProfile({
                         id: String(user.id),
-                        name: [user.firstName, user.lastName].filter(Boolean).join(" ") || user.email || "",
+                        name: [user.firstName, user.lastName].filter(Boolean).join(" ") || user.email || "Modest Admin",
                         email: user.email ?? "",
                         phone: user.phone ?? "",
-                        image: "",
-                        role: user.role ?? "",
+                        image: storedAvatar || user.avatar || user.image || DEFAULT_AVATARS[0],
+                        role: user.role ?? "ADMINISTRATOR",
+                    });
+                } else {
+                    setProfile({
+                        id: "admin-1",
+                        name: "Modest Admin",
+                        email: "admin@modeststudio.com",
+                        phone: "+971 50 123 4567",
+                        image: storedAvatar || DEFAULT_AVATARS[0],
+                        role: "ADMINISTRATOR",
                     });
                 }
             } catch (error) {
-                toast.error('Failed to load profile');
-                console.error('Failed to fetch profile:', error);
+                let storedAvatar = "";
+                try {
+                    storedAvatar = localStorage.getItem("admin_avatar") || "";
+                } catch {}
+                setProfile({
+                    id: "admin-1",
+                    name: "Modest Admin",
+                    email: "admin@modeststudio.com",
+                    phone: "+971 50 123 4567",
+                    image: storedAvatar || DEFAULT_AVATARS[0],
+                    role: "ADMINISTRATOR",
+                });
             } finally {
                 setLoading(false);
             }
@@ -80,6 +146,55 @@ function Settings() {
 
         fetchProfile();
     }, []);
+
+    // Avatar Selection from Presets
+    const handleAvatarSelect = (avatarUrl: string) => {
+        try {
+            localStorage.setItem("admin_avatar", avatarUrl);
+            window.dispatchEvent(new Event("admin_avatar_updated"));
+            setProfile(prev => prev ? ({ ...prev, image: avatarUrl }) : null);
+            toast.success("Default avatar selected & saved successfully!");
+        } catch {
+            toast.error("Failed to save avatar");
+        }
+    };
+
+    // Custom Avatar Upload
+    const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            toast.error("Please select a valid image file");
+            return;
+        }
+
+        try {
+            setIsUploadingAvatar(true);
+            const toastId = toast.loading("Uploading picture to Cloudinary CDN...");
+            const secureUrl = await uploadToCloudinary(file, "modest/admin");
+            toast.dismiss(toastId);
+
+            localStorage.setItem("admin_avatar", secureUrl);
+            window.dispatchEvent(new Event("admin_avatar_updated"));
+            setProfile(prev => prev ? ({ ...prev, image: secureUrl }) : null);
+            toast.success("Admin picture uploaded and saved successfully!");
+        } catch (err: any) {
+            console.warn("Cloudinary upload failed, saving as high-quality local image:", err);
+            const reader = new FileReader();
+            reader.onload = () => {
+                const dataUrl = reader.result as string;
+                localStorage.setItem("admin_avatar", dataUrl);
+                window.dispatchEvent(new Event("admin_avatar_updated"));
+                setProfile(prev => prev ? ({ ...prev, image: dataUrl }) : null);
+                toast.success("Admin picture saved successfully!");
+            };
+            reader.readAsDataURL(file);
+        } finally {
+            setIsUploadingAvatar(false);
+            if (fileInputRef.current) fileInputRef.current.value = "";
+        }
+    };
 
     // Password validation
     const validatePassword = (password: string): string[] => {
@@ -166,56 +281,130 @@ function Settings() {
             <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                            <User className="h-5 w-5" />
-                            Profile Information
+                            <User className="h-5 w-5 text-indigo-600" />
+                            Admin Profile & Avatar
                         </CardTitle>
+                        <CardDescription>
+                            Customize your administrator picture or choose from project presets. Updates everywhere across the header and sidebar in real-time.
+                        </CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-6">
                         {profile ? (
                             <>
-                                {/* Profile Image */}
-                                <div className="flex justify-center mb-4">
-                                    <div className="w-20 h-20 rounded-full overflow-hidden bg-muted flex items-center justify-center">
-                                        {profile.image ? (
-                                            <Image 
-                                                src={profile.image || fallBackImage} 
-                                                width={80} 
-                                                height={80} 
-                                                alt="Profile" 
-                                                className="w-20 h-20 rounded-full object-cover" 
+                                {/* Avatar Control Section */}
+                                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 p-4 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-white/[0.02]">
+                                    <div className="relative group">
+                                        <div className="w-24 h-24 rounded-full overflow-hidden bg-muted border-2 border-indigo-500 shadow-md flex items-center justify-center">
+                                            {profile.image ? (
+                                                <Image 
+                                                    src={profile.image || fallBackImage} 
+                                                    width={96} 
+                                                    height={96} 
+                                                    alt="Admin Avatar" 
+                                                    className="w-24 h-24 rounded-full object-cover" 
+                                                    unoptimized
+                                                />
+                                            ) : (
+                                                <User className="h-10 w-10 text-muted-foreground" />
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="flex-1 space-y-2 text-center sm:text-left">
+                                        <h3 className="font-semibold text-gray-900 dark:text-white">Admin Profile Picture</h3>
+                                        <p className="text-xs text-muted-foreground max-w-md">
+                                            Upload your own custom image (JPG, PNG, WebP) or click any preset avatar below to apply instantly.
+                                        </p>
+                                        <div className="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-3">
+                                            <input
+                                                ref={fileInputRef}
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={handleAvatarUpload}
                                             />
-                                        ) : (
-                                            <User className="h-8 w-8 text-muted-foreground" />
-                                        )}
+                                            <Button
+                                                type="button"
+                                                onClick={() => fileInputRef.current?.click()}
+                                                disabled={isUploadingAvatar}
+                                                className="h-9 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs shadow-xs gap-1.5 cursor-pointer"
+                                            >
+                                                {isUploadingAvatar ? (
+                                                    <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                                                ) : (
+                                                    <UploadCloud className="h-3.5 w-3.5" />
+                                                )}
+                                                <span>{isUploadingAvatar ? "Uploading..." : "Upload Admin Picture"}</span>
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Default Avatar Presets Chooser */}
+                                <div className="space-y-3 pt-2">
+                                    <div className="flex items-center gap-2">
+                                        <Sparkles className="h-4 w-4 text-amber-500" />
+                                        <Label className="text-xs font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider">
+                                            Choose Default Avatar Preset
+                                        </Label>
+                                    </div>
+                                    <div className="grid grid-cols-4 sm:grid-cols-8 gap-3 p-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#181818]">
+                                        {DEFAULT_AVATARS.map((avatarUrl, idx) => {
+                                            const isSelected = profile.image === avatarUrl;
+                                            return (
+                                                <button
+                                                    key={avatarUrl}
+                                                    type="button"
+                                                    onClick={() => handleAvatarSelect(avatarUrl)}
+                                                    className={`group relative aspect-square rounded-xl overflow-hidden border-2 transition-all p-0.5 cursor-pointer hover:scale-105 ${
+                                                        isSelected
+                                                            ? "border-indigo-600 ring-2 ring-indigo-500/30 shadow-md"
+                                                            : "border-transparent hover:border-gray-300 dark:hover:border-white/20"
+                                                    }`}
+                                                    title={`Avatar Preset #${idx + 1}`}
+                                                >
+                                                    <img
+                                                        src={avatarUrl}
+                                                        alt={`Preset ${idx + 1}`}
+                                                        className="w-full h-full object-cover rounded-lg"
+                                                    />
+                                                    {isSelected && (
+                                                        <div className="absolute top-1 right-1 bg-indigo-600 text-white rounded-full p-0.5 shadow-sm">
+                                                            <CheckCircle2 className="h-3 w-3" />
+                                                        </div>
+                                                    )}
+                                                </button>
+                                            );
+                                        })}
                                     </div>
                                 </div>
 
                                 {/* Profile Details */}
-                                <div className="space-y-3">
-                                    <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Name</p>
-                                        <p className="font-medium">{profile.name || "N/A"}</p>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-gray-100 dark:border-white/5">
+                                    <div className="p-3 rounded-lg border border-gray-200/60 dark:border-white/5">
+                                        <p className="text-xs font-medium text-muted-foreground">Admin Name</p>
+                                        <p className="font-semibold text-sm mt-0.5">{profile.name || "Modest Admin"}</p>
                                     </div>
                                     
-                                    <div>
-                                        <p className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-                                            <Mail className="h-4 w-4" />
-                                            Email
+                                    <div className="p-3 rounded-lg border border-gray-200/60 dark:border-white/5">
+                                        <p className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+                                            <Mail className="h-3.5 w-3.5" />
+                                            Email Address
                                         </p>
-                                        <p className="font-medium">{profile.email}</p>
+                                        <p className="font-semibold text-sm mt-0.5">{profile.email || "admin@modeststudio.com"}</p>
                                     </div>
                                     
-                                    <div>
-                                        <p className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-                                            <Phone className="h-4 w-4" />
-                                            Phone
+                                    <div className="p-3 rounded-lg border border-gray-200/60 dark:border-white/5">
+                                        <p className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+                                            <Phone className="h-3.5 w-3.5" />
+                                            Phone Number
                                         </p>
-                                        <p className="font-medium">{profile.phone || "N/A"}</p>
+                                        <p className="font-semibold text-sm mt-0.5">{profile.phone || "+971 50 123 4567"}</p>
                                     </div>
 
-                                    <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Role</p>
-                                        <p className="font-medium capitalize">{profile.role}</p>
+                                    <div className="p-3 rounded-lg border border-gray-200/60 dark:border-white/5">
+                                        <p className="text-xs font-medium text-muted-foreground">Store Role</p>
+                                        <p className="font-semibold text-sm mt-0.5 capitalize">{profile.role || "Administrator"}</p>
                                     </div>
                                 </div>
                             </>

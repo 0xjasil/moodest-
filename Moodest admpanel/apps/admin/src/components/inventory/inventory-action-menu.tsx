@@ -10,7 +10,7 @@ import {
   ArrowUpRight,
   Edit2,
   MoreHorizontal,
-} from "lucide-react";
+} from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 

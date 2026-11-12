@@ -2,7 +2,9 @@
 
 import * as React from "react"
 import * as SheetPrimitive from "@radix-ui/react-dialog"
-import { XIcon } from "lucide-react"
+import { Icon } from "@iconify/react"
+
+const XIcon = ({ className }: { className?: string }) => <Icon icon="lucide:x" className={className || "size-4"} />;
 
 import { cn } from "@/lib/utils"
 

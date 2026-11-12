@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import Link from "next/link";
+import { Icon } from "@iconify/react";
 import { useProducts } from "@/lib/hooks";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
@@ -45,11 +46,9 @@ export default function HotListProducts() {
         <button
           onClick={() => scroll("left")}
           aria-label="Previous products"
-          className="absolute left-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-mb-bg border border-mb-border text-mb-primary shadow-card flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-mb-surface hover:scale-105"
+          className="absolute left-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-mb-bg border border-mb-border text-mb-primary shadow-card flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-mb-surface hover:scale-105 cursor-pointer"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
-          </svg>
+          <Icon icon="lucide:chevron-left" className="w-5 h-5" />
         </button>
 
         <div
@@ -98,21 +97,12 @@ export default function HotListProducts() {
                         e.preventDefault();
                         toggleWishlist(product);
                       }}
-                      className="absolute top-2.5 right-2.5 z-10 w-7 h-7 rounded-full bg-mb-bg border border-mb-border shadow-sm flex items-center justify-center text-mb-accent hover:text-mb-primary transition-colors hover:scale-110"
+                      className="absolute top-2.5 right-2.5 z-10 w-7 h-7 rounded-full bg-mb-bg border border-mb-border shadow-sm flex items-center justify-center text-mb-accent hover:text-mb-primary transition-colors hover:scale-110 cursor-pointer"
                     >
-                      <svg
-                        className={`w-3.5 h-3.5 ${
-                          wishlisted ? "fill-mb-accent text-mb-accent" : "fill-none stroke-currentColor"
-                        }`}
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"
-                        />
-                      </svg>
+                      <Icon
+                        icon="lucide:heart"
+                        className={`w-3.5 h-3.5 ${wishlisted ? "fill-current" : ""}`}
+                      />
                     </button>
 
                     {/* Image */}
@@ -179,11 +169,9 @@ export default function HotListProducts() {
         <button
           onClick={() => scroll("right")}
           aria-label="Next products"
-          className="absolute right-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-mb-bg border border-mb-border text-mb-primary shadow-card flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-mb-surface hover:scale-105"
+          className="absolute right-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-mb-bg border border-mb-border text-mb-primary shadow-card flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 hover:bg-mb-surface hover:scale-105 cursor-pointer"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
-          </svg>
+          <Icon icon="lucide:chevron-right" className="w-5 h-5" />
         </button>
       </div>
     </section>

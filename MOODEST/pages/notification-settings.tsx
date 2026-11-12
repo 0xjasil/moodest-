@@ -22,7 +22,7 @@ interface NotificationSettings {
 
 export default function NotificationSettings() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const { preferences, fetchPreferences, updatePreferences, isLoading } =
     useNotification();
   const [settings, setSettings] = useState<NotificationSettings>({
@@ -40,12 +40,13 @@ export default function NotificationSettings() {
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   useEffect(() => {
+    if (authLoading) return;
     if (!user) {
-      router.push("/login");
+      router.push("/login?redirect=/notification-settings");
       return;
     }
     loadPreferences();
-  }, [user, router]);
+  }, [user, authLoading, router]);
 
   const loadPreferences = async () => {
     try {

@@ -3,31 +3,35 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Search,
-  ArrowUp,
-  Plus,
-  MoreVertical,
-  Eye,
-  Edit2,
-  Trash2,
-  Smartphone,
-  Radio,
-  Clock,
-  Footprints,
-  Watch,
-  Laptop,
-  Headphones,
-  Armchair,
-  Package,
-  Users,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-  Filter,
-  Check,
-} from "lucide-react";
+import { Icon } from "@iconify/react";
+
+const makeIcon = (iconName: string) => function ProdIcon({ className }: { className?: string }) {
+  return <Icon icon={iconName} className={className} />;
+};
+
+const Search = makeIcon("lucide:search");
+const ArrowUp = makeIcon("lucide:arrow-up");
+const Plus = makeIcon("lucide:plus");
+const MoreVertical = makeIcon("lucide:more-vertical");
+const Eye = makeIcon("lucide:eye");
+const Edit2 = makeIcon("lucide:pencil");
+const Trash2 = makeIcon("lucide:trash-2");
+const Smartphone = makeIcon("lucide:smartphone");
+const Radio = makeIcon("lucide:radio");
+const Clock = makeIcon("lucide:clock");
+const Footprints = makeIcon("lucide:footprints");
+const Watch = makeIcon("lucide:watch");
+const Laptop = makeIcon("lucide:laptop");
+const Headphones = makeIcon("lucide:headphones");
+const Armchair = makeIcon("lucide:armchair");
+const Package = makeIcon("lucide:package");
+const Users = makeIcon("lucide:users");
+const ChevronLeft = makeIcon("lucide:chevron-left");
+const ChevronRight = makeIcon("lucide:chevron-right");
+const ChevronsLeft = makeIcon("lucide:chevrons-left");
+const ChevronsRight = makeIcon("lucide:chevrons-right");
+const Filter = makeIcon("lucide:filter");
+const Check = makeIcon("lucide:check");
 import Checkbox from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

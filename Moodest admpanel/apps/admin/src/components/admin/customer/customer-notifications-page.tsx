@@ -11,7 +11,7 @@ import {
   Tag,
   Save,
   RotateCcw,
-} from "lucide-react";
+} from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { CustomerLayoutFrame } from "./customer-layout-frame";

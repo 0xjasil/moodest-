@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { Icon } from "@iconify/react";
 import { categoryAPI } from "@/lib/api";
 import type { Product } from "@/lib/types";
 
@@ -192,7 +193,7 @@ export default function DiscoverCategories({ initialCategories, initialProducts 
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="flex-shrink-0 w-[46vw] sm:w-[30vw] md:w-[22vw] lg:w-[calc((100%-5*1rem)/6)] aspect-[2/3] rounded-[16px] bg-mb-surface border border-mb-border animate-pulse"
+              className="flex-shrink-0 w-[46vw] sm:w-[30vw] md:w-[22vw] lg:w-[calc((100%-5*1rem)/6)] aspect-[2/3] rounded-[2px] bg-mb-surface border border-mb-border animate-pulse"
             />
           ))}
         </div>
@@ -203,21 +204,21 @@ export default function DiscoverCategories({ initialCategories, initialProducts 
   if (categories.length === 0) return null;
 
   return (
-    <section className="w-full px-3 sm:px-6 my-10 relative group/section" aria-label="Explore Abaya Categories">
-      {/* Header with Clean High-Fashion Typography */}
-      <div className="flex items-center justify-between mb-4 sm:mb-6">
+    <section className="w-full max-w-full px-3 sm:px-6 my-10 relative group/section overflow-hidden" aria-label="Explore Abaya Categories">
+      {/* Header with Dynamic Database Categories Subtitle & Underlined DISCOVER MORE */}
+      <div className="flex items-center justify-between mb-3.5 sm:mb-6">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-mb-text">
+          <h2 className="font-serif text-lg sm:text-2xl md:text-3xl font-bold text-mb-text tracking-tight">
             Shop by Category
           </h2>
-          <p className="text-xs sm:text-sm text-mb-muted mt-0.5">
+          <p className="text-[11px] sm:text-sm text-mb-muted mt-0.5 sm:mt-1">
             Browse our curated collections
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Link
             href="/category/all"
-            className="font-bold text-xs sm:text-sm uppercase tracking-wider text-neutral-900 hover:text-mb-primary transition-colors underline underline-offset-4 decoration-[1.5px]"
+            className="text-[11px] sm:text-sm font-bold uppercase tracking-wider text-mb-text hover:text-mb-primary underline underline-offset-4 decoration-1 decoration-mb-text/80 transition-colors"
           >
             DISCOVER MORE
           </Link>
@@ -229,50 +230,46 @@ export default function DiscoverCategories({ initialCategories, initialProducts 
                 onClick={scrollPrev}
                 disabled={activeIndex === 0}
                 aria-label="Previous categories"
-                className="w-8 h-8 rounded-full bg-mb-surface border border-mb-border text-mb-text hover:bg-mb-primary hover:text-white transition-all flex items-center justify-center disabled:opacity-30 disabled:pointer-events-none shadow-xs"
+                className="w-8 h-8 rounded-full bg-mb-surface border border-mb-border text-mb-text hover:bg-mb-primary hover:text-white transition-all flex items-center justify-center disabled:opacity-30 disabled:pointer-events-none shadow-xs cursor-pointer"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
-                </svg>
+                <Icon icon="lucide:chevron-left" className="w-4 h-4" />
               </button>
               <button
                 type="button"
                 onClick={scrollNext}
                 disabled={activeIndex >= categories.length - 1}
                 aria-label="Next categories"
-                className="w-8 h-8 rounded-full bg-mb-surface border border-mb-border text-mb-text hover:bg-mb-primary hover:text-white transition-all flex items-center justify-center disabled:opacity-30 disabled:pointer-events-none shadow-xs"
+                className="w-8 h-8 rounded-full bg-mb-surface border border-mb-border text-mb-text hover:bg-mb-primary hover:text-white transition-all flex items-center justify-center disabled:opacity-30 disabled:pointer-events-none shadow-xs cursor-pointer"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
-                </svg>
+                <Icon icon="lucide:chevron-right" className="w-4 h-4" />
               </button>
             </div>
           )}
         </div>
       </div>
 
-      {/* Horizontal Scrollable Rail with Snap: Reference Category Cards */}
+      {/* Horizontal Scrollable Rail with Snap: Displays Live Database Categories */}
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory gap-3.5 sm:gap-5 pb-2 -mx-3 px-3 sm:mx-0 sm:px-0"
+        className="flex overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory gap-3.5 sm:gap-4.5 pb-2 -mx-3 px-3 sm:mx-0 sm:px-0"
       >
         {categories.map((cat, idx) => {
           const href = `/category/${cat.slug || cat.id}`;
           return (
             <div
               key={cat.id || cat.slug || idx}
-              className="snap-start flex-shrink-0 w-[54vw] sm:w-[35vw] md:w-[25vw] lg:w-[calc((100%-4*1.25rem)/5)]"
+              className="snap-start flex-shrink-0 w-[46vw] sm:w-[32vw] md:w-[22vw] lg:w-[calc((100%-5*1.125rem)/6)]"
             >
               <Link
                 href={href}
-                className="group block overflow-hidden rounded-[22px] sm:rounded-[26px] bg-mb-surface shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                className="group block overflow-hidden rounded-[2px] bg-mb-surface border border-mb-border shadow-card hover:shadow-dropdown hover:-translate-y-0.5 transition-all duration-300"
               >
-                <div className="relative aspect-[3/4.2] w-full overflow-hidden bg-[#E8DDD0]">
-                  {/* Floating Number Badge (Reference: 01, 02, 03) */}
-                  <span className="absolute top-3 left-3 z-20 px-2.5 py-0.5 rounded-full bg-white/25 backdrop-blur-md text-white font-medium text-xs tracking-wider border border-white/20 shadow-xs">
+                <div className="relative aspect-[2/3] w-full overflow-hidden bg-[#E8DDD0]">
+                  {/* Reference Image Index Pill Badge (01, 02, 03...) */}
+                  <div className="absolute top-2.5 sm:top-3 left-2.5 sm:left-3 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/40 dark:bg-black/40 backdrop-blur-md border border-white/30 flex items-center justify-center text-white text-[11px] sm:text-xs font-semibold shadow-xs">
                     {String(idx + 1).padStart(2, "0")}
-                  </span>
+                  </div>
 
                   {(() => {
                     const dynamicImg = getDynamicCategoryImage(cat, initialProducts);
@@ -294,15 +291,13 @@ export default function DiscoverCategories({ initialCategories, initialProducts 
                     );
                   })()}
 
-                  {/* Bottom Bar: Category Name & Circular Arrow Button */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end justify-between p-3.5 sm:p-4 z-10">
-                    <span className="text-white font-semibold text-sm sm:text-base leading-tight drop-shadow-sm pr-2 truncate">
+                  {/* Reference Image Bottom Layout: Category Title + White Circular Arrow Button */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex items-end justify-between p-3.5 sm:p-4">
+                    <span className="text-white font-serif text-sm sm:text-base font-semibold group-hover:text-[#D29A90] transition-colors drop-shadow-sm leading-tight pr-2">
                       {cat.name}
                     </span>
-                    <div className="w-8 h-8 rounded-full bg-white text-neutral-900 flex items-center justify-center shrink-0 shadow-md transition-transform duration-300 group-hover:translate-x-0.5">
-                      <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-mb-surface text-mb-primary border border-mb-border shadow-md flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                      <Icon icon="lucide:chevron-right" className="w-3.5 h-3.5 text-mb-primary" />
                     </div>
                   </div>
                 </div>
@@ -311,34 +306,6 @@ export default function DiscoverCategories({ initialCategories, initialProducts 
           );
         })}
       </div>
-
-      {/* Manual Dotting Area: Controllable Pagination Dots Below Category Row */}
-      {categories.length > 1 && (
-        <div
-          className="flex items-center justify-center gap-2 mt-5 py-2"
-          role="tablist"
-          aria-label="Category Carousel Pagination Dots"
-        >
-          {categories.map((cat, idx) => {
-            const isActive = activeIndex === idx;
-            return (
-              <button
-                key={cat.id || idx}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                aria-label={`Go to category ${idx + 1}: ${cat.name}`}
-                onClick={() => scrollToCard(idx)}
-                className={`transition-all duration-300 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mb-accent ${
-                  isActive
-                    ? "w-7 h-2 bg-mb-primary shadow-xs"
-                    : "w-2 h-2 bg-mb-border hover:bg-mb-muted/60"
-                }`}
-              />
-            );
-          })}
-        </div>
-      )}
     </section>
   );
 }

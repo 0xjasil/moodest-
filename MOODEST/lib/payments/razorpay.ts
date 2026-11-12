@@ -9,10 +9,14 @@ declare global {
 }
 
 export interface RazorpayOrder {
+  orderId?: string;
   razorpayOrderId: string;
-  razorpayKeyId: string;
+  keyId?: string;
+  razorpayKeyId?: string;
   amount: number;
+  amountInPaise?: number;
   currency?: string;
+  alreadyPaid?: boolean;
 }
 
 export interface RazorpayPaymentSuccess {
@@ -22,13 +26,18 @@ export interface RazorpayPaymentSuccess {
 }
 
 export interface PaymentVerificationRequest {
+  orderId: string;
   razorpayOrderId: string;
   razorpayPaymentId: string;
-  signature: string;
+  razorpaySignature: string;
 }
 
 export interface PaymentVerificationResponse {
-  success: boolean;
+  orderId?: string;
+  status?: string;
+  stockAllocated?: boolean;
+  isDuplicate?: boolean;
+  success?: boolean;
   message?: string;
 }
 
@@ -48,9 +57,14 @@ export async function loadRazorpayScript(): Promise<boolean> {
   if (window.Razorpay) return true;
 
   return new Promise((resolve) => {
-    const existing = document.getElementById("razorpay-checkout-script");
+    const existing = document.getElementById("razorpay-checkout-script") as HTMLScriptElement | null;
     if (existing) {
-      resolve(true);
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
+      existing.addEventListener("load", () => resolve(Boolean(window.Razorpay)), { once: true });
+      existing.addEventListener("error", () => resolve(false), { once: true });
       return;
     }
 
@@ -58,7 +72,7 @@ export async function loadRazorpayScript(): Promise<boolean> {
     script.id = "razorpay-checkout-script";
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
-    script.onload = () => resolve(true);
+    script.onload = () => resolve(Boolean(window.Razorpay));
     script.onerror = () => resolve(false);
     document.body.appendChild(script);
   });
@@ -67,6 +81,9 @@ export async function loadRazorpayScript(): Promise<boolean> {
 export async function openRazorpayCheckout({
   orderId,
   amount,
+  amountInPaise,
+  currency = "INR",
+  keyId,
   name = "Modest Studio",
   description = "Luxury Abaya & Modest Wears",
   prefill = {},
@@ -75,6 +92,9 @@ export async function openRazorpayCheckout({
 }: {
   orderId: string;
   amount: number;
+  amountInPaise?: number;
+  currency?: string;
+  keyId?: string;
   name?: string;
   description?: string;
   prefill?: { name?: string; email?: string; contact?: string };
@@ -88,9 +108,9 @@ export async function openRazorpayCheckout({
   }
 
   const options = {
-    key: getRazorpayKey(),
-    amount: Math.round(amount * 100), // paise
-    currency: "INR",
+    key: keyId && !keyId.includes("placeholder") ? keyId : getRazorpayKey(),
+    amount: amountInPaise ?? Math.round(amount * 100), // paise
+    currency,
     name,
     description,
     image: "/brand/logo-emblem.png",

@@ -37,7 +37,7 @@ import {
   Globe,
   Database,
   Eye,
-} from "lucide-react";
+} from "@/components/ui/icon";
 import { toast } from "sonner";
 import { API_URL } from "@/lib/api-client";
 

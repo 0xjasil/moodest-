@@ -3,20 +3,24 @@
 import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Search,
-  Plus,
-  MoreVertical,
-  Edit,
-  Trash2,
-  PieChart,
-  Home,
-  ChevronRight,
-  ChevronLeft,
-  Upload,
-  Check,
-  Loader2,
-} from "lucide-react";
+import { Icon } from "@iconify/react";
+
+const makeIcon = (iconName: string) => function CatIcon({ className }: { className?: string }) {
+  return <Icon icon={iconName} className={className} />;
+};
+
+const Search = makeIcon("lucide:search");
+const Plus = makeIcon("lucide:plus");
+const MoreVertical = makeIcon("lucide:more-vertical");
+const Edit = makeIcon("lucide:pencil");
+const Trash2 = makeIcon("lucide:trash-2");
+const PieChart = makeIcon("lucide:pie-chart");
+const Home = makeIcon("lucide:home");
+const ChevronRight = makeIcon("lucide:chevron-right");
+const ChevronLeft = makeIcon("lucide:chevron-left");
+const Upload = makeIcon("lucide:upload");
+const Check = makeIcon("lucide:check");
+const Loader2 = makeIcon("lucide:loader-2");
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -90,7 +94,7 @@ export function CommerceoCategoryList() {
                 id: String(c.id),
                 name: c.name,
                 slug: c.slug || c.name.toLowerCase().replace(/\s+/g, "-"),
-                description: c.description || (c.parentId ? `Subcategory of #${c.parentId}` : "Moodest collection category"),
+                description: c.description || (c.parentId ? `Subcategory of #${c.parentId}` : "Modest collection category"),
                 image: c.image || "",
                 totalEarnings: c.totalEarnings || "₹0.00",
                 totalProducts: c.totalProducts || c.productCount || 0,

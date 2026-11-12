@@ -21,26 +21,54 @@ import type {
   Wallet,
   WalletTransaction,
   PaymentIntentResult,
+  VerifyPaymentPayload,
+  VerifyPaymentResult,
   Banner,
 } from "./types";
 
 /* ── Product Mapping Helper ──────────────────────────────────── */
 
 export function mapBackendProductToProduct(item: BackendProduct): Product {
-  const defaultPrice = item.basePrice || 0;
+  const firstVariant = item.variants?.[0];
+  const variantMrp = firstVariant?.price != null ? Number(firstVariant.price) : 0;
+  const variantOffer =
+    firstVariant?.offerPrice != null ? Number(firstVariant.offerPrice) : 0;
+  const rawPrice = Number((item as any).price ?? 0);
+  const rawBasePrice = Number(item.basePrice ?? 0);
+
+  const defaultPrice = rawBasePrice || variantMrp || rawPrice || 0;
   const discountPct = item.discountPct ?? 0;
+
   const effectivePrice =
-    discountPct > 0
+    rawPrice > 0
+      ? rawPrice
+      : variantOffer > 0
+      ? variantOffer
+      : discountPct > 0 && defaultPrice > 0
       ? Math.round(defaultPrice * (1 - discountPct / 100))
       : defaultPrice;
+
+  const computedOriginal =
+    (item as any).originalPrice && Number((item as any).originalPrice) > effectivePrice
+      ? Number((item as any).originalPrice)
+      : defaultPrice > effectivePrice
+      ? defaultPrice
+      : undefined;
+
+  const computedDiscount =
+    discountPct > 0
+      ? discountPct
+      : computedOriginal && effectivePrice > 0
+      ? Math.round(((computedOriginal - effectivePrice) / computedOriginal) * 100)
+      : undefined;
 
   return {
     id: String(item.id),
     backendId: item.id,
     name: item.name,
     price: effectivePrice,
-    originalPrice: discountPct > 0 ? defaultPrice : undefined,
-    discount: discountPct > 0 ? discountPct : undefined,
+    originalPrice: computedOriginal,
+    discount: computedDiscount,
     rating: item.avgRating ?? 4.5,
     reviewCount: item.reviewCount ?? (item.reviews?.length ?? 0),
     image: item.images?.[0] || "/placeholder.png",
@@ -63,14 +91,39 @@ export function mapBackendProductToProduct(item: BackendProduct): Product {
 
 /* ── Auth API ─────────────────────────────────────────────────── */
 
+export interface AuthTokenResponse {
+  access_token?: string;
+  accessToken?: string;
+  refresh_token?: string;
+  refreshToken?: string;
+  user?: User;
+  data?: {
+    access_token?: string;
+    accessToken?: string;
+    refresh_token?: string;
+    refreshToken?: string;
+    user?: User;
+  };
+}
+
 export const authAPI = {
   login: async (email: string, password: string) => {
-    return apiFetchJson<{
-      access_token: string;
-      refresh_token: string;
-    }>("/api/auth/login", {
+    return apiFetchJson<AuthTokenResponse>("/api/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
+    });
+  },
+
+  sendVerificationOtp: async (email: string) => {
+    return apiFetchJson<{
+      message?: string;
+      verificationToken?: string;
+      expiresInSeconds?: number;
+      data?: { verificationToken?: string; expiresInSeconds?: number };
+    }>("/api/auth/send-verification-otp", {
+      method: "POST",
+      skipRefresh: true,
+      body: JSON.stringify({ email }),
     });
   },
 
@@ -78,18 +131,46 @@ export const authAPI = {
     email: string,
     password: string,
     firstName?: string,
-    lastName?: string
+    lastName?: string,
+    otp?: string,
+    verificationToken?: string
   ) => {
-    return apiFetchJson<User>("/api/auth/register", {
+    const fullName = [firstName, lastName]
+      .map((part) => part?.trim())
+      .filter(Boolean)
+      .join(" ");
+    return apiFetchJson<AuthTokenResponse>("/api/auth/register", {
       method: "POST",
-      body: JSON.stringify({ email, password, firstName, lastName }),
+      body: JSON.stringify({
+        email,
+        password,
+        ...(fullName ? { name: fullName } : {}),
+        ...(otp ? { otp } : {}),
+        ...(verificationToken ? { verificationToken } : {}),
+      }),
     });
   },
 
   refresh: async (refreshToken: string) => {
-    return apiFetchJson<{ access_token: string }>("/api/auth/refresh", {
+    return apiFetchJson<AuthTokenResponse>("/api/auth/refresh", {
       method: "POST",
-      body: JSON.stringify({ refresh_token: refreshToken }),
+      body: JSON.stringify({ refreshToken }),
+    });
+  },
+
+  logout: async (refreshToken?: string) => {
+    return apiFetchJson<{ message?: string }>("/api/auth/logout", {
+      method: "POST",
+      skipRefresh: true,
+      body: JSON.stringify(refreshToken ? { refreshToken } : {}),
+    });
+  },
+
+  forgotPassword: async (email: string) => {
+    return apiFetchJson<{ message?: string }>("/api/auth/forgot-password", {
+      method: "POST",
+      skipRefresh: true,
+      body: JSON.stringify({ email }),
     });
   },
 
@@ -209,21 +290,21 @@ export const cartAPI = {
     return apiFetchJson<Cart>("/api/cart");
   },
 
-  addItem: async (variantId: number, quantity: number = 1): Promise<CartItem> => {
+  addItem: async (variantId: number | string, quantity: number = 1): Promise<CartItem> => {
     return apiFetchJson<CartItem>("/api/cart/items", {
       method: "POST",
-      body: JSON.stringify({ variantId, quantity }),
+      body: JSON.stringify({ variantId: String(variantId), quantity }),
     });
   },
 
-  updateItem: async (id: number, quantity: number): Promise<CartItem> => {
+  updateItem: async (id: number | string, quantity: number): Promise<CartItem> => {
     return apiFetchJson<CartItem>(`/api/cart/items/${id}`, {
       method: "PATCH",
       body: JSON.stringify({ quantity }),
     });
   },
 
-  removeItem: async (id: number): Promise<{ message?: string }> => {
+  removeItem: async (id: number | string): Promise<{ message?: string }> => {
     return apiFetchJson<{ message?: string }>(`/api/cart/items/${id}`, {
       method: "DELETE",
     });
@@ -241,7 +322,7 @@ export const cartAPI = {
     });
   },
 
-  releaseReservation: async (id: number): Promise<{ message?: string }> => {
+  releaseReservation: async (id: number | string): Promise<{ message?: string }> => {
     return apiFetchJson<{ message?: string }>(`/api/cart/reserve/${id}`, {
       method: "DELETE",
     });
@@ -251,10 +332,11 @@ export const cartAPI = {
 /* ── Order API ────────────────────────────────────────────────── */
 
 export interface PlaceOrderPayload {
-  addressId: number;
-  reservationId: number;
+  addressId: number | string;
+  reservationId?: number | string;
   couponCode?: string;
   walletAmountUsed?: number;
+  paymentMethod?: "COD" | "RAZORPAY";
 }
 
 export const orderAPI = {
@@ -290,7 +372,7 @@ export const orderAPI = {
 
 export const paymentAPI = {
   createIntent: async (
-    orderId: number,
+    orderId: number | string,
     currency?: string
   ): Promise<PaymentIntentResult> => {
     return apiFetchJson<PaymentIntentResult>("/api/payments/create-intent", {
@@ -300,12 +382,19 @@ export const paymentAPI = {
   },
 
   retry: async (
-    orderId: number,
+    orderId: number | string,
     currency?: string
   ): Promise<PaymentIntentResult> => {
     return apiFetchJson<PaymentIntentResult>(`/api/payments/retry/${orderId}`, {
       method: "POST",
       body: JSON.stringify({ currency }),
+    });
+  },
+
+  verify: async (payload: VerifyPaymentPayload): Promise<VerifyPaymentResult> => {
+    return apiFetchJson<VerifyPaymentResult>("/api/payments/verify", {
+      method: "POST",
+      body: JSON.stringify(payload),
     });
   },
 };
@@ -335,20 +424,20 @@ export const addressAPI = {
     });
   },
 
-  update: async (id: number, dto: Partial<CreateAddressDto>): Promise<Address> => {
+  update: async (id: number | string, dto: Partial<CreateAddressDto>): Promise<Address> => {
     return apiFetchJson<Address>(`/api/users/me/addresses/${id}`, {
       method: "PATCH",
       body: JSON.stringify(dto),
     });
   },
 
-  delete: async (id: number): Promise<{ message?: string }> => {
+  delete: async (id: number | string): Promise<{ message?: string }> => {
     return apiFetchJson<{ message?: string }>(`/api/users/me/addresses/${id}`, {
       method: "DELETE",
     });
   },
 
-  setDefault: async (id: number): Promise<Address> => {
+  setDefault: async (id: number | string): Promise<Address> => {
     return apiFetchJson<Address>(`/api/users/me/addresses/${id}/default`, {
       method: "PATCH",
     });

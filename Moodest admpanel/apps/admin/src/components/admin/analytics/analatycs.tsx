@@ -1,18 +1,22 @@
 'use client'
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  BarChart3,
-  TrendingUp,
-  Package,
-  ShoppingCart,
-  AlertTriangle,
-  DollarSign,
-  RefreshCw,
-  Gift,
-  Ticket,
-  Calendar,
-  Users,
-} from "lucide-react";
+import { Icon } from "@iconify/react";
+
+const makeIcon = (iconName: string) => function AnalyticsIcon({ className }: { className?: string }) {
+  return <Icon icon={iconName} className={className} />;
+};
+
+const BarChart3 = makeIcon("lucide:bar-chart-3");
+const TrendingUp = makeIcon("lucide:trending-up");
+const Package = makeIcon("lucide:package");
+const ShoppingCart = makeIcon("lucide:shopping-cart");
+const AlertTriangle = makeIcon("lucide:alert-triangle");
+const DollarSign = makeIcon("lucide:dollar-sign");
+const RefreshCw = makeIcon("lucide:refresh-cw");
+const Gift = makeIcon("lucide:gift");
+const Ticket = makeIcon("lucide:ticket");
+const Calendar = makeIcon("lucide:calendar");
+const Users = makeIcon("lucide:users");
 import Image from "next/image";
 import { exportOverviewPDF, exportProductsPDF, exportOrdersPDF } from "./analytic-pdf";
 import { Button } from "@/components/ui/button";
@@ -305,7 +309,6 @@ function AnalyticsPage() {
     { value: "30d", label: "Last 30 days" },
     { value: "90d", label: "Last 3 months" },
     { value: "1y", label: "Last year" },
-    { value: "custom", label: "Custom range" },
   ];
 
   const getStatusColor = (status: string) => {

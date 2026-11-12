@@ -38,7 +38,7 @@ import {
   HelpCircle,
   Eye,
   DollarSign,
-} from "lucide-react";
+} from "@/components/ui/icon";
 import { toast } from "sonner";
 import { apiFetch } from "@/lib/apiFetch";
 import { rupee } from "@/constants/values";

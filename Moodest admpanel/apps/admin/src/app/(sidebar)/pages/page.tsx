@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Page } from "@/types/page";
 import { Button } from "@/components/ui/button";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2, Plus } from "@/components/ui/icon";
 import { toast } from "sonner";
 import { API_URL } from "@/lib/api-client";
 import PageTable from "@/components/pages/page-table";

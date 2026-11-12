@@ -1,466 +1,265 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import {
-  Home,
-  User,
-  Shield,
-  MapPin,
-  Bell,
-  Trash2,
-  ShoppingCart,
-  DollarSign,
-  Tag,
-} from "lucide-react";
+import { useParams } from "next/navigation";
+import { Icon } from "@iconify/react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
+import { apiFetch } from "@/lib/apiFetch";
 
 interface CustomerLayoutFrameProps {
-  currentTab: "overview" | "security" | "address-billing" | "notifications";
-  pageTitle: string;
+  currentTab?: "overview" | "security" | "address-billing" | "notifications";
+  pageTitle?: string;
   children: React.ReactNode;
 }
 
+interface CustomerProfileState {
+  loading: boolean;
+  found: boolean;
+  name: string;
+  customerId: string;
+  dateJoined: string;
+  ordersCount: number;
+  totalSpent: number;
+  email: string;
+  status: "Active" | "Inactive";
+  contact: string | null;
+  location: string | null;
+}
+
 export function CustomerLayoutFrame({
-  currentTab,
-  pageTitle,
   children,
 }: CustomerLayoutFrameProps) {
-  const router = useRouter();
+  const params = useParams();
+  const customerIdParam = params?.id as string | undefined;
 
-  // Shared Customer State (Moodest Abaya Store Client)
-  const [customer, setCustomer] = useState({
-    name: "Fatima Al-Zahra",
-    customerId: "#100001",
-    dateJoined: "Jan 15, 2026",
-    avatar: null as string | null,
-    ordersCount: 6,
-    totalSpent: 1420,
-    username: "fatima.alzahra",
-    email: "fatima.alzahra@example.com",
+  const [customer, setCustomer] = useState<CustomerProfileState>({
+    loading: true,
+    found: false,
+    name: "Loading Customer...",
+    customerId: customerIdParam ? `#${String(customerIdParam).slice(-6).toUpperCase()}` : "—",
+    dateJoined: "—",
+    ordersCount: 0,
+    totalSpent: 0,
+    email: "—",
     status: "Active",
-    contact: "+971 50 123 4567",
-    country: "United Arab Emirates",
+    contact: null,
+    location: null,
   });
 
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  useEffect(() => {
+    if (!customerIdParam) return;
+    let active = true;
 
-  const [editForm, setEditForm] = useState({
-    name: customer.name,
-    username: customer.username,
-    email: customer.email,
-    contact: customer.contact,
-    country: customer.country,
-    status: customer.status,
-  });
+    const fetchCustomer = async () => {
+      try {
+        const [res, ordersRes] = await Promise.all([
+          apiFetch(`/api/admin/users?limit=100`).catch(() => null),
+          apiFetch(`/api/admin/orders?limit=100`).catch(() => null),
+        ]);
 
-  const handleSaveCustomer = (e: React.FormEvent) => {
-    e.preventDefault();
-    setCustomer((prev) => ({
-      ...prev,
-      ...editForm,
-    }));
-    toast.success("Customer details updated successfully");
-    setIsEditDialogOpen(false);
-  };
+        let computedOrdersCount = 0;
+        let computedTotalSpent = 0;
+        let latestLocation: string | null = null;
+        let latestShippingPhone: string | null = null;
 
-  const handleDeleteCustomer = () => {
-    toast.success(`Customer ${customer.name} deleted successfully`);
-    setIsDeleteDialogOpen(false);
-    router.push("/customers");
-  };
+        if (ordersRes && ordersRes.ok) {
+          const ordersJson = await ordersRes.json();
+          const ordersList = Array.isArray(ordersJson)
+            ? ordersJson
+            : ordersJson.data || ordersJson.items || [];
+
+          for (const ord of ordersList) {
+            if (String(ord.userId) !== String(customerIdParam)) continue;
+            computedOrdersCount += 1;
+
+            const st = String(ord.status || ord.orderStatus || "").toUpperCase();
+            const amt = Number(ord.totalAmount ?? ord.total ?? 0);
+            if (st !== "CANCELLED" && !Number.isNaN(amt)) {
+              computedTotalSpent += amt;
+            }
+
+            if (!latestLocation && ord.shippingAddress) {
+              const parts = [
+                ord.shippingAddress.city,
+                ord.shippingAddress.state,
+                ord.shippingAddress.country,
+              ].filter(Boolean);
+              if (parts.length > 0) {
+                latestLocation = parts.join(", ");
+              }
+            }
+            if (!latestShippingPhone && ord.shippingAddress?.phone) {
+              latestShippingPhone = String(ord.shippingAddress.phone);
+            }
+          }
+        }
+
+        if (res && res.ok && active) {
+          const json = await res.json();
+          const list = Array.isArray(json) ? json : json.data || json.items || [];
+          const match = list.find((u: any) => String(u.id) === String(customerIdParam));
+
+          if (match) {
+            const fullName =
+              [match.firstName, match.lastName].filter(Boolean).join(" ") ||
+              match.name ||
+              match.email;
+            const formattedId = `#${String(match.id).slice(-6).toUpperCase()}`;
+            const statusLabel: "Active" | "Inactive" =
+              match.isActive === false ? "Inactive" : "Active";
+
+            setCustomer({
+              loading: false,
+              found: true,
+              name: fullName,
+              customerId: formattedId,
+              dateJoined: match.createdAt
+                ? new Date(match.createdAt).toLocaleDateString("en-IN", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })
+                : "—",
+              ordersCount: match._count?.orders ?? match.ordersCount ?? computedOrdersCount,
+              totalSpent: match.totalSpent ?? computedTotalSpent,
+              email: match.email || "—",
+              status: statusLabel,
+              contact: match.phone || latestShippingPhone || null,
+              location: latestLocation,
+            });
+            return;
+          }
+        }
+
+        if (active) {
+          setCustomer((prev) => ({
+            ...prev,
+            loading: false,
+            found: false,
+            name: "Customer Not Found",
+            ordersCount: computedOrdersCount,
+            totalSpent: computedTotalSpent,
+            location: latestLocation,
+            contact: latestShippingPhone,
+          }));
+        }
+      } catch (e) {
+        console.error("Failed to fetch customer profile", e);
+        if (active) {
+          setCustomer((prev) => ({
+            ...prev,
+            loading: false,
+            found: false,
+            name: "Unable to load customer",
+          }));
+        }
+      }
+    };
+
+    fetchCustomer();
+    return () => {
+      active = false;
+    };
+  }, [customerIdParam]);
 
   return (
     <div className="flex flex-1 flex-col space-y-6">
-      {/* 1. Breadcrumb Navigation */}
+      {/* Breadcrumb Navigation */}
       <nav className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
         <Link
           href="/"
           className="hover:text-gray-900 dark:hover:text-gray-100 flex items-center gap-1 transition-colors"
           title="Home"
         >
-          <Home className="size-3.5" />
+          <Icon icon="lucide:home" className="size-3.5" />
         </Link>
         <span>/</span>
         <Link
           href="/customers"
           className="hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
         >
-          Customer
+          Customers
         </Link>
         <span>/</span>
         <span className="text-gray-900 dark:text-white font-medium">
-          {pageTitle}
+          {customer.name}
         </span>
       </nav>
 
-      {/* 2. Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Customer ID {customer.customerId}
-          </h1>
-          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 font-medium">
-            {customer.dateJoined}
-          </p>
-        </div>
-
-        <Button
-          onClick={() => setIsDeleteDialogOpen(true)}
-          className="h-10 px-4 bg-rose-50 text-rose-600 hover:bg-rose-100 dark:bg-rose-950/40 dark:text-rose-400 dark:hover:bg-rose-950/60 border border-rose-200/80 dark:border-rose-900/30 rounded-xl text-xs sm:text-sm font-semibold shadow-2xs transition-colors self-start sm:self-auto cursor-pointer"
-        >
-          Delete Customer
-        </Button>
-      </div>
-
-      {/* 3. Sub-Navigation Tabs */}
-      <div className="flex flex-wrap items-center gap-2 pt-1 pb-2 border-b border-gray-200/70 dark:border-white/10">
-        <Link
-          href="/customers/overview"
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors ${
-            currentTab === "overview"
-              ? "bg-indigo-600 text-white shadow-xs"
-              : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5"
-          }`}
-        >
-          <User className="size-4" />
-          <span>Overview</span>
-        </Link>
-
-        <Link
-          href="/customers/security"
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors ${
-            currentTab === "security"
-              ? "bg-indigo-600 text-white shadow-xs"
-              : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5"
-          }`}
-        >
-          <Shield className="size-4" />
-          <span>Security</span>
-        </Link>
-
-        <Link
-          href="/customers/address-billing"
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors ${
-            currentTab === "address-billing"
-              ? "bg-indigo-600 text-white shadow-xs"
-              : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5"
-          }`}
-        >
-          <MapPin className="size-4" />
-          <span>Address & Billing</span>
-        </Link>
-
-        <Link
-          href="/customers/notifications"
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors ${
-            currentTab === "notifications"
-              ? "bg-indigo-600 text-white shadow-xs"
-              : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5"
-          }`}
-        >
-          <Bell className="size-4" />
-          <span>Notifications</span>
-        </Link>
-      </div>
-
-      {/* 4. 2-Column Main Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* LEFT COLUMN: Customer Profile Card & Upgrade Banner */}
-        <div className="space-y-6 lg:col-span-1">
-          {/* Customer Profile Card */}
-          <div className="rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#141414] shadow-xs p-6 space-y-6">
-            {/* Avatar (with graceful initials fallback for any male or female customer) */}
-            <div className="flex flex-col items-center text-center">
-              <AvatarWithFallback
-                src={customer.avatar}
-                name={customer.name}
-                size={128}
-                className="size-28 sm:size-32 text-3xl font-bold rounded-2xl shadow-2xs border-2 border-white dark:border-white/10"
-              />
-
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mt-4">
+      {/* Clean Imageless Customer Summary Header */}
+      <div className="rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#141414] shadow-xs p-5 sm:p-6">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+          {/* Identity & Account Details */}
+          <div className="space-y-2.5">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                 {customer.name}
-              </h2>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                Customer ID {customer.customerId}
-              </p>
+              </h1>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/40">
+                {customer.customerId}
+              </span>
+              {!customer.loading && customer.found && (
+                <span
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+                    customer.status === "Active"
+                      ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
+                      : "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20"
+                  }`}
+                >
+                  <span
+                    className={`size-1.5 rounded-full ${
+                      customer.status === "Active" ? "bg-emerald-500" : "bg-rose-500"
+                    }`}
+                  />
+                  {customer.status}
+                </span>
+              )}
             </div>
 
-            {/* Orders & Spent KPI Pills */}
-            <div className="grid grid-cols-2 gap-3 pt-2">
-              <div className="p-3 rounded-xl bg-gray-50/70 dark:bg-white/[0.02] border border-gray-200/70 dark:border-white/10 flex items-center gap-3">
-                <div className="size-9 rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400 flex items-center justify-center shrink-0">
-                  <ShoppingCart className="size-4" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-gray-900 dark:text-white">
-                    {customer.ordersCount}
-                  </p>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400 font-medium">
-                    Orders
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-gray-50/70 dark:bg-white/[0.02] border border-gray-200/70 dark:border-white/10 flex items-center gap-3">
-                <div className="size-9 rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400 flex items-center justify-center shrink-0">
-                  <DollarSign className="size-4" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-gray-900 dark:text-white">
-                    ${customer.totalSpent.toLocaleString()}
-                  </p>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400 font-medium">
-                    Spent
-                  </p>
-                </div>
-              </div>
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-gray-600 dark:text-gray-400 font-medium">
+              <span className="inline-flex items-center gap-1.5">
+                <Icon icon="lucide:mail" className="size-3.5 text-gray-400" />
+                {customer.email}
+              </span>
+              {customer.contact && (
+                <span className="inline-flex items-center gap-1.5">
+                  <Icon icon="lucide:phone" className="size-3.5 text-gray-400" />
+                  {customer.contact}
+                </span>
+              )}
+              <span className="inline-flex items-center gap-1.5">
+                <Icon icon="lucide:calendar" className="size-3.5 text-gray-400" />
+                Joined {customer.dateJoined}
+              </span>
+              {customer.location && (
+                <span className="inline-flex items-center gap-1.5">
+                  <Icon icon="lucide:map-pin" className="size-3.5 text-indigo-500" />
+                  {customer.location}
+                </span>
+              )}
             </div>
-
-            {/* Profile Details List */}
-            <div className="space-y-3 pt-4 border-t border-gray-200/70 dark:border-white/10 text-xs sm:text-sm">
-              <h3 className="font-bold text-gray-900 dark:text-white text-sm">
-                Details
-              </h3>
-
-              <div className="space-y-2.5 text-gray-600 dark:text-gray-300">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    Username:
-                  </span>
-                  <span className="text-gray-600 dark:text-gray-400">
-                    {customer.username}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    Email:
-                  </span>
-                  <span className="text-gray-600 dark:text-gray-400 truncate max-w-[170px]">
-                    {customer.email}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    Status:
-                  </span>
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
-                    {customer.status}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    Contact:
-                  </span>
-                  <span className="text-gray-600 dark:text-gray-400">
-                    {customer.contact}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    Country:
-                  </span>
-                  <span className="text-gray-600 dark:text-gray-400">
-                    {customer.country}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Edit Details Action Button */}
-            <Button
-              onClick={() => {
-                setEditForm({
-                  name: customer.name,
-                  username: customer.username,
-                  email: customer.email,
-                  contact: customer.contact,
-                  country: customer.country,
-                  status: customer.status,
-                });
-                setIsEditDialogOpen(true);
-              }}
-              className="w-full h-10 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs sm:text-sm shadow-xs transition-colors cursor-pointer"
-            >
-              Edit Details
-            </Button>
           </div>
-        </div>
 
-        {/* RIGHT COLUMN: Tab specific contents */}
-        <div className="space-y-6 lg:col-span-2">{children}</div>
-      </div>
-
-      {/* Edit Details Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-md rounded-2xl border-gray-200 dark:border-white/10">
-          <DialogHeader>
-            <DialogTitle className="text-base font-bold">
-              Edit Customer Details
-            </DialogTitle>
-            <DialogDescription className="text-xs text-gray-500 dark:text-gray-400">
-              Update personal information and status for {customer.name}.
-            </DialogDescription>
-          </DialogHeader>
-
-          <form onSubmit={handleSaveCustomer} className="space-y-4 py-2">
-            <div className="space-y-1.5">
-              <Label htmlFor="frame-name" className="text-xs font-medium">
-                Full Name
-              </Label>
-              <Input
-                id="frame-name"
-                value={editForm.name}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, name: e.target.value })
-                }
-                className="h-10 rounded-xl text-xs sm:text-sm"
-                required
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="frame-username" className="text-xs font-medium">
-                Username
-              </Label>
-              <Input
-                id="frame-username"
-                value={editForm.username}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, username: e.target.value })
-                }
-                className="h-10 rounded-xl text-xs sm:text-sm"
-                required
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="frame-email" className="text-xs font-medium">
-                Email
-              </Label>
-              <Input
-                id="frame-email"
-                type="email"
-                value={editForm.email}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, email: e.target.value })
-                }
-                className="h-10 rounded-xl text-xs sm:text-sm"
-                required
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label htmlFor="frame-phone" className="text-xs font-medium">
-                  Contact
-                </Label>
-                <Input
-                  id="frame-phone"
-                  value={editForm.contact}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, contact: e.target.value })
-                  }
-                  className="h-10 rounded-xl text-xs sm:text-sm"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="frame-country" className="text-xs font-medium">
-                  Country
-                </Label>
-                <Input
-                  id="frame-country"
-                  value={editForm.country}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, country: e.target.value })
-                  }
-                  className="h-10 rounded-xl text-xs sm:text-sm"
-                />
-              </div>
-            </div>
-
-            <DialogFooter className="pt-4 flex sm:flex-row items-center justify-end gap-2">
+          {/* Back Navigation */}
+          <div className="flex items-center gap-2 shrink-0">
+            <Link href="/customers">
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setIsEditDialogOpen(false)}
-                className="rounded-xl text-xs h-9 px-4"
+                size="sm"
+                className="h-9 px-3.5 rounded-xl text-xs font-semibold border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 cursor-pointer"
               >
-                Cancel
+                <Icon icon="lucide:arrow-left" className="size-3.5 mr-1.5" />
+                Back to Customers
               </Button>
-              <Button
-                type="submit"
-                className="rounded-xl text-xs h-9 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
-              >
-                Save Changes
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+            </Link>
+          </div>
+        </div>
+      </div>
 
-      {/* Delete Customer Alert Dialog */}
-      <AlertDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-      >
-        <AlertDialogContent className="rounded-2xl border-gray-200 dark:border-white/10">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-base font-bold text-gray-900 dark:text-white">
-              Delete Customer Account
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-              Are you sure you want to permanently delete{" "}
-              <span className="font-semibold text-gray-900 dark:text-white">
-                {customer.name}
-              </span>{" "}
-              ({customer.customerId})? All purchase history and customer records
-              will be permanently removed.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="rounded-xl text-xs h-9 px-4">
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDeleteCustomer}
-              className="rounded-xl text-xs h-9 px-4 bg-rose-600 hover:bg-rose-700 text-white font-semibold"
-            >
-              Delete Customer
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {/* Main Content */}
+      <div className="space-y-6">{children}</div>
     </div>
   );
 }
